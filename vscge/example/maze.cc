@@ -1,4 +1,5 @@
 #include <vscge/application.h>
+#include <vscge/core/timer.h>
 #include <vscge/utils/conversions.h>
 
 #include <string>
@@ -23,7 +24,7 @@ std::wstring map =
 
 class ExampleGame : public vs::Application {
  protected:
-  virtual void OnUpdate() override {
+  virtual void OnUpdate(vs::Timestep timestep) override {
     DrawBuffer(vs::StringToPixelBuffer(screen_, {0, 0, 16, 16}));
   }
 

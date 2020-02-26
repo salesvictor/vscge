@@ -2,6 +2,7 @@
 #define VSCGE_INCLUDE_APPLICATION_H
 
 #include "vscge/core/types.h"
+#include "vscge/core/timer.h"
 
 #include <vector>
 
@@ -24,14 +25,13 @@ class Application {
   Rect window_;
 
   virtual void OnStart() {};
-  virtual void OnUpdate() = 0;
+  virtual void OnUpdate(Timestep timestep) = 0;
 
  private:
   Size font_size_;
 
   HANDLE buffer_in_;
   HANDLE buffer_out_;
-
 
   void MainLoop();
 };

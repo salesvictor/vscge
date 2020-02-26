@@ -1,7 +1,9 @@
 #include <vscge/application.h>
+#include <vscge/core/timer.h>
 #include <vscge/utils/conversions.h>
 
 #include <string>
+#include <thread>
 
 class GameOfLife : public vs::Application {
  protected:
@@ -23,7 +25,10 @@ class GameOfLife : public vs::Application {
     DrawBuffer(vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
   }
 
-  virtual void OnUpdate() override {
+  virtual void OnUpdate(vs::Timestep timestep) override {
+    if (1/timestep > 20) {
+      std::this_thread::sleep_for(std::chrono::duration<float>{1./20 - timestep});
+    }
     std::vector<vs::Pixel> new_state = screen_buffer_;
 
     auto is_alive = [](const vs::Pixel &pixel) {

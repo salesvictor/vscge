@@ -1,10 +1,12 @@
 #include "vscge/application.h"
 
 #include "vscge/utils/conversions.h"
+#include "vscge/core/timer.h"
 
 #include <algorithm>
 #include <vector>
 #include <thread>
+#include <string>
 
 #include <Windows.h>
 
@@ -52,10 +54,16 @@ void Application::Start() {
 }
 
 void Application::MainLoop() {
+  Timer timer;
+  timer.Start();
   while (true) {
-    using namespace std::chrono_literals;
-    std::this_thread::sleep_for(20ms);
-    OnUpdate();
+    Timestep timestep =  timer.Stop();
+    std::wstring title = std::wstring(L"VS CGS - FPS: ") + std::to_wstring(1/timestep);
+    SetConsoleTitle(title.c_str());
+
+    timer.Start();
+
+    OnUpdate(timestep);
 
     std::vector<CHAR_INFO> write_buffer;
     for (const auto &pixel : screen_buffer_) {

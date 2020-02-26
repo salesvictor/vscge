@@ -3,6 +3,7 @@ message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION}")
 add_library(
   vscge
   src/application.cc
+  src/core/timer.cc
   src/utils/conversions.cc
 )
 
