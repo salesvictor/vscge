@@ -3,6 +3,9 @@
 
 #include <Windows.h>
 
+#include "vscge/core/consts.h"
+
+
 namespace vs {
 struct Point {
   int x;
@@ -60,12 +63,21 @@ struct Pixel {
   Pixel(wchar_t ch, Point location) : location(location) {
     info = {
         .Char = {.UnicodeChar = ch},
-        .Attributes = 0x000F,
+        .Attributes = PixelColor::FG::kWhite,
+    };
+  }
+  Pixel(wchar_t ch, PixelColor::FG color, Point location) : location(location) {
+    info = {
+        .Char = {.UnicodeChar = ch},
+        .Attributes = color,
     };
   }
 
-  wchar_t Char() const { return info.Char.UnicodeChar; };
   wchar_t& Char() { return info.Char.UnicodeChar; };
+  const wchar_t& Char() const { return info.Char.UnicodeChar; };
+
+  WORD& Color() { return info.Attributes; };
+  const WORD& Color() const { return info.Attributes; };
 };
 }  // namespace vs
 
