@@ -3,7 +3,12 @@
 
 namespace vs {
 enum PixelBlock {
-  kSolid = 0x2588,
+  kUpperHalf = 0x2580,    // ▀
+  kLowerHalf = 0x2584,    // ▄
+  kFull = 0x2588,         // █
+  kLightShade = 0x2591,   //   ░
+  kMediumShade = 0x2592,  //     ▒
+  kDarkShade = 0x2593,    // ▓
 };
 }
 #endif  // VSCGE_INCLUDE_VSCGE_CONSTS_H

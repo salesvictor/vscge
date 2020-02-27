@@ -6,6 +6,8 @@
 class GameOfLife : public vs::Application {
  protected:
   virtual void OnStart() override {
+    for (auto &ch : screen_buffer_) ch.Char() = vs::PixelBlock::kLightShade;
+
     std::wstring initial_state =
         L"........................#............"
         L"......................#.#............"
@@ -17,7 +19,8 @@ class GameOfLife : public vs::Application {
         L"...........#...#....................."
         L"............##.......................";
 
-    for (auto &ch : initial_state) ch = (ch == '#') ? 0x2588 : ' ';
+    for (auto &ch : initial_state)
+      ch = (ch == '#') ? vs::PixelBlock::kFull : vs::PixelBlock::kLightShade;
 
     DrawBuffer(vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
   }
@@ -57,13 +60,13 @@ class GameOfLife : public vs::Application {
       short y = pixel.y;
       int count = alive_count(x, y);
 
-      if (ch == L' ') {
+      if (ch == vs::PixelBlock::kLightShade) {
         if (count == 3) {
           pixel.Char() = 0x2588;
         }
       } else {
         if (count < 2 || count > 3) {
-          pixel.Char() = L' ';
+          pixel.Char() = vs::PixelBlock::kLightShade;
         }
       }
     }
