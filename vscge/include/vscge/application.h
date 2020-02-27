@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_APPLICATION_H
-#define VSCGE_INCLUDE_APPLICATION_H
+#ifndef VSCGE_INCLUDE_VSCGE_APPLICATION_H
+#define VSCGE_INCLUDE_VSCGE_APPLICATION_H
 
 #include "vscge/core/types.h"
 #include "vscge/core/timer.h"
@@ -37,4 +37,4 @@ class Application {
 };
 } // namespace vs
 
-#endif // VSCGE_INCLUDE_APPLICATION_H
+#endif // VSCGE_INCLUDE_VSCGE_APPLICATION_H

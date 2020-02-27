@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_CORE_TIMER_H
-#define VSCGE_INCLUDE_CORE_TIMER_H
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_TIMER_H
+#define VSCGE_INCLUDE_VSCGE_CORE_TIMER_H
 
 #include <chrono>
 #include <ratio>
@@ -25,4 +25,4 @@ class Timer {
 };
 } // namespace vs
 
-#endif // VSCGE_INCLUDE_CORE_TIMER_H
+#endif // VSCGE_INCLUDE_VSCGE_CORE_TIMER_H

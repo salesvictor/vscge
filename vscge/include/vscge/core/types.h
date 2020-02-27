@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_CORE_TYPES_H
-#define VSCGE_INCLUDE_CORE_TYPES_H
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_TYPES_H
+#define VSCGE_INCLUDE_VSCGE_CORE_TYPES_H
 
 #include <Windows.h>
 
@@ -64,4 +64,4 @@ struct Pixel {
 };
 } // namespace vs
 
-#endif // VSCGE_INCLUDE_CORE_TYPES_H
+#endif // VSCGE_INCLUDE_VSCGE_CORE_TYPES_H
