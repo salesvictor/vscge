@@ -5,46 +5,51 @@
 
 namespace vs {
 struct Point {
-  short x;
-  short y;
+  int x;
+  int y;
 };
 
 struct Size {
-  short width;
-  short height;
+  int width;
+  int height;
 
-  short Area() const { return width * height; };
-  operator COORD() const { return {width, height}; };
+  int Area() const { return width * height; };
+  operator COORD() const { return {(SHORT)width, (SHORT)height}; };
 };
 
 struct Rect {
-  short x;
-  short y;
+  int x;
+  int y;
 
   union {
     struct {
-      short width;
-      short height;
+      int width;
+      int height;
     };
 
     Size size;
   };
 
-  short BufferSize() const { return width * height; };
+  int BufferSize() const { return width * height; };
 
   Point TopLeft() const { return {x, y}; };
   Point BottomRight() const { return {x + width, y + height}; };
 
-  bool Contains(const Point &p) { return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height; };
+  bool Contains(const Point& p) {
+    return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height;
+  };
 
-  operator SMALL_RECT() const { return {x, y, x + width - 1, y + height - 1}; };
+  operator SMALL_RECT() const {
+    return {(SHORT)x, (SHORT)y, (SHORT)(x + width - 1),
+            (SHORT)(y + height - 1)};
+  };
 };
 
 struct Pixel {
   union {
     struct {
-      short x;
-      short y;
+      int x;
+      int y;
     };
 
     Point location;
@@ -52,16 +57,16 @@ struct Pixel {
 
   CHAR_INFO info;
 
-  Pixel(wchar_t ch, Point location) : location(location){
+  Pixel(wchar_t ch, Point location) : location(location) {
     info = {
-      .Char = { .UnicodeChar = ch },
-      .Attributes = 0x000F,
+        .Char = {.UnicodeChar = ch},
+        .Attributes = 0x000F,
     };
   }
 
   wchar_t Char() const { return info.Char.UnicodeChar; };
   wchar_t& Char() { return info.Char.UnicodeChar; };
 };
-} // namespace vs
+}  // namespace vs
 
-#endif // VSCGE_INCLUDE_VSCGE_CORE_TYPES_H
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_TYPES_H

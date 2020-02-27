@@ -23,6 +23,6 @@ class Timer {
   std::chrono::time_point<std::chrono::steady_clock> start_time_;
   std::chrono::time_point<std::chrono::steady_clock> end_time_;
 };
-} // namespace vs
+}  // namespace vs
 
-#endif // VSCGE_INCLUDE_VSCGE_CORE_TIMER_H
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_TIMER_H

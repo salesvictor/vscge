@@ -1,17 +1,18 @@
 #ifndef VSCGE_INCLUDE_VSCGE_APPLICATION_H
 #define VSCGE_INCLUDE_VSCGE_APPLICATION_H
 
-#include "vscge/core/types.h"
-#include "vscge/core/timer.h"
+#include <Windows.h>
 
 #include <vector>
 
-#include <Windows.h>
+#include "vscge/core/timer.h"
+#include "vscge/core/types.h"
 
 namespace vs {
 class Application {
  public:
-  Application(const Size &screen_size = {80, 60}, const Size &font_size = {8, 8});
+  Application(const Size &screen_size = {80, 60},
+              const Size &font_size = {8, 8});
 
   void Start();
   void SetPixel(const Pixel &pixel);
@@ -24,7 +25,7 @@ class Application {
   Size screen_size_;
   Rect window_;
 
-  virtual void OnStart() {};
+  virtual void OnStart(){};
   virtual void OnUpdate(Timestep timestep) = 0;
 
  private:
@@ -33,8 +34,10 @@ class Application {
   HANDLE buffer_in_;
   HANDLE buffer_out_;
 
+  SMALL_RECT window_wrapper_;
+
   void MainLoop();
 };
-} // namespace vs
+}  // namespace vs
 
-#endif // VSCGE_INCLUDE_VSCGE_APPLICATION_H
+#endif  // VSCGE_INCLUDE_VSCGE_APPLICATION_H

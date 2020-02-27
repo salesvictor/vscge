@@ -1,6 +1,4 @@
-#include <vscge/application.h>
-#include <vscge/core/timer.h>
-#include <vscge/utils/conversions.h>
+#include <vscge/vscge.h>
 
 #include <string>
 #include <thread>
@@ -8,26 +6,26 @@
 class GameOfLife : public vs::Application {
  protected:
   virtual void OnStart() override {
-    std::wstring initial_state = 
-    L"........................#............"
-    L"......................#.#............"
-    L"............##......##............##."
-    L"...........#...#....##............##."
-    L"##........#.....#...##..............."
-    L"##........#...#.##....#.#............"
-    L"..........#.....#.......#............"
-    L"...........#...#....................."
-    L"............##.......................";
+    std::wstring initial_state =
+        L"........................#............"
+        L"......................#.#............"
+        L"............##......##............##."
+        L"...........#...#....##............##."
+        L"##........#.....#...##..............."
+        L"##........#...#.##....#.#............"
+        L"..........#.....#.......#............"
+        L"...........#...#....................."
+        L"............##.......................";
 
-    for(auto &ch : initial_state)
-      ch = (ch == '#') ? 0x2588 : ' ';
+    for (auto &ch : initial_state) ch = (ch == '#') ? 0x2588 : ' ';
 
     DrawBuffer(vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
   }
 
   virtual void OnUpdate(vs::Timestep timestep) override {
-    if (1/timestep > 20) {
-      std::this_thread::sleep_for(std::chrono::duration<float>{1./20 - timestep});
+    if (1 / timestep > 20) {
+      std::this_thread::sleep_for(
+          std::chrono::duration<float>{1. / 20 - timestep});
     }
     std::vector<vs::Pixel> new_state = screen_buffer_;
 
@@ -36,17 +34,18 @@ class GameOfLife : public vs::Application {
     };
 
     auto alive_count = [this, is_alive](short x, short y) {
-      constexpr short dx[] = {-1, -1,  0,  1, 1, 1, 0, -1};
-      constexpr short dy[] = { 0, -1, -1, -1, 0, 1, 1,  1};
-      
+      constexpr short dx[] = {-1, -1, 0, 1, 1, 1, 0, -1};
+      constexpr short dy[] = {0, -1, -1, -1, 0, 1, 1, 1};
+
       int count = 0;
-      for (int i=0;i<8;i++) {
+      for (int i = 0; i < 8; i++) {
         vs::Point neibourgh = {x + dx[i], y + dy[i]};
-        if(!window_.Contains(neibourgh)) {
+        if (!window_.Contains(neibourgh)) {
           continue;
         }
 
-        count += is_alive(screen_buffer_[vs::PointToBufferIndex(window_, neibourgh)]);
+        count += is_alive(
+            screen_buffer_[vs::PointToBufferIndex(window_, neibourgh)]);
       }
 
       return count;
