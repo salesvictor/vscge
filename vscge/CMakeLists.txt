@@ -34,12 +34,22 @@ set_target_properties(
   ARCHIVE_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
   LIBRARY_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
 )
-if(CLANG_TIDY_EXE)
-  set_target_properties(
-    vscge PROPERTIES
-    CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-  )
-endif()
+find_program(
+  CPPLINT_EXE
+  NAMES "cpplint"
+)
+message(STATUS "cpplint found: ${CPPLINT_EXE}")
+find_program(
+  CPPCHECK_EXE
+  NAMES "cppcheck"
+)
+message(STATUS "cppcheck found: ${CPPCHECK_EXE}")
+set_target_properties(
+  vscge PROPERTIES
+  CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+  CXX_CPPCHECK "${CPPCHECK_EXE}"
+  CXX_CPPLINT "${CPPLINT_EXE}"
+)
 target_include_directories(
   vscge
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -47,14 +47,14 @@ void Initialize(const HANDLE &handle, const Size &window_size,
   }
 }
 
-const std::vector<Pixel> &GetBuffer() { return internals.screen_buffer; };
+const std::vector<Pixel> &GetBuffer() { return internals.screen_buffer; }
 
 const Pixel &GetPixelAt(Point location) {
   return internals
       .screen_buffer[PointToBufferIndex(Rect(internals.window), location)];
-};
+}
 
-const Rect GetWindowRect() { return Rect(internals.window); };
+const Rect GetWindowRect() { return Rect(internals.window); }
 
 void DrawPixel(const Pixel &pixel) {
   assert(Rect(internals.window).Contains(pixel.location));
