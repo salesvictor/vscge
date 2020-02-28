@@ -11,8 +11,8 @@
 namespace vs {
 class Application {
  public:
-  Application(const Size &screen_size = {80, 60},
-              const Size &font_size = {8, 8});
+  Application(const Size &screen_size = {240, 120},
+              const Size &font_size = {4, 4});
 
   void Start();
   void SetPixel(const Pixel &pixel);

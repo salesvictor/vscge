@@ -3,10 +3,11 @@
 #include <string>
 #include <thread>
 
+
 class GameOfLife : public vs::Application {
  protected:
   virtual void OnStart() override {
-    for (auto &ch : screen_buffer_) ch.Char() = vs::PixelBlock::kLightShade;
+    for (auto &ch : screen_buffer_) ch.Char() = vs::PixelBlock::kEmpty;
 
     std::wstring initial_state =
         L"........................#............"
@@ -20,20 +21,20 @@ class GameOfLife : public vs::Application {
         L"............##.......................";
 
     for (auto &ch : initial_state)
-      ch = (ch == '#') ? vs::PixelBlock::kFull : vs::PixelBlock::kLightShade;
+      ch = (ch == '#') ? vs::PixelBlock::kFull : vs::PixelBlock::kEmpty;
 
     DrawBuffer(vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
   }
 
   virtual void OnUpdate(vs::Timestep timestep) override {
-    if (1 / timestep > 20) {
+    if (1 / timestep > 60) {
       std::this_thread::sleep_for(
-          std::chrono::duration<float>{1. / 20 - timestep});
+          std::chrono::duration<float>{1. / 60 - timestep});
     }
     std::vector<vs::Pixel> new_state = screen_buffer_;
 
     auto is_alive = [](const vs::Pixel &pixel) {
-      return pixel.Char() == 0x2588;
+      return pixel.Char() == vs::PixelBlock::kFull;
     };
 
     auto alive_count = [this, is_alive](short x, short y) {
@@ -60,13 +61,15 @@ class GameOfLife : public vs::Application {
       short y = pixel.y;
       int count = alive_count(x, y);
 
-      if (ch == vs::PixelBlock::kLightShade) {
+      if (ch == vs::PixelBlock::kEmpty) {
         if (count == 3) {
-          pixel.Char() = 0x2588;
+          pixel.Char() = vs::PixelBlock::kFull;
+          pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kWhite};
         }
       } else {
         if (count < 2 || count > 3) {
-          pixel.Char() = vs::PixelBlock::kLightShade;
+          pixel.Char() = L' ';
+          pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kBlack};
         }
       }
     }
