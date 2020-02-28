@@ -2,6 +2,7 @@
 
 #include <string>
 
+
 std::wstring map =
     L"#########......."
     L"#..............."
@@ -21,9 +22,9 @@ std::wstring map =
     L"################";
 
 class ExampleGame : public vs::Application {
- protected:
+ private:
   virtual void OnUpdate(vs::Timestep timestep) override {
-    DrawBuffer(vs::StringToPixelBuffer(screen_, {0, 0, 16, 16}));
+    vs::Renderer::DrawBuffer(vs::StringToPixelBuffer(screen_, {0, 0, 16, 16}));
   }
 
  public:

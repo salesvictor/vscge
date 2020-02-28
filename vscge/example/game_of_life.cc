@@ -3,12 +3,9 @@
 #include <string>
 #include <thread>
 
-
 class GameOfLife : public vs::Application {
- protected:
+ private:
   virtual void OnStart() override {
-    for (auto &ch : screen_buffer_) ch.Char() = vs::PixelBlock::kEmpty;
-
     std::wstring initial_state =
         L"........................#............"
         L"......................#.#............"
@@ -23,7 +20,8 @@ class GameOfLife : public vs::Application {
     for (auto &ch : initial_state)
       ch = (ch == '#') ? vs::PixelBlock::kFull : vs::PixelBlock::kEmpty;
 
-    DrawBuffer(vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
+    vs::Renderer::DrawBuffer(
+        vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
   }
 
   virtual void OnUpdate(vs::Timestep timestep) override {
@@ -31,7 +29,7 @@ class GameOfLife : public vs::Application {
       std::this_thread::sleep_for(
           std::chrono::duration<float>{1. / 60 - timestep});
     }
-    std::vector<vs::Pixel> new_state = screen_buffer_;
+    std::vector<vs::Pixel> new_state = vs::Renderer::GetBuffer();
 
     auto is_alive = [](const vs::Pixel &pixel) {
       return pixel.Char() == vs::PixelBlock::kFull;
@@ -42,14 +40,14 @@ class GameOfLife : public vs::Application {
       constexpr short dy[] = {0, -1, -1, -1, 0, 1, 1, 1};
 
       int count = 0;
+      vs::Rect window_rect = vs::Renderer::GetWindowRect();
       for (int i = 0; i < 8; i++) {
         vs::Point neibourgh = {x + dx[i], y + dy[i]};
-        if (!window_.Contains(neibourgh)) {
+        if (!window_rect.Contains(neibourgh)) {
           continue;
         }
 
-        count += is_alive(
-            screen_buffer_[vs::PointToBufferIndex(window_, neibourgh)]);
+        count += is_alive(vs::Renderer::GetPixelAt(neibourgh));
       }
 
       return count;
@@ -74,7 +72,7 @@ class GameOfLife : public vs::Application {
       }
     }
 
-    screen_buffer_ = new_state;
+    vs::Renderer::DrawBuffer(new_state);
   }
 };
 
