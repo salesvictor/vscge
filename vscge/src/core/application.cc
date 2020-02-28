@@ -11,6 +11,7 @@
 #include "vscge/core/timer.h"
 #include "vscge/utils/conversions.h"
 
+
 namespace vs {
 Application::Application(const Size &screen_size, const Size &font_size)
     : screen_size_(screen_size),
@@ -75,13 +76,13 @@ void Application::MainLoop() {
   }
 }
 
-void Application::SetPixel(const Pixel &pixel) {
+void Application::DrawPixel(const Pixel &pixel) {
   screen_buffer_[vs::PointToBufferIndex(window_, pixel.location)] = pixel;
 }
 
 void Application::DrawBuffer(const std::vector<Pixel> &buffer) {
   for (const auto &pixel : buffer) {
-    SetPixel(pixel);
+    DrawPixel(pixel);
   }
 }
 
@@ -99,7 +100,7 @@ void Application::DrawLine(const Point &p1, const Point &p2) {
   if (p_left.x == p_right.x) {
     // Treat vertical lines
     for (int y = p_left.y; y <= p_right.y; ++y) {
-      SetPixel(Pixel(PixelBlock::kFull, {p_left.x, y}));
+      DrawPixel(Pixel(PixelBlock::kFull, {p_left.x, y}));
     }
   } else {
     int dx = p_right.x - p_left.x;
@@ -107,7 +108,7 @@ void Application::DrawLine(const Point &p1, const Point &p2) {
 
     for (int x = p_left.x; x <= p_right.x; ++x) {
       int y = dy / dx * (x - p_left.x) + p_left.y;
-      SetPixel(Pixel(PixelBlock::kFull, {x, y}));
+      DrawPixel(Pixel(PixelBlock::kFull, {x, y}));
     }
   }
 }

@@ -8,6 +8,7 @@
 #include "vscge/core/timer.h"
 #include "vscge/core/types.h"
 
+
 namespace vs {
 class Application {
  public:
@@ -15,7 +16,7 @@ class Application {
               const Size &font_size = {4, 4});
 
   void Start();
-  void SetPixel(const Pixel &pixel);
+  void DrawPixel(const Pixel &pixel);
   void DrawBuffer(const std::vector<Pixel> &buffer);
   void DrawLine(const Point &p1, const Point &p2);
   void DrawRect(const Rect &rect);
