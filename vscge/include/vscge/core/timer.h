@@ -8,19 +8,19 @@
 
 
 namespace vs {
-struct Timestep {
+struct VS_API Timestep {
   std::chrono::duration<float> duration;
 
-  VS_API float GetSeconds();
-  VS_API float GetMilliseconds();
+  float GetSeconds();
+  float GetMilliseconds();
 
   operator float() const { return duration.count(); };
 };
 
-class Timer {
+class VS_API Timer {
  public:
-  VS_API void Start();
-  VS_API Timestep Stop();
+  void Start();
+  Timestep Stop();
 
  private:
   std::chrono::time_point<std::chrono::steady_clock> start_time_;
