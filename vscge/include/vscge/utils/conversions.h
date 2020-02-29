@@ -7,10 +7,10 @@
 #include "vscge/core/types.h"
 
 namespace vs {
-Point BufferIndexToPoint(const Rect &region, int i);
-int PointToBufferIndex(const Rect &region, const Point &point);
+VS_API Point BufferIndexToPoint(const Rect &region, int i);
+VS_API int PointToBufferIndex(const Rect &region, const Point &point);
 
-std::vector<Pixel> StringToPixelBuffer(std::wstring_view string_buffer,
+VS_API std::vector<Pixel> StringToPixelBuffer(std::wstring_view string_buffer,
                                        const Rect &region);
 }  // namespace vs
 

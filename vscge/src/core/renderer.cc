@@ -26,10 +26,8 @@ void Initialize(const HANDLE &handle, const Size &window_size,
   internals.window = {handle, window_size};
   internals.font_size = font_size;
   internals.window_wrapper = SMALL_RECT(Rect(internals.window));
-  SetConsoleScreenBufferSize(internals.window.handle, internals.window.size);
-  SetConsoleWindowInfo(internals.window.handle, true,
-                       &internals.window_wrapper);
 
+  // Font needs to be set before knowing largest possible size.
   CONSOLE_FONT_INFOEX cfi = {
       .cbSize = sizeof(CONSOLE_FONT_INFOEX),
       .nFont = 0,
@@ -39,6 +37,24 @@ void Initialize(const HANDLE &handle, const Size &window_size,
   };
   wcsncpy_s(cfi.FaceName, internals.font.c_str(), 32);  // NOLINT: C API...
   SetCurrentConsoleFontEx(internals.window.handle, false, &cfi);
+
+  COORD largest_size = GetLargestConsoleWindowSize(handle);
+  if (window_size.width > largest_size.X ||
+      window_size.height > largest_size.Y) {
+    MessageBox(GetConsoleWindow(), TEXT("Window size is too big!"), nullptr,
+               MB_OK);
+    return;
+  }
+
+  SetConsoleScreenBufferSize(internals.window.handle, internals.window.size);
+  SetConsoleWindowInfo(internals.window.handle, true,
+                       &internals.window_wrapper);
+
+  CONSOLE_CURSOR_INFO cci = {
+      .dwSize = 1,
+      .bVisible = false,
+  };
+  SetConsoleCursorInfo(internals.window.handle, &cci);
   SetConsoleActiveScreenBuffer(internals.window.handle);
   internals.screen_buffer.reserve(internals.window.size.Area());
   for (int i = 0; i < internals.window.size.Area(); ++i) {
@@ -64,16 +80,12 @@ void DrawPixel(const Pixel &pixel) {
 
 void DrawBuffer(const std::vector<Pixel> &buffer) {
   assert(buffer.size() <= internals.screen_buffer.size());
-  for (const auto &pixel : buffer) {
-    DrawPixel(pixel);
-  }
+  for (const auto &pixel : buffer) DrawPixel(pixel);
 }
 
-void DrawLine(const Point &p1, const Point &p2) {
+void DrawLine(const Point &p1, const Point &p2, const vs::PixelBlock &block) {
   auto isLeft = [](const Point &a, const Point &b) {
-    if (a.x == b.x) {
-      return a.y < b.y;
-    }
+    if (a.x == b.x) return a.y < b.y;
 
     return a.x < b.x;
   };
@@ -83,7 +95,7 @@ void DrawLine(const Point &p1, const Point &p2) {
   if (p_left.x == p_right.x) {
     // Treat vertical lines
     for (int y = p_left.y; y <= p_right.y; ++y) {
-      DrawPixel(Pixel(PixelBlock::kFull, {p_left.x, y}));
+      DrawPixel(Pixel(block, {p_left.x, y}));
     }
   } else {
     int dx = p_right.x - p_left.x;
@@ -91,27 +103,33 @@ void DrawLine(const Point &p1, const Point &p2) {
 
     for (int x = p_left.x; x <= p_right.x; ++x) {
       int y = dy / dx * (x - p_left.x) + p_left.y;
-      DrawPixel(Pixel(PixelBlock::kFull, {x, y}));
+      DrawPixel(Pixel(block, {x, y}));
     }
   }
 }
 
-void DrawRect(const Rect &rect) {
+void DrawRect(const Rect &rect, const vs::PixelBlock &block) {
   int x0 = rect.x;
   int y0 = rect.y;
   int x1 = rect.x + rect.width - 1;
   int y1 = rect.y + rect.height - 1;
 
-  DrawLine({x0, y0}, {x1, y0});  // Top
-  DrawLine({x1, y0}, {x1, y1});  // Right
-  DrawLine({x1, y1}, {x0, y1});  // Bottom
-  DrawLine({x0, y1}, {x0, y0});  // Left
+  DrawLine({x0, y0}, {x1, y0}, block);  // Top
+  DrawLine({x1, y0}, {x1, y1}, block);  // Right
+  DrawLine({x1, y1}, {x0, y1}, block);  // Bottom
+  DrawLine({x0, y1}, {x0, y0}, block);  // Left
+}
+
+void FillRect(const Rect &rect, const vs::PixelBlock &block) {
+  for (int y = rect.y; y < internals.window.size.height; ++y) {
+    DrawLine({rect.x, y}, {rect.x + rect.width, y}, block);
+  }
 }
 
 void Render() {
   std::vector<CHAR_INFO> write_buffer;
   for (const auto &pixel : internals.screen_buffer) {
-    write_buffer.push_back(pixel.info);
+    write_buffer.emplace_back(pixel.info);
   }
   WriteConsoleOutput(internals.window.handle, write_buffer.data(),
                      internals.window.size, {0, 0}, &internals.window_wrapper);

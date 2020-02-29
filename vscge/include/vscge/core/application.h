@@ -5,12 +5,13 @@
 
 #include <vector>
 
+#include "vscge/core/core.h"
 #include "vscge/core/renderer.h"
 #include "vscge/core/timer.h"
 #include "vscge/core/types.h"
 
 namespace vs {
-class Application {
+class VS_API Application {
  public:
   Application(const Size &screen_size = {240, 120},
               const Size &font_size = {4, 4});

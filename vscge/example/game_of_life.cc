@@ -3,6 +3,7 @@
 #include <string>
 #include <thread>
 
+
 class GameOfLife : public vs::Application {
  private:
   virtual void OnStart() override {
@@ -22,6 +23,9 @@ class GameOfLife : public vs::Application {
 
     vs::Renderer::DrawBuffer(
         vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
+
+    vs::Renderer::DrawRect(vs::Renderer::GetWindowRect(),
+                           vs::PixelBlock::kDarkShade);
   }
 
   virtual void OnUpdate(vs::Timestep timestep) override {
@@ -64,7 +68,7 @@ class GameOfLife : public vs::Application {
           pixel.Char() = vs::PixelBlock::kFull;
           pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kWhite};
         }
-      } else {
+      } else if (ch == vs::PixelBlock::kFull) {
         if (count < 2 || count > 3) {
           pixel.Char() = L' ';
           pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kBlack};

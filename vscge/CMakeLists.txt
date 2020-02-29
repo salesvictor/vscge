@@ -1,7 +1,7 @@
 message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION}")
 
 add_library(
-  vscge
+  vscge STATIC
   src/core/application.cc
   src/core/renderer.cc
   src/core/timer.cc
@@ -12,7 +12,7 @@ find_program(
   CLANG_TIDY_EXE
   NAMES "clang-tidy"
   DOC "Path to clang-tidy executable"
-  )
+)
 if(NOT CLANG_TIDY_EXE)
   message(STATUS "clang-tidy not found.")
 else()
@@ -33,6 +33,7 @@ set_target_properties(
   VERSION ${PROJECT_VERSION}
   ARCHIVE_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
   LIBRARY_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
+  RUNTIME_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
 )
 find_program(
   CPPLINT_EXE
@@ -64,13 +65,13 @@ target_compile_definitions(vscge PRIVATE -D_UNICODE -DUNICODE)
 target_compile_features(vscge PRIVATE cxx_std_20)
 
 if(VSCGE_COMPILER STREQUAL "GNU")
+  set(COMPILE_PRIVATE_FLAGS -Wall -Wextra)
   set(COMPILE_DEBUG_FLAGS -g)
   set(COMPILE_RELEASE_FLAGS -O2)
-  set(COMPILE_PRIVATE_FLAGS -Wall -Wextra)
 elseif(VSCGE_COMPILER STREQUAL "MSVC")
+  set(COMPILE_PRIVATE_FLAGS /std:c++latest)
   set(COMPILE_DEBUG_FLAGS /std:c++latest)
   set(COMPILE_RELEASE_FLAGS /std:c++latest)
-  set(COMPILE_PRIVATE_FLAGS /std:c++latest)
 endif()
 
 target_compile_options(

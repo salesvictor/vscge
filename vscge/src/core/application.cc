@@ -11,7 +11,6 @@
 #include "vscge/core/timer.h"
 #include "vscge/utils/conversions.h"
 
-
 namespace vs {
 Application::Application(const Size &screen_size, const Size &font_size)
     : buffer_in_(GetStdHandle(STD_INPUT_HANDLE)) {

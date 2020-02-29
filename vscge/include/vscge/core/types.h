@@ -4,14 +4,15 @@
 #include <Windows.h>
 
 #include "vscge/core/consts.h"
+#include "vscge/core/core.h"
 
 namespace vs {
-struct Point {
+struct VS_API Point {
   int x;
   int y;
 };
 
-struct Size {
+struct VS_API Size {
   int width;
   int height;
 
@@ -19,7 +20,7 @@ struct Size {
   operator COORD() const { return {(SHORT)width, (SHORT)height}; };
 };
 
-struct Rect {
+struct VS_API Rect {
   int x;
   int y;
 
@@ -47,7 +48,7 @@ struct Rect {
   };
 };
 
-struct PixelColor {
+struct VS_API PixelColor {
   enum class FG {
     kBlack = 0X0000,
     kDarkBlue = 0X0001,
@@ -96,7 +97,7 @@ struct PixelColor {
   operator WORD() const { return (WORD)color; };
 };
 
-struct Pixel {
+struct VS_API Pixel {
   union {
     struct {
       int x;
@@ -128,7 +129,7 @@ struct Pixel {
   const WORD& Color() const { return info.Attributes; };
 };
 
-struct Window {
+struct VS_API Window {
   HANDLE handle;
   Size size;
 

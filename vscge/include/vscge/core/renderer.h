@@ -6,24 +6,29 @@
 #include <string>
 #include <vector>
 
+#include "vscge/core/core.h"
 #include "vscge/core/types.h"
 #include "vscge/utils/conversions.h"
 
 namespace vs {
 namespace Renderer {
-void Initialize(const HANDLE &handle, const Size &window_size,
-                const Size &font_size);
+void VS_API Initialize(const HANDLE &handle, const Size &window_size,
+                       const Size &font_size);
 
-const std::vector<Pixel> &GetBuffer();
-const Pixel &GetPixelAt(Point location);
-const Rect GetWindowRect();
+const VS_API std::vector<Pixel> &GetBuffer();
+const VS_API Pixel &GetPixelAt(Point location);
+const VS_API Rect GetWindowRect();
 
-void DrawPixel(const Pixel &pixel);
-void DrawBuffer(const std::vector<Pixel> &buffer);
-void DrawLine(const Point &p1, const Point &p2);
-void DrawRect(const Rect &rect);
+void VS_API DrawPixel(const Pixel &pixel);
+void VS_API DrawBuffer(const std::vector<Pixel> &buffer);
+void VS_API DrawLine(const Point &p1, const Point &p2,
+                     const PixelBlock &block = PixelBlock::kFull);
+void VS_API DrawRect(const Rect &rect,
+                     const PixelBlock &block = PixelBlock::kFull);
+void VS_API FillRect(const Rect &rect,
+                     const PixelBlock &block = PixelBlock::kFull);
 
-void Render();
+void VS_API Render();
 }  // namespace Renderer
 }  // namespace vs
 
