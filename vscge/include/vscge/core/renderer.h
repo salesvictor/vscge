@@ -19,6 +19,8 @@ const VS_API std::vector<Pixel> &GetBuffer();
 const VS_API Pixel &GetPixelAt(Point location);
 const VS_API Rect GetWindowRect();
 
+void VS_API ClearScreen();
+
 void VS_API DrawPixel(const Pixel &pixel);
 void VS_API DrawBuffer(const std::vector<Pixel> &buffer);
 void VS_API DrawLine(const Point &p1, const Point &p2,

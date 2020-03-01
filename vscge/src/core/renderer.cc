@@ -78,6 +78,13 @@ void DrawPixel(const Pixel &pixel) {
                                              pixel.location)] = pixel;
 }
 
+void ClearScreen() {
+  for(auto &pixel : internals.screen_buffer) {
+    pixel.Char() = PixelBlock::kEmpty;
+    pixel.Color() = PixelColor();
+  }
+}
+
 void DrawBuffer(const std::vector<Pixel> &buffer) {
   assert(buffer.size() <= internals.screen_buffer.size());
   for (const auto &pixel : buffer) DrawPixel(pixel);

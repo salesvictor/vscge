@@ -5,7 +5,8 @@
 
 namespace vs {
 enum class EventType {
-  KeyPressed,
+  kKeyPressed,
+  kMouseClick,
 };
 
 struct VS_API Event {

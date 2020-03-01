@@ -1,11 +1,12 @@
 #include <vscge/vscge.h>
 
 #include <string>
-#include <thread>
 
 class GameOfLife : public vs::Application {
  private:
   virtual void OnStart() override {
+    vs::Renderer::ClearScreen();
+
     std::wstring initial_state =
         L"........................#............"
         L"......................#.#............"
@@ -30,20 +31,27 @@ class GameOfLife : public vs::Application {
   }
 
   virtual void OnEvent(const vs::Event &event) {
-    if (event.Type() == vs::EventType::KeyPressed) {
+    if (event.Type() == vs::EventType::kKeyPressed) {
       auto key_event = static_cast<const vs::KeyEvent &>(event);
-      if (key_event.is_down && key_event.key == VK_SPACE) {
-        running_ = !running_;
+      if (key_event.is_down) {
+        if (key_event.key == vs::Key::kSpace) {
+          running_ = !running_;
+        } else if (!running_ && key_event.key == vs::Key::kEscape) {
+          OnStart();
+        }
+      }
+    } else if (event.Type() == vs::EventType::kMouseClick) {
+      auto mouse_event = static_cast<const vs::MouseEvent &>(event);
+      if (!running_ && mouse_event.button == vs::MouseButton::kLeft) {
+        vs::Renderer::DrawPixel({vs::PixelBlock::kFull,
+                                 {vs::PixelColor::BG::kWhite},
+                                 {mouse_event.x, mouse_event.y}});
       }
     }
   }
 
   virtual void OnUpdate(const vs::Timestep &timestep) override {
     if (running_) {
-      if (1 / timestep > 60) {
-        std::this_thread::sleep_for(
-            std::chrono::duration<float>{1. / 60 - timestep});
-      }
       std::vector<vs::Pixel> new_state = vs::Renderer::GetBuffer();
 
       auto is_alive = [](const vs::Pixel &pixel) {
