@@ -32,7 +32,7 @@ class ExampleGame : public vs::Application {
 
     vs::Renderer::DrawBuffer(vs::StringToPixelBuffer(screen_, {0, 0, 16, 16}));
   }
-  virtual void OnUpdate(vs::Timestep timestep) override {
+  virtual void OnUpdate(const vs::Timestep &timestep) override {
     // vs::Renderer::DrawBuffer(vs::StringToPixelBuffer(screen_, {0, 0, 16,
     // 16}));
   }

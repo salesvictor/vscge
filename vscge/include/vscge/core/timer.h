@@ -6,7 +6,6 @@
 
 #include "vscge/core/core.h"
 
-
 namespace vs {
 struct VS_API Timestep {
   std::chrono::duration<float> duration;

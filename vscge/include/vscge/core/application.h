@@ -9,6 +9,7 @@
 #include "vscge/core/renderer.h"
 #include "vscge/core/timer.h"
 #include "vscge/core/types.h"
+#include "vscge/event/event.h"
 
 namespace vs {
 class VS_API Application {
@@ -21,7 +22,8 @@ class VS_API Application {
  private:
   void MainLoop();
   virtual void OnStart(){};
-  virtual void OnUpdate(Timestep timestep) = 0;
+  virtual void OnEvent(const Event &event){};
+  virtual void OnUpdate(const Timestep &timestep) = 0;
 
   HANDLE buffer_in_;
 };
