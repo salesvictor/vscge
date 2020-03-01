@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H
-#define VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H_
 
 #include <Windows.h>
 
@@ -32,4 +32,4 @@ void VS_API Render();
 }  // namespace Renderer
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H_

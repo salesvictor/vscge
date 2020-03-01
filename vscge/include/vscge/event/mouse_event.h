@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H
-#define VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H
+#ifndef VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H_
+#define VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H_
 
 #include "vscge/event/event.h"
 
@@ -10,15 +10,15 @@ enum class MouseButton {
 };
 
 struct MouseEvent : public Event {
-  MouseEvent(int x, int y, MouseButton button) : x{x}, y{y}, button{button} {};
+  MouseEvent(int x, int y, MouseButton button) : x{x}, y{y}, button{button} {}
 
   int x;
   int y;
   MouseButton button;
 
   static constexpr EventType TypeStatic() { return EventType::kMouseClick; }
-  virtual EventType Type() const override { return EventType::kMouseClick; }
+  EventType Type() const override { return EventType::kMouseClick; }
 };
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H
+#endif  // VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H_

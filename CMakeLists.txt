@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 set(VSCGE_ROOT ${CMAKE_CURRENT_BINARY_DIR})
+set(VSCGE_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(cmake/VSCGEVersion.cmake)
 

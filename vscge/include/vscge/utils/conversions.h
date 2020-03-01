@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_UTILS_PIXEL_CONVERTER_H
-#define VSCGE_INCLUDE_VSCGE_UTILS_PIXEL_CONVERTER_H
+#ifndef VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
+#define VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
 
 #include <string_view>
 #include <vector>
@@ -14,4 +14,4 @@ VS_API std::vector<Pixel> StringToPixelBuffer(std::wstring_view string_buffer,
                                        const Rect &region);
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_UTILS_PIXEL_CONVERTER_H
+#endif  // VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_

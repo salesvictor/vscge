@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H
-#define VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H
+#ifndef VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_
+#define VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_
 
 #include "vscge/core/core.h"
 
@@ -15,7 +15,7 @@ struct VS_API Event {
 
 class VS_API EventDispatcher {
  public:
-  EventDispatcher(Ref<Event> event) : event_{event} {};
+  explicit EventDispatcher(Ref<Event> event) : event_{event} {}
 
   template <typename Type, typename Fn>
   void Dispatch(const Fn& fn) {
@@ -28,4 +28,4 @@ class VS_API EventDispatcher {
 };
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H
+#endif  // VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_

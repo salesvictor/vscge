@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_CORE_CORE_H
-#define VSCGE_INCLUDE_VSCGE_CORE_CORE_H
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
 
 #ifdef _WIN32
 #  pragma warning(disable : 4251)
@@ -14,6 +14,7 @@
 
 #include <functional>
 #include <memory>
+#include <utility>
 
 #define VS_BIND_EVENT(fn) std::bind(&fn, this, std::placeholders::_1)
 #define VS_BIND_THREAD(fn) std::bind(&fn, this)
@@ -28,4 +29,4 @@ constexpr Ref<Type> CreateRef(Args&&... args) {
 }
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_CORE_CORE_H
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_CORE_H_

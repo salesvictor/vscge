@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_EVENT_KEY_EVENT_H
-#define VSCGE_INCLUDE_VSCGE_EVENT_KEY_EVENT_H
+#ifndef VSCGE_INCLUDE_VSCGE_EVENT_KEY_EVENT_H_
+#define VSCGE_INCLUDE_VSCGE_EVENT_KEY_EVENT_H_
 
 #include <Windows.h>
 
@@ -108,14 +108,14 @@ enum class Key {
 };
 
 struct VS_API KeyEvent : public Event {
-  KeyEvent(bool is_down, Key key) : is_down(is_down), key(key){};
+  KeyEvent(bool is_down, Key key) : is_down(is_down), key(key) {}
 
   bool is_down;
   Key key;
 
   static constexpr EventType TypeStatic() { return EventType::kKeyPressed; }
-  virtual EventType Type() const override { return EventType::kKeyPressed; }
+  EventType Type() const override { return EventType::kKeyPressed; }
 };
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_EVENT_KEY_EVENT_H
+#endif  // VSCGE_INCLUDE_VSCGE_EVENT_KEY_EVENT_H_

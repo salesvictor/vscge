@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_CORE_TIMER_H
-#define VSCGE_INCLUDE_VSCGE_CORE_TIMER_H
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_TIMER_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_TIMER_H_
 
 #include <chrono>
 #include <ratio>
@@ -13,7 +13,7 @@ struct VS_API Timestep {
   float GetSeconds();
   float GetMilliseconds();
 
-  operator float() const { return duration.count(); };
+  operator float() const { return duration.count(); }
 };
 
 class VS_API Timer {
@@ -27,4 +27,4 @@ class VS_API Timer {
 };
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_CORE_TIMER_H
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_TIMER_H_

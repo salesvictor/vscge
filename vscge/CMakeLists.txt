@@ -1,11 +1,24 @@
 message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION}")
 
-add_library(
-  vscge SHARED
+set(
+  VSCGE_SOURCE
   src/core/application.cc
   src/core/renderer.cc
   src/core/timer.cc
   src/utils/conversions.cc
+  include/vscge/core/application.h
+  include/vscge/core/core.h
+  include/vscge/core/renderer.h
+  include/vscge/core/timer.h
+  include/vscge/event/event.h
+  include/vscge/event/key_event.h
+  include/vscge/event/mouse_event.h
+  include/vscge/utils/conversions.h
+)
+
+add_library(
+  vscge SHARED
+  ${VSCGE_SOURCE}
 )
 
 find_program(
@@ -40,6 +53,20 @@ find_program(
   NAMES "cpplint"
 )
 message(STATUS "cpplint found: ${CPPLINT_EXE}")
+set(VSCGE_LINT_FILES "")
+foreach(file ${VSCGE_SOURCE})
+  list(APPEND VSCGE_LINT_FILES "vscge/${file}")
+endforeach()
+set(CPPLINT_FILTERS "-legal/copyright,-build/c++11")
+add_custom_target(
+  lint
+  ALL
+  COMMAND ${CPPLINT_EXE} "--filter=${CPPLINT_FILTERS}" ${VSCGE_LINT_FILES}
+  DEPENDS ${VSCGE_SOURCE}
+  WORKING_DIRECTORY "${VSCGE_SOURCE_ROOT}"
+  COMMENT "Linting project"
+  VERBATIM
+)
 find_program(
   CPPCHECK_EXE
   NAMES "cppcheck"
@@ -49,7 +76,6 @@ set_target_properties(
   vscge PROPERTIES
   CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
   CXX_CPPCHECK "${CPPCHECK_EXE}"
-  CXX_CPPLINT "${CPPLINT_EXE}"
 )
 target_include_directories(
   vscge

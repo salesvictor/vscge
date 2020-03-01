@@ -1,5 +1,5 @@
-#ifndef VSCGE_INCLUDE_VSCGE_CORE_TYPES_H
-#define VSCGE_INCLUDE_VSCGE_CORE_TYPES_H
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
 
 #include <Windows.h>
 
@@ -163,4 +163,4 @@ struct VS_API Window {
 };
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_CORE_TYPES_H
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
