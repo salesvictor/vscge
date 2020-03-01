@@ -113,6 +113,7 @@ struct VS_API KeyEvent : public Event {
   bool is_down;
   Key key;
 
+  static constexpr EventType TypeStatic() { return EventType::kKeyPressed; }
   virtual EventType Type() const override { return EventType::kKeyPressed; }
 };
 }  // namespace vs

@@ -30,23 +30,28 @@ class GameOfLife : public vs::Application {
     running_ = false;
   }
 
-  virtual void OnEvent(const vs::Event &event) {
-    if (event.Type() == vs::EventType::kKeyPressed) {
-      auto key_event = static_cast<const vs::KeyEvent &>(event);
-      if (key_event.is_down) {
-        if (key_event.key == vs::Key::kSpace) {
-          running_ = !running_;
-        } else if (!running_ && key_event.key == vs::Key::kEscape) {
-          OnStart();
-        }
+  virtual void OnEvent(vs::Ref<vs::Event> event) {
+    vs::EventDispatcher dispatcher{event};
+    dispatcher.Dispatch<vs::KeyEvent>(VS_BIND_EVENT(GameOfLife::OnKeyPress));
+    dispatcher.Dispatch<vs::MouseEvent>(
+        VS_BIND_EVENT(GameOfLife::OnMouseClick));
+  }
+
+  void OnKeyPress(vs::Ref<vs::KeyEvent> key_event) {
+    if (key_event->is_down) {
+      if (key_event->key == vs::Key::kSpace) {
+        running_ = !running_;
+      } else if (!running_ && key_event->key == vs::Key::kEscape) {
+        OnStart();
       }
-    } else if (event.Type() == vs::EventType::kMouseClick) {
-      auto mouse_event = static_cast<const vs::MouseEvent &>(event);
-      if (!running_ && mouse_event.button == vs::MouseButton::kLeft) {
-        vs::Renderer::DrawPixel({vs::PixelBlock::kFull,
-                                 {vs::PixelColor::BG::kWhite},
-                                 {mouse_event.x, mouse_event.y}});
-      }
+    }
+  }
+
+  void OnMouseClick(vs::Ref<vs::MouseEvent> mouse_event) {
+    if (!running_ && mouse_event->button == vs::MouseButton::kLeft) {
+      vs::Renderer::DrawPixel({vs::PixelBlock::kFull,
+                               {vs::PixelColor::BG::kWhite},
+                               {mouse_event->x, mouse_event->y}});
     }
   }
 

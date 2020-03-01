@@ -16,6 +16,7 @@ struct MouseEvent : public Event {
   int y;
   MouseButton button;
 
+  static constexpr EventType TypeStatic() { return EventType::kMouseClick; }
   virtual EventType Type() const override { return EventType::kMouseClick; }
 };
 }  // namespace vs

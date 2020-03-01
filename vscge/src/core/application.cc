@@ -2,8 +2,8 @@
 
 #include <Windows.h>
 
-#include <array>
 #include <algorithm>
+#include <array>
 #include <string>
 #include <thread>
 #include <vector>
@@ -27,8 +27,8 @@ Application::Application(const Size &screen_size, const Size &font_size)
 void Application::Start() {
   OnStart();
 
-  std::thread game_loop(&Application::MainLoop, this);
-  std::thread event_loop(&Application::EventListener, this);
+  std::thread game_loop(VS_BIND_THREAD(Application::MainLoop));
+  std::thread event_loop(VS_BIND_THREAD(Application::EventListener));
   game_loop.join();
   event_loop.join();
 }
@@ -57,8 +57,7 @@ void Application::EventListener() {
     GetNumberOfConsoleInputEvents(buffer_in_, &num_events);
 
     std::array<INPUT_RECORD, kMaxEvents> event_buffer;
-    ReadConsoleInput(buffer_in_, event_buffer.data(), num_events,
-                     &num_events);
+    ReadConsoleInput(buffer_in_, event_buffer.data(), num_events, &num_events);
     for (size_t i = 0; i < num_events; ++i) {
       auto event = event_buffer.at(i);
       switch (event.EventType) {
@@ -66,7 +65,7 @@ void Application::EventListener() {
           KEY_EVENT_RECORD record = event.Event.KeyEvent;
           KeyEvent event = {static_cast<bool>(record.bKeyDown),
                             static_cast<vs::Key>(record.wVirtualKeyCode)};
-          OnEvent(event);
+          OnEvent(CreateRef<KeyEvent>(event));
 
           break;
         }
@@ -79,7 +78,7 @@ void Application::EventListener() {
           MouseEvent event = {static_cast<int>(record.dwMousePosition.X),
                               static_cast<int>(record.dwMousePosition.Y),
                               button};
-          OnEvent(event);
+          OnEvent(CreateRef<MouseEvent>(event));
 
           break;
         }
