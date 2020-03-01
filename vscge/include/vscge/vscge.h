@@ -10,4 +10,4 @@
 #include "vscge/event/mouse_event.h"
 #include "vscge/utils/conversions.h"
 
-#endif VSCGE_INCLUDE_VSCGE_VSCGE_H_
+#endif  // VSCGE_INCLUDE_VSCGE_VSCGE_H_

@@ -6,6 +6,8 @@ set(
   src/core/renderer.cc
   src/core/timer.cc
   src/utils/conversions.cc
+  include/vscge/version.h
+  include/vscge/vscge.h
   include/vscge/core/application.h
   include/vscge/core/core.h
   include/vscge/core/renderer.h
