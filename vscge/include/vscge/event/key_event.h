@@ -106,6 +106,7 @@ enum class Key {
   kNumlock = VK_NUMLOCK,
   kScroll = VK_SCROLL,
 };
+
 struct VS_API KeyEvent : public Event {
   KeyEvent(bool is_down, Key key) : is_down(is_down), key(key){};
 

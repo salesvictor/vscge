@@ -21,6 +21,8 @@ class VS_API Application {
 
  private:
   void MainLoop();
+  void EventListener();
+
   virtual void OnStart(){};
   virtual void OnEvent(const Event &event){};
   virtual void OnUpdate(const Timestep &timestep) = 0;

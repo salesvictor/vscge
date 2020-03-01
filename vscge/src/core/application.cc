@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 
+#include <array>
 #include <algorithm>
 #include <string>
 #include <thread>
@@ -27,7 +28,9 @@ void Application::Start() {
   OnStart();
 
   std::thread game_loop(&Application::MainLoop, this);
+  std::thread event_loop(&Application::EventListener, this);
   game_loop.join();
+  event_loop.join();
 }
 
 void Application::MainLoop() {
@@ -41,18 +44,28 @@ void Application::MainLoop() {
 
     timer.Start();
 
+    OnUpdate(timestep);
+
+    Renderer::Render();
+  }
+}
+
+void Application::EventListener() {
+  constexpr size_t kMaxEvents = 32;
+  while (true) {
     DWORD num_events;
     GetNumberOfConsoleInputEvents(buffer_in_, &num_events);
 
-    INPUT_RECORD event_buffer[32];  // NOLINT
-    ReadConsoleInput(buffer_in_, event_buffer, num_events,
-                     &num_events);  // NOLINT
-    for (int i = 0; i < num_events; ++i) {
-      auto event = event_buffer[i];
+    std::array<INPUT_RECORD, kMaxEvents> event_buffer;
+    ReadConsoleInput(buffer_in_, event_buffer.data(), num_events,
+                     &num_events);
+    for (size_t i = 0; i < num_events; ++i) {
+      auto event = event_buffer.at(i);
       switch (event.EventType) {
         case KEY_EVENT: {
           KEY_EVENT_RECORD record = event.Event.KeyEvent;
-          KeyEvent event = {(bool)record.bKeyDown, (vs::Key)record.wVirtualKeyCode};
+          KeyEvent event = {static_cast<bool>(record.bKeyDown),
+                            static_cast<vs::Key>(record.wVirtualKeyCode)};
           OnEvent(event);
 
           break;
@@ -63,27 +76,30 @@ void Application::MainLoop() {
               (record.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
                   ? MouseButton::kLeft
                   : MouseButton::kRight;
-          MouseEvent event = {(int)record.dwMousePosition.X,
-                              (int)record.dwMousePosition.Y, button};
+          MouseEvent event = {static_cast<int>(record.dwMousePosition.X),
+                              static_cast<int>(record.dwMousePosition.Y),
+                              button};
           OnEvent(event);
 
           break;
         }
         case WINDOW_BUFFER_SIZE_EVENT: {
           WINDOW_BUFFER_SIZE_RECORD record = event.Event.WindowBufferSizeEvent;
+
+          break;
         }
         case MENU_EVENT: {
           MENU_EVENT_RECORD record = event.Event.MenuEvent;
+
+          break;
         }
         case FOCUS_EVENT: {
           FOCUS_EVENT_RECORD record = event.Event.FocusEvent;
+
+          break;
         }
       }
     }
-
-    OnUpdate(timestep);
-
-    Renderer::Render();
   }
 }
 }  // namespace vs
