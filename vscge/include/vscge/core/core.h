@@ -18,8 +18,8 @@
 #include <memory>
 #include <utility>
 
-#define VS_BIND_EVENT(fn) std::bind(&fn, this, std::placeholders::_1)
-#define VS_BIND_THREAD(fn) std::bind(&fn, this)
+#define VS_BIND_EVENT(fn) [this](auto ev) { fn(ev); }
+#define VS_BIND_THREAD(fn) [this]() { fn(); }
 
 namespace vs {
 template <class Type>

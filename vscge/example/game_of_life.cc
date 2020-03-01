@@ -32,9 +32,8 @@ class GameOfLife : public vs::Application {
 
   virtual void OnEvent(vs::Ref<vs::Event> event) {
     vs::EventDispatcher dispatcher{event};
-    dispatcher.Dispatch<vs::KeyEvent>(VS_BIND_EVENT(GameOfLife::OnKeyPress));
-    dispatcher.Dispatch<vs::MouseEvent>(
-        VS_BIND_EVENT(GameOfLife::OnMouseClick));
+    dispatcher.Dispatch<vs::KeyEvent>(VS_BIND_EVENT(OnKeyPress));
+    dispatcher.Dispatch<vs::MouseEvent>(VS_BIND_EVENT(OnMouseClick));
   }
 
   void OnKeyPress(vs::Ref<vs::KeyEvent> key_event) {
