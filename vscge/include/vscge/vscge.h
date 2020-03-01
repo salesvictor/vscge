@@ -1,3 +1,5 @@
+// Copyright 2020 Victor Sales
+
 #ifndef VSCGE_INCLUDE_VSCGE_VSCGE_H_
 #define VSCGE_INCLUDE_VSCGE_VSCGE_H_
 

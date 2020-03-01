@@ -24,10 +24,10 @@ add_library(
 find_program(
   CLANG_TIDY_EXE
   NAMES "clang-tidy"
-  DOC "Path to clang-tidy executable"
+  DOC "Path to clang-tidy"
 )
 if(NOT CLANG_TIDY_EXE)
-  message(STATUS "clang-tidy not found.")
+  message(STATUS "clang-tidy not found")
 else()
   message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
   set(CLANG_TIDY_CHECKS "-*")
@@ -51,27 +51,33 @@ set_target_properties(
 find_program(
   CPPLINT_EXE
   NAMES "cpplint"
+  DOC "Path to cpplint"
 )
-message(STATUS "cpplint found: ${CPPLINT_EXE}")
-set(VSCGE_LINT_FILES "")
-foreach(file ${VSCGE_SOURCE})
-  list(APPEND VSCGE_LINT_FILES "vscge/${file}")
-endforeach()
-set(CPPLINT_FILTERS "-legal/copyright,-build/c++11")
-add_custom_target(
-  lint
-  ALL
-  COMMAND ${CPPLINT_EXE} "--filter=${CPPLINT_FILTERS}" ${VSCGE_LINT_FILES}
-  DEPENDS ${VSCGE_SOURCE}
-  WORKING_DIRECTORY "${VSCGE_SOURCE_ROOT}"
-  COMMENT "Linting project"
-  VERBATIM
-)
+if(NOT CPPLINT_EXE)
+  message(STATUS "cpplint not found")
+else()
+  message(STATUS "cpplint found: ${CPPLINT_EXE}")
+  message(STATUS "configuring cpplint")
+  set(VSCGE_LINT_FILES "")
+  foreach(file ${VSCGE_SOURCE})
+    list(APPEND VSCGE_LINT_FILES "vscge/${file}")
+  endforeach()
+  set(CPPLINT_FILTERS "-build/c++11")
+  add_custom_target(
+    lint
+    ALL
+    COMMAND ${CPPLINT_EXE} "--filter=${CPPLINT_FILTERS}" ${VSCGE_LINT_FILES}
+    DEPENDS ${VSCGE_SOURCE}
+    WORKING_DIRECTORY "${VSCGE_SOURCE_ROOT}"
+    COMMENT "Linting project"
+    VERBATIM
+  )
+  message(STATUS "configuring cpplint - done")
+endif()
 find_program(
   CPPCHECK_EXE
   NAMES "cppcheck"
 )
-message(STATUS "cppcheck found: ${CPPCHECK_EXE}")
 set_target_properties(
   vscge PROPERTIES
   CXX_CLANG_TIDY "${DO_CLANG_TIDY}"

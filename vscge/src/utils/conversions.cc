@@ -1,3 +1,5 @@
+// Copyright 2020 Victor Sales
+
 #include "vscge/utils/conversions.h"
 
 #include <cassert>
