@@ -59,7 +59,7 @@ void Initialize(const HANDLE &handle, const Size &window_size,
   internals.screen_buffer.reserve(internals.window.size.Area());
   for (int i = 0; i < internals.window.size.Area(); ++i) {
     internals.screen_buffer.emplace_back(Pixel(
-        PixelBlock::kEmpty, BufferIndexToPoint(Rect(internals.window), i)));
+        BufferIndexToPoint(Rect(internals.window), i), {PixelBlock::kEmpty}));
   }
 }
 
@@ -79,7 +79,7 @@ void DrawPixel(const Pixel &pixel) {
 }
 
 void ClearScreen() {
-  for(auto &pixel : internals.screen_buffer) {
+  for (auto &pixel : internals.screen_buffer) {
     pixel.Char() = PixelBlock::kEmpty;
     pixel.Color() = PixelColor();
   }
@@ -90,7 +90,7 @@ void DrawBuffer(const std::vector<Pixel> &buffer) {
   for (const auto &pixel : buffer) DrawPixel(pixel);
 }
 
-void DrawLine(const Point &p1, const Point &p2, const vs::PixelBlock &block) {
+void DrawLine(const Point &p1, const Point &p2, const PixelProps &props) {
   auto isLeft = [](const Point &a, const Point &b) {
     if (a.x == b.x) return a.y < b.y;
 
@@ -102,7 +102,7 @@ void DrawLine(const Point &p1, const Point &p2, const vs::PixelBlock &block) {
   if (p_left.x == p_right.x) {
     // Treat vertical lines
     for (int y = p_left.y; y <= p_right.y; ++y) {
-      DrawPixel(Pixel(block, {p_left.x, y}));
+      DrawPixel(Pixel({p_left.x, y}, props));
     }
   } else {
     int dx = p_right.x - p_left.x;
@@ -110,33 +110,33 @@ void DrawLine(const Point &p1, const Point &p2, const vs::PixelBlock &block) {
 
     for (int x = p_left.x; x <= p_right.x; ++x) {
       int y = dy / dx * (x - p_left.x) + p_left.y;
-      DrawPixel(Pixel(block, {x, y}));
+      DrawPixel(Pixel({x, y}, props));
     }
   }
 }
 
-void DrawRect(const Rect &rect, const vs::PixelBlock &block) {
+void DrawRect(const Rect &rect, const vs::PixelProps &props) {
   int x0 = rect.x;
   int y0 = rect.y;
   int x1 = rect.x + rect.width - 1;
   int y1 = rect.y + rect.height - 1;
 
-  DrawLine({x0, y0}, {x1, y0}, block);  // Top
-  DrawLine({x1, y0}, {x1, y1}, block);  // Right
-  DrawLine({x1, y1}, {x0, y1}, block);  // Bottom
-  DrawLine({x0, y1}, {x0, y0}, block);  // Left
+  DrawLine({x0, y0}, {x1, y0}, props);  // Top
+  DrawLine({x1, y0}, {x1, y1}, props);  // Right
+  DrawLine({x1, y1}, {x0, y1}, props);  // Bottom
+  DrawLine({x0, y1}, {x0, y0}, props);  // Left
 }
 
-void FillRect(const Rect &rect, const vs::PixelBlock &block) {
+void FillRect(const Rect &rect, const vs::PixelProps &props) {
   for (int y = rect.y; y < internals.window.size.height; ++y) {
-    DrawLine({rect.x, y}, {rect.x + rect.width, y}, block);
+    DrawLine({rect.x, y}, {rect.x + rect.width, y}, props);
   }
 }
 
 void Render() {
   std::vector<CHAR_INFO> write_buffer;
   for (const auto &pixel : internals.screen_buffer) {
-    write_buffer.emplace_back(pixel.info);
+    write_buffer.emplace_back(pixel.props);
   }
   WriteConsoleOutput(internals.window.handle, write_buffer.data(),
                      internals.window.size, {0, 0}, &internals.window_wrapper);

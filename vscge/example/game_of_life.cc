@@ -49,9 +49,10 @@ class GameOfLife : public vs::Application {
 
   void OnMouseClick(vs::Ref<vs::MouseEvent> mouse_event) {
     if (!running_ && mouse_event->button == vs::MouseButton::kLeft) {
-      vs::Renderer::DrawPixel({vs::PixelBlock::kFull,
-                               {vs::PixelColor::BG::kWhite},
-                               {mouse_event->x, mouse_event->y}});
+      constexpr vs::PixelProps full_white = {{vs::PixelColor::BG::kWhite},
+                                             vs::PixelBlock::kFull};
+      vs::Renderer::DrawPixel(
+          vs::Pixel(vs::Point{mouse_event->x, mouse_event->y}, full_white));
     }
   }
 
@@ -94,7 +95,7 @@ class GameOfLife : public vs::Application {
           }
         } else if (ch == vs::PixelBlock::kFull) {
           if (count < 2 || count > 3) {
-            pixel.Char() = L' ';
+            pixel.Char() = vs::PixelBlock::kEmpty;
             pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kBlack};
           }
         }

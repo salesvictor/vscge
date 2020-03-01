@@ -8,7 +8,6 @@
 #include <thread>
 #include <vector>
 
-#include "vscge/core/consts.h"
 #include "vscge/core/timer.h"
 #include "vscge/event/event.h"
 #include "vscge/event/key_event.h"

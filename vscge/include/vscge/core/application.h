@@ -23,8 +23,8 @@ class VS_API Application {
   void MainLoop();
   void EventListener();
 
-  virtual void OnStart(){};
-  virtual void OnEvent(Ref<Event> event){};
+  virtual void OnStart() {}
+  virtual void OnEvent(Ref<Event> event) {}
   virtual void OnUpdate(const Timestep &timestep) = 0;
 
   HANDLE buffer_in_;

@@ -28,7 +28,7 @@ std::vector<Pixel> StringToPixelBuffer(std::wstring_view string_buffer,
 
   for (size_t i = 0; i < string_buffer.size(); ++i) {
     Point location = BufferIndexToPoint(region, i);
-    buffer.emplace_back(Pixel(string_buffer[i], location));
+    buffer.emplace_back(Pixel(location, PixelProps{string_buffer[i]}));
   }
 
   return buffer;

@@ -24,11 +24,9 @@ void VS_API ClearScreen();
 void VS_API DrawPixel(const Pixel &pixel);
 void VS_API DrawBuffer(const std::vector<Pixel> &buffer);
 void VS_API DrawLine(const Point &p1, const Point &p2,
-                     const PixelBlock &block = PixelBlock::kFull);
-void VS_API DrawRect(const Rect &rect,
-                     const PixelBlock &block = PixelBlock::kFull);
-void VS_API FillRect(const Rect &rect,
-                     const PixelBlock &block = PixelBlock::kFull);
+                     const PixelProps &props = {});
+void VS_API DrawRect(const Rect &rect, const PixelProps &props = {});
+void VS_API FillRect(const Rect &rect, const PixelProps &props = {});
 
 void VS_API Render();
 }  // namespace Renderer

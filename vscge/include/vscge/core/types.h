@@ -3,7 +3,6 @@
 
 #include <Windows.h>
 
-#include "vscge/core/consts.h"
 #include "vscge/core/core.h"
 
 namespace vs {
@@ -38,7 +37,7 @@ struct VS_API Rect {
   inline Point TopLeft() const { return {x, y}; };
   inline Point BottomRight() const { return {x + width, y + height}; };
 
-  inline bool Contains(const Point& p) const {
+  inline bool Contains(const Point &p) const {
     return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height;
   };
 
@@ -46,6 +45,21 @@ struct VS_API Rect {
     return {(SHORT)x, (SHORT)y, (SHORT)(x + width - 1),
             (SHORT)(y + height - 1)};
   };
+};
+
+enum PixelBlock : wchar_t {
+  kEmpty = L' ',
+  kUpperHalf = 0x2580,           // ▀
+  kLowerHalf = 0x2584,           // ▄
+  kFull = 0x2588,                // █
+  kLightShade = 0x2591,          // ░
+  kMediumShade = 0x2592,         // ▒
+  kDarkShade = 0x2593,           // ▓
+  kFisheye = 0x25C9,             // ◉
+  kCircleVerticalFill = 0x25CD,  // ◍
+  kBlackCircle = 0x25CF,         // ●
+  kLargeCircle = 0x25EF,         // ◯
+  kLargeBlackCircle = 0x2B24,    // ⬤
 };
 
 struct VS_API PixelColor {
@@ -89,12 +103,34 @@ struct VS_API PixelColor {
 
   int color;
 
-  PixelColor() : color((int)BG::kBlack | (int)FG::kWhite){};
-  PixelColor(BG back) : color((int)back | (int)FG::kWhite){};
-  PixelColor(FG fore) : color((int)BG::kBlack | (int)fore){};
-  PixelColor(BG back, FG fore) : color((int)back | (int)fore){};
+  constexpr PixelColor() : color((int)BG::kBlack | (int)FG::kWhite) {}
+  constexpr PixelColor(const BG &back) : color((int)back | (int)FG::kWhite) {}
+  constexpr PixelColor(const FG &fore) : color((int)BG::kBlack | (int)fore) {}
+  constexpr PixelColor(const BG &back, const FG &fore)
+      : color((int)back | (int)fore) {}
 
   operator WORD() const { return (WORD)color; };
+};
+
+struct VS_API PixelProps {
+  PixelColor color;
+  union {
+    PixelBlock block;
+    wchar_t ch;
+  };
+
+  constexpr PixelProps() : ch(PixelBlock::kFull), color() {}
+  constexpr PixelProps(const PixelBlock &block)
+      : block(block), color(PixelColor::BG::kWhite) {}
+  constexpr PixelProps(const wchar_t &ch) : ch(ch), color() {}
+  constexpr PixelProps(const PixelColor &color, const PixelBlock &block)
+      : color(color), block(block) {}
+  constexpr PixelProps(const PixelColor &color, const wchar_t &ch)
+      : color(color), ch(ch) {}
+
+  operator CHAR_INFO() const {
+    return {.Char = {.UnicodeChar = ch}, .Attributes = color};
+  }
 };
 
 struct VS_API Pixel {
@@ -107,26 +143,16 @@ struct VS_API Pixel {
     Point location;
   };
 
-  CHAR_INFO info;
+  PixelProps props;
 
-  Pixel(wchar_t ch, Point location) : location(location) {
-    info = {
-        .Char = {.UnicodeChar = ch},
-        .Attributes = PixelColor{},
-    };
-  }
-  Pixel(wchar_t ch, PixelColor color, Point location) : location(location) {
-    info = {
-        .Char = {.UnicodeChar = ch},
-        .Attributes = color,
-    };
-  }
+  constexpr Pixel(const Point &location, const PixelProps &props)
+      : location(location), props(props) {}
 
-  wchar_t& Char() { return info.Char.UnicodeChar; };
-  const wchar_t& Char() const { return info.Char.UnicodeChar; };
+  PixelBlock &Char() { return props.block; }
+  const PixelBlock &Char() const { return props.block; }
 
-  WORD& Color() { return info.Attributes; };
-  const WORD& Color() const { return info.Attributes; };
+  PixelColor &Color() { return props.color; };
+  const PixelColor &Color() const { return props.color; };
 };
 
 struct VS_API Window {
