@@ -5,8 +5,6 @@ set(VSCGE_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(cmake/VSCGEVersion.cmake)
 
-message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION}")
-
 project(
   vscge
   VERSION ${VSCGE_VERSION}

@@ -1,5 +1,22 @@
+set(VERSION_FILE "vscge/include/vscge/version.h")
+
+find_package(Git)
+if(Git_FOUND)
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} diff --name-only
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE CHANGED_FILES
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  string(REPLACE "\n" ";" CHANGED_FILES_LIST ${CHANGED_FILES})
+  list(LENGTH CHANGED_FILES_LIST CHANGE_SIZE)
+  list(FIND CHANGED_FILES_LIST ${VERSION_FILE} VERSION_INDEX)
+  if(${CHANGE_SIZE} GREATER 0 AND ${VERSION_INDEX} EQUAL -1)
+    message(FATAL_ERROR "Detected ${CHANGE_SIZE} file changes, but no version change, update the version")
+  endif()
+endif()
 file(
-  STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/vscge/include/vscge/version.h" VSCGE_VERSION_PARTS
+  STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/${VERSION_FILE}" VSCGE_VERSION_PARTS
   REGEX "#define VSCGE_VERSION_[A-Z]+[ ]+"
 )
 
