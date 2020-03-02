@@ -8,11 +8,13 @@ if(Git_FOUND)
     OUTPUT_VARIABLE CHANGED_FILES
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  string(REPLACE "\n" ";" CHANGED_FILES_LIST ${CHANGED_FILES})
-  list(LENGTH CHANGED_FILES_LIST CHANGE_SIZE)
-  list(FIND CHANGED_FILES_LIST ${VERSION_FILE} VERSION_INDEX)
-  if(${CHANGE_SIZE} GREATER 0 AND ${VERSION_INDEX} EQUAL -1)
-    message(FATAL_ERROR "Detected ${CHANGE_SIZE} file changes, but no version change, update the version")
+  if(NOT CHANGED_FILES STREQUAL "")
+    string(REPLACE "\n" ";" CHANGED_FILES_LIST ${CHANGED_FILES})
+    list(LENGTH CHANGED_FILES_LIST CHANGE_SIZE)
+    list(FIND CHANGED_FILES_LIST ${VERSION_FILE} VERSION_INDEX)
+    if(${CHANGE_SIZE} GREATER 0 AND ${VERSION_INDEX} EQUAL -1)
+      message(FATAL_ERROR "Detected ${CHANGE_SIZE} file changes, but no version change, update the version")
+    endif()
   endif()
 endif()
 file(
