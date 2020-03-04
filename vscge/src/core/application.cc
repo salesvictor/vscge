@@ -26,15 +26,16 @@
 #include "vscge/event/event.h"
 #include "vscge/event/key_event.h"
 #include "vscge/event/mouse_event.h"
+#include "vscge/logger/logger.h"
 #include "vscge/utils/conversions.h"
 
 namespace vs {
 Application::Application(const Size &screen_size, const Size &font_size)
     : buffer_in_(GetStdHandle(STD_INPUT_HANDLE)) {
-  buffer_in_ = GetStdHandle(STD_INPUT_HANDLE);
   SetConsoleMode(buffer_in_, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT |
                                  ENABLE_MOUSE_INPUT);
   Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size, font_size);
+  Logger::Initialize();
 }
 
 void Application::Start() {

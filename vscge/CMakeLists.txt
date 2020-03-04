@@ -20,6 +20,7 @@ set(
   src/core/renderer.cc
   src/core/timer.cc
   src/utils/conversions.cc
+  include/vscge/logger/logger.h
   include/vscge/version.h
   include/vscge/vscge.h
   include/vscge/core/application.h
@@ -145,3 +146,5 @@ if(BUILD_VSCGE_EXAMPLES)
 endif()
 
 message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION} - done")
+
+add_executable(Logger src/logger/logger.cc)
