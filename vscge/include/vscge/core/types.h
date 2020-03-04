@@ -46,16 +46,16 @@ struct VS_API Rect {
     Size size;
   };
 
-  inline int BufferSize() const { return width * height; };
+  int BufferSize() const { return width * height; };
 
-  inline Point TopLeft() const { return {x, y}; };
-  inline Point BottomRight() const { return {x + width, y + height}; };
+  Point TopLeft() const { return {x, y}; };
+  Point BottomRight() const { return {x + width, y + height}; };
 
-  inline bool Contains(const Point &p) const {
+  bool Contains(const Point &p) const {
     return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height;
   };
 
-  inline operator SMALL_RECT() const {
+  operator SMALL_RECT() const {
     return {(SHORT)x, (SHORT)y, (SHORT)(x + width - 1),
             (SHORT)(y + height - 1)};
   };

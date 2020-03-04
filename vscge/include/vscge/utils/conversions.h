@@ -25,7 +25,7 @@ VS_API Point BufferIndexToPoint(const Rect &region, int i);
 VS_API int PointToBufferIndex(const Rect &region, const Point &point);
 
 VS_API std::vector<Pixel> StringToPixelBuffer(std::wstring_view string_buffer,
-                                       const Rect &region);
+                                              const Rect &region);
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
