@@ -15,23 +15,59 @@
 #ifndef VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H_
 #define VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H_
 
+#include "vscge/core/types.h"
 #include "vscge/event/event.h"
 
 namespace vs {
-enum class MouseButton {
-  kLeft = FROM_LEFT_1ST_BUTTON_PRESSED,
-  kRight = RIGHTMOST_BUTTON_PRESSED,
+struct VS_API MouseButtons {
+  bool left = false;
+  bool right = false;
 };
 
-struct MouseEvent : public Event {
-  MouseEvent(int x, int y, MouseButton button) : x{x}, y{y}, button{button} {}
+struct VS_API MouseEvent : public Event {
+  MouseEvent() = default;
+  MouseEvent(Point position, MouseButtons buttons)
+      : position{position}, buttons{buttons} {}
 
-  int x;
-  int y;
-  MouseButton button;
+  union {
+    struct {
+      int x;
+      int y;
+    };
+    Point position;
+  };
+  MouseButtons buttons;
 
-  static constexpr EventType TypeStatic() { return EventType::kMouseClick; }
-  EventType Type() const override { return EventType::kMouseClick; }
+  static constexpr EventType TypeStatic() { return EventType::kMouse; }
+  EventType Type() const override { return EventType::kMouse; }
+};
+
+struct VS_API MouseMovedEvent : public MouseEvent {
+  MouseMovedEvent(Point before, Point after, MouseButtons buttons)
+      : MouseEvent(after, buttons), movement(after - before) {}
+
+  Point movement;
+
+  static constexpr EventType TypeStatic() { return EventType::kMouseMoved; }
+  EventType Type() const override { return EventType::kMouseMoved; }
+};
+
+struct VS_API MouseButtonPressedEvent : public MouseEvent {
+  using MouseEvent::MouseEvent;  // Nothing new to add.
+  static constexpr EventType TypeStatic() {
+    return EventType::kMouseButtonPressed;
+  }
+  EventType Type() const override { return EventType::kMouseButtonPressed; }
+};
+
+struct VS_API MouseButtonReleasedEvent : public MouseEvent {
+  using MouseEvent::MouseEvent;  // Nothing new to add.
+  static constexpr EventType TypeStatic() {
+    return EventType::kMouseButtonReleased;
+  }
+  EventType Type() const override {
+    return EventType::kMouseButtonReleased;
+  }
 };
 }  // namespace vs
 

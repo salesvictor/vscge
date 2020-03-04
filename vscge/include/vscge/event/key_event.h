@@ -122,13 +122,25 @@ enum class Key {
 };
 
 struct VS_API KeyEvent : public Event {
-  KeyEvent(bool is_down, Key key) : is_down(is_down), key(key) {}
+  KeyEvent() = default;
+  explicit KeyEvent(Key key) : key(key) {}
 
-  bool is_down;
   Key key;
 
+  static constexpr EventType TypeStatic() { return EventType::kKey; }
+  EventType Type() const override { return EventType::kKey; }
+};
+
+struct VS_API KeyPressedEvent : public KeyEvent {
+  using KeyEvent::KeyEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() { return EventType::kKeyPressed; }
   EventType Type() const override { return EventType::kKeyPressed; }
+};
+
+struct VS_API KeyReleasedEvent : public KeyEvent {
+  using KeyEvent::KeyEvent;  // Nothing new to add.
+  static constexpr EventType TypeStatic() { return EventType::kKeyReleased; }
+  EventType Type() const override { return EventType::kKeyReleased; }
 };
 }  // namespace vs
 

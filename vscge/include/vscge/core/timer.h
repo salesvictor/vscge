@@ -24,10 +24,10 @@ namespace vs {
 struct VS_API Timestep {
   std::chrono::duration<float> duration;
 
-  float GetSeconds();
-  float GetMilliseconds();
+  constexpr float GetSeconds();
+  constexpr float GetMilliseconds();
 
-  operator float() const { return duration.count(); }
+  constexpr operator float() const { return duration.count(); }
 };
 
 class VS_API Timer {

@@ -46,22 +46,22 @@ class GameOfLife : public vs::Application {
 
   virtual void OnEvent(vs::Ref<vs::Event> event) {
     vs::EventDispatcher dispatcher{event};
-    dispatcher.Dispatch<vs::KeyEvent>(VS_BIND_EVENT(OnKeyPress));
-    dispatcher.Dispatch<vs::MouseEvent>(VS_BIND_EVENT(OnMouseClick));
+    dispatcher.Dispatch<vs::KeyPressedEvent>(VS_BIND_EVENT(OnKeyPress));
+    dispatcher.Dispatch<vs::MouseButtonPressedEvent>(
+        VS_BIND_EVENT(OnMouseClick));
+    dispatcher.Dispatch<vs::MouseMovedEvent>(VS_BIND_EVENT(OnMouseClick));
   }
 
-  void OnKeyPress(vs::Ref<vs::KeyEvent> key_event) {
-    if (key_event->is_down) {
-      if (key_event->key == vs::Key::kSpace) {
-        running_ = !running_;
-      } else if (!running_ && key_event->key == vs::Key::kEscape) {
-        OnStart();
-      }
+  void OnKeyPress(vs::Ref<vs::KeyPressedEvent> key_event) {
+    if (key_event->key == vs::Key::kSpace) {
+      running_ = !running_;
+    } else if (!running_ && key_event->key == vs::Key::kEscape) {
+      OnStart();
     }
   }
 
   void OnMouseClick(vs::Ref<vs::MouseEvent> mouse_event) {
-    if (!running_ && mouse_event->button == vs::MouseButton::kLeft) {
+    if (!running_ && mouse_event->buttons.left) {
       constexpr vs::PixelProps full_white = {{vs::PixelColor::BG::kWhite},
                                              vs::PixelBlock::kFull};
       vs::Renderer::DrawPixel(

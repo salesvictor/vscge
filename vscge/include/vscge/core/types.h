@@ -23,14 +23,40 @@ namespace vs {
 struct VS_API Point {
   int x;
   int y;
+
+  Point() = default;
+  constexpr Point(const int &x, const int &y) : x(x), y(y) {}
+  constexpr Point(const COORD &coord) : x(coord.X), y(coord.Y) {}
+
+  Point &operator+=(const Point &other) {
+    x += other.x;
+    y += other.y;
+
+    return *this;
+  };
+  friend Point operator+(Point lhs, const Point &rhs) {
+    lhs += rhs;
+    return lhs;
+  };
+
+  Point &operator-=(const Point &other) {
+    x -= other.x;
+    y -= other.y;
+
+    return *this;
+  };
+  friend Point operator-(Point lhs, const Point &rhs) {
+    lhs -= rhs;
+    return lhs;
+  };
 };
 
 struct VS_API Size {
   int width;
   int height;
 
-  inline int Area() const { return width * height; };
-  operator COORD() const { return {(SHORT)width, (SHORT)height}; };
+  constexpr int Area() const { return width * height; };
+  constexpr operator COORD() const { return {(SHORT)width, (SHORT)height}; };
 };
 
 struct VS_API Rect {
@@ -46,21 +72,22 @@ struct VS_API Rect {
     Size size;
   };
 
-  int BufferSize() const { return width * height; };
+  constexpr int BufferSize() const { return width * height; };
 
-  Point TopLeft() const { return {x, y}; };
-  Point BottomRight() const { return {x + width, y + height}; };
+  constexpr Point TopLeft() const { return {x, y}; };
+  constexpr Point BottomRight() const { return {x + width, y + height}; };
 
-  bool Contains(const Point &p) const {
+  constexpr bool Contains(const Point &p) const {
     return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height;
   };
 
-  operator SMALL_RECT() const {
+  constexpr operator SMALL_RECT() const {
     return {(SHORT)x, (SHORT)y, (SHORT)(x + width - 1),
             (SHORT)(y + height - 1)};
   };
 };
 
+// TODO(Victor): Move to a platform layer.
 enum PixelBlock : wchar_t {
   kEmpty = L' ',
   kUpperHalf = 0x2580,           // ▀
@@ -76,6 +103,7 @@ enum PixelBlock : wchar_t {
   kLargeBlackCircle = 0x2B24,    // ⬤
 };
 
+// TODO(Victor): Move to a platform layer.
 struct VS_API PixelColor {
   enum class FG {
     kBlack = 0X0000,
@@ -123,9 +151,10 @@ struct VS_API PixelColor {
   constexpr PixelColor(const BG &back, const FG &fore)
       : color((int)back | (int)fore) {}
 
-  operator WORD() const { return (WORD)color; };
+  constexpr operator WORD() const { return (WORD)color; };
 };
 
+// TODO(Victor): Move to a platform layer.
 struct VS_API PixelProps {
   PixelColor color;
   union {
@@ -142,7 +171,7 @@ struct VS_API PixelProps {
   constexpr PixelProps(const PixelColor &color, const wchar_t &ch)
       : color(color), ch(ch) {}
 
-  operator CHAR_INFO() const {
+  constexpr operator CHAR_INFO() const {
     return {.Char = {.UnicodeChar = ch}, .Attributes = color};
   }
 };
@@ -162,18 +191,19 @@ struct VS_API Pixel {
   constexpr Pixel(const Point &location, const PixelProps &props)
       : location(location), props(props) {}
 
+  // TODO(Victor): Move to a platform layer.
   PixelBlock &Char() { return props.block; }
-  const PixelBlock &Char() const { return props.block; }
+  constexpr const PixelBlock &Char() const { return props.block; }
 
   PixelColor &Color() { return props.color; };
-  const PixelColor &Color() const { return props.color; };
+  constexpr const PixelColor &Color() const { return props.color; }
 };
 
 struct VS_API Window {
   HANDLE handle;
   Size size;
 
-  operator Rect() const { return {0, 0, size.width, size.height}; }
+  constexpr operator Rect() const { return {0, 0, size.width, size.height}; }
 };
 }  // namespace vs
 

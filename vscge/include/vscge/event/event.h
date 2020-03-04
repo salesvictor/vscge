@@ -19,8 +19,13 @@
 
 namespace vs {
 enum class EventType {
+  kKey,  // Generic key event, for when you don't care.
   kKeyPressed,
-  kMouseClick,
+  kKeyReleased,
+  kMouse,  // Generic mouse event, for when you don't care.
+  kMouseMoved,
+  kMouseButtonPressed,
+  kMouseButtonReleased,
 };
 
 struct VS_API Event {

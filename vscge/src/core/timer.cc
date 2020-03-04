@@ -15,8 +15,8 @@
 #include "vscge/core/timer.h"
 
 namespace vs {
-float Timestep::GetSeconds() { return duration.count(); }
-float Timestep::GetMilliseconds() {
+constexpr float Timestep::GetSeconds() { return duration.count(); }
+constexpr float Timestep::GetMilliseconds() {
   return duration.count() * 1000.f;  // NOLINT: duration is clearly in seconds.
 }
 

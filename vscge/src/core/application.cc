@@ -63,50 +63,97 @@ void Application::MainLoop() {
   }
 }
 
+// TODO(Victor): Move to a platform layer.
 void Application::EventListener() {
-  constexpr size_t kMaxEvents = 32;
+  Ref<MouseEvent> previous_mouse_event;
+  std::unordered_map<Key, Ref<KeyEvent>> previous_key_event;
   while (true) {
     DWORD num_events;
     GetNumberOfConsoleInputEvents(buffer_in_, &num_events);
 
+    constexpr size_t kMaxEvents = 32;
     std::array<INPUT_RECORD, kMaxEvents> event_buffer;
     ReadConsoleInput(buffer_in_, event_buffer.data(), num_events, &num_events);
     for (size_t i = 0; i < num_events; ++i) {
-      auto event = event_buffer.at(i);
-      switch (event.EventType) {
+      auto read_event = event_buffer.at(i);
+      switch (read_event.EventType) {
         case KEY_EVENT: {
-          KEY_EVENT_RECORD record = event.Event.KeyEvent;
-          KeyEvent event = {static_cast<bool>(record.bKeyDown),
-                            static_cast<vs::Key>(record.wVirtualKeyCode)};
-          OnEvent(CreateRef<KeyEvent>(event));
+          KEY_EVENT_RECORD record = read_event.Event.KeyEvent;
+          Key key = static_cast<Key>(record.wVirtualKeyCode);
+          bool is_down = record.bKeyDown;
+
+          // If first time, create a dummy KeyEvent
+          if (!previous_key_event[key]) {
+            previous_key_event[key] = CreateRef<KeyEvent>(KeyEvent{key});
+          }
+
+          if (previous_key_event[key]->Type() == EventType::kKeyPressed &&
+              !is_down) {
+            KeyReleasedEvent event{key};
+            previous_key_event[key] = CreateRef<KeyReleasedEvent>(event);
+          } else if (previous_key_event[key]->Type() !=
+                         EventType::kKeyPressed &&
+                     is_down) {
+            KeyPressedEvent event{key};
+            previous_key_event[key] = CreateRef<KeyPressedEvent>(event);
+          }
+
+          OnEvent(previous_key_event[key]);
 
           break;
         }
         case MOUSE_EVENT: {
-          MOUSE_EVENT_RECORD record = event.Event.MouseEvent;
-          MouseButton button =
-              (record.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
-                  ? MouseButton::kLeft
-                  : MouseButton::kRight;
-          MouseEvent event = {static_cast<int>(record.dwMousePosition.X),
-                              static_cast<int>(record.dwMousePosition.Y),
-                              button};
-          OnEvent(CreateRef<MouseEvent>(event));
+          MOUSE_EVENT_RECORD record = read_event.Event.MouseEvent;
+          Point position = record.dwMousePosition;
+          MouseButtons buttons;
+
+          if (record.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED) {
+            buttons.left = true;
+          }
+          if (record.dwButtonState & RIGHTMOST_BUTTON_PRESSED) {
+            buttons.right = true;
+          }
+
+          // If first time, create a dummy MouseEvent
+          if (!previous_mouse_event) {
+            previous_mouse_event =
+                CreateRef<MouseEvent>(MouseEvent{{0, 0}, {false, false}});
+          }
+
+          if (record.dwEventFlags & MOUSE_MOVED) {
+            MouseMovedEvent event = {previous_mouse_event->position, position,
+                                     buttons};
+            previous_mouse_event = CreateRef<MouseMovedEvent>(event);
+          } else {
+            if ((previous_mouse_event->buttons.left && !buttons.left) ||
+                (previous_mouse_event->buttons.right && !buttons.right)) {
+              MouseButtonReleasedEvent event = {position, buttons};
+              previous_mouse_event = CreateRef<MouseButtonReleasedEvent>(event);
+            } else if ((!previous_mouse_event->buttons.left && buttons.left) ||
+                       (!previous_mouse_event->buttons.right &&
+                        buttons.right)) {
+              MouseButtonPressedEvent event = {position, buttons};
+              previous_mouse_event = CreateRef<MouseButtonPressedEvent>(event);
+            }
+          }
+
+          OnEvent(previous_mouse_event);
 
           break;
         }
         case WINDOW_BUFFER_SIZE_EVENT: {
-          WINDOW_BUFFER_SIZE_RECORD record = event.Event.WindowBufferSizeEvent;
+          WINDOW_BUFFER_SIZE_RECORD record =
+              read_event.Event.WindowBufferSizeEvent;
 
           break;
         }
         case MENU_EVENT: {
-          MENU_EVENT_RECORD record = event.Event.MenuEvent;
+          MENU_EVENT_RECORD record = read_event.Event.MenuEvent;
 
           break;
         }
         case FOCUS_EVENT: {
-          FOCUS_EVENT_RECORD record = event.Event.FocusEvent;
+          FOCUS_EVENT_RECORD record = read_event.Event.FocusEvent;
 
           break;
         }
