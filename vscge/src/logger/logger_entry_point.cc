@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_VERSION_H_
-#define VSCGE_INCLUDE_VSCGE_VERSION_H_
+#include <Windows.h>
 
-#define VSCGE_VERSION_MAJOR 0
-#define VSCGE_VERSION_MINOR 4
-#define VSCGE_VERSION_PATCH 1
+int main() {
+  HANDLE input = GetStdHandle(STD_INPUT_HANDLE);
+  HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
+  INPUT_RECORD buffer[100];
+  while (true) {
+    DWORD read = 0;
+    ReadFile(input, buffer, 100, &read, NULL);
+    if (read) {
+      DWORD written = 0;
+      WriteFile(output, buffer, read, &written, NULL);
+    }
+  }
 
-#define VSCGE_STR(str) VSCGE_STR_IMPL(str)
-#define VSCGE_STR_IMPL(str) #str
-
-#define VSCGE_VERSION            \
-  VSCGE_STR(VSCGE_VERSION_MAJOR) \
-  "." VSCGE_STR(VSCGE_VERSION_MINOR) "." VSCGE_STR(VSCGE_VERSION_PATCH)
-
-#endif  // VSCGE_INCLUDE_VSCGE_VERSION_H_
+  return 0;
+}

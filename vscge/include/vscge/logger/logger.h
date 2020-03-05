@@ -15,40 +15,14 @@
 #ifndef VSCGE_INCLUDE_VSCGE_LOGGER_LOGGER_H_
 #define VSCGE_INCLUDE_VSCGE_LOGGER_LOGGER_H_
 
-#include <Windows.h>
+#include <string>
+
+#include "vscge/core/core.h"
 
 namespace vs {
 namespace Logger {
-void Initialize() {
-  HANDLE logger_in_read;
-  HANDLE logger_in_write;
-
-  SECURITY_ATTRIBUTES sa = {
-      .nLength = sizeof(SECURITY_ATTRIBUTES),
-      .bInheritHandle = TRUE,
-  };
-  CreatePipe(&logger_in_read, &logger_in_write, &sa, 0);
-  SetHandleInformation(logger_in_write, HANDLE_FLAG_INHERIT, 0);
-  STARTUPINFO si = {
-      .cb = sizeof(STARTUPINFO),
-      .lpTitle = TEXT("Logger"),
-      .dwX = 0,
-      .dwY = 0,
-      .dwFlags =
-          STARTF_USEPOSITION | STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW,
-      .wShowWindow = SW_SHOWNOACTIVATE,
-      .hStdInput = logger_in_read,
-  };
-  PROCESS_INFORMATION pi = {};
-  std::wstring logger_command = L"Logger.exe";
-  CreateProcess(nullptr, logger_command.data(), nullptr, nullptr, TRUE,
-                CREATE_NEW_CONSOLE, nullptr, nullptr, &si, &pi);
-  CloseHandle(pi.hProcess);
-  CloseHandle(pi.hThread);
-  CloseHandle(logger_in_read);
-  SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, 0, 0, 0, 0,
-               SWP_NOMOVE | SWP_NOSIZE);
-}
+void VS_API Initialize();
+void VS_API Log(std::string_view message);
 }  // namespace Logger
 }  // namespace vs
 

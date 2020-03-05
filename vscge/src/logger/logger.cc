@@ -12,20 +12,59 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "vscge/logger/logger.h"
+
 #include <Windows.h>
 
-int main() {
-  HANDLE input = GetStdHandle(STD_INPUT_HANDLE);
-  HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-  INPUT_RECORD buffer[100];
-  while (true) {
-    DWORD read = 0;
-    ReadFile(input, buffer, 100, &read, NULL);
-    if (read) {
-      DWORD written = 0;
-      WriteFile(output, buffer, read, &written, NULL);
-    }
-  }
+#include <string>
 
-  return 0;
+namespace vs::Logger {
+struct Internals {
+  HANDLE write_handle;
+};
+
+Internals internals;
+
+void Initialize() {
+  HANDLE logger_in_read;
+  HANDLE logger_in_write;
+
+  SECURITY_ATTRIBUTES sa = {
+      .nLength = sizeof(SECURITY_ATTRIBUTES),
+      .bInheritHandle = TRUE,
+  };
+  CreatePipe(&logger_in_read, &logger_in_write, &sa, 0);
+  SetHandleInformation(logger_in_write, HANDLE_FLAG_INHERIT, 0);
+  STARTUPINFOA si = {
+      .cb = sizeof(STARTUPINFO),
+      .lpTitle = "Logger",
+      .dwX = 0,
+      .dwY = 0,
+      .dwFlags =
+          STARTF_USEPOSITION | STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW,
+      .wShowWindow = SW_SHOWNOACTIVATE,
+      .hStdInput = logger_in_read,
+      // .hStdInput = GetStdHandle(STD_ERROR_HANDLE),
+  };
+  PROCESS_INFORMATION pi = {};
+  std::string logger_command = "Logger.exe";
+  CreateProcessA(nullptr, logger_command.data(), nullptr, nullptr, TRUE,
+                 CREATE_NEW_CONSOLE, nullptr, nullptr, &si, &pi);
+  CloseHandle(pi.hProcess);
+  CloseHandle(pi.hThread);
+  CloseHandle(logger_in_read);
+
+  Sleep(200); // NOLINT
+  SetWindowPos(GetConsoleWindow(), HWND_TOP, 0, 0, 0, 0,
+               SWP_NOMOVE | SWP_NOSIZE);
+
+  internals.write_handle = logger_in_write;
+  // internals.write_handle = GetStdHandle(STD_ERROR_HANDLE);
 }
+
+void Log(std::string_view message) {
+  DWORD written = 0;
+  WriteFile(internals.write_handle, message.data(), message.size(), &written,
+            nullptr);
+}
+}  // namespace vs::Logger

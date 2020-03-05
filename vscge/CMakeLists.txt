@@ -19,6 +19,7 @@ set(
   src/core/application.cc
   src/core/renderer.cc
   src/core/timer.cc
+  src/logger/logger.cc
   src/utils/conversions.cc
   include/vscge/logger/logger.h
   include/vscge/version.h
@@ -30,6 +31,7 @@ set(
   include/vscge/event/event.h
   include/vscge/event/key_event.h
   include/vscge/event/mouse_event.h
+  include/vscge/logger/logger.h
   include/vscge/utils/conversions.h
 )
 
@@ -147,4 +149,4 @@ endif()
 
 message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION} - done")
 
-add_executable(Logger src/logger/logger.cc)
+add_executable(Logger src/logger/logger_entry_point.cc)

@@ -54,6 +54,7 @@ class GameOfLife : public vs::Application {
 
   void OnKeyPress(vs::Ref<vs::KeyPressedEvent> key_event) {
     if (key_event->key == vs::Key::kSpace) {
+      vs::Logger::Log("Hit space!\n");
       running_ = !running_;
     } else if (!running_ && key_event->key == vs::Key::kEscape) {
       OnStart();
@@ -62,6 +63,7 @@ class GameOfLife : public vs::Application {
 
   void OnMouseClick(vs::Ref<vs::MouseEvent> mouse_event) {
     if (!running_ && mouse_event->buttons.left) {
+      vs::Logger::Log("Click!\n");
       constexpr vs::PixelProps full_white = {{vs::PixelColor::BG::kWhite},
                                              vs::PixelBlock::kFull};
       vs::Renderer::DrawPixel(
