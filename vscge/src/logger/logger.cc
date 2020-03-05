@@ -66,28 +66,23 @@ void Initialize() {
 }
 
 void Log(std::string_view message, Level level) {
-  // Unfortunately, Windows pushes the Ex API by saying the previous one could
-  // be deprecated.
-  constexpr std::wstring_view date_format = L"ddMMMyyyy";
-  constexpr std::wstring_view time_format = L"HH':'mm':'ss";
+  // I could use the Ex API, but that means Unicode, and I didn't like it.
+  constexpr std::string_view date_format = "ddMMMyyyy";
+  constexpr std::string_view time_format = "HH':'mm':'ss";
 
-  std::wstring wtime;
-  wtime.reserve(time_format.size());
-  GetTimeFormatEx(LOCALE_NAME_USER_DEFAULT, 0, nullptr, time_format.data(),
-                  wtime.data(), wtime.capacity());
-  std::wstring wdate;
-  wdate.reserve(date_format.size());
-  GetDateFormatEx(LOCALE_NAME_USER_DEFAULT, 0, nullptr, date_format.data(),
-                  wdate.data(), wdate.capacity(), nullptr);
-
-  // As we only get ASCII characters here, we do a dirty conversion.
-  std::string date(wdate.begin(), wdate.end());
-  std::string time(wtime.begin(), wtime.end());
+  std::string time;
+  time.resize(time_format.size() - 4);  // NOLINT: removin the '
+  GetTimeFormatA(LOCALE_USER_DEFAULT, 0, nullptr, time_format.data(),
+                 time.data(), time.capacity());
+  std::string date;
+  date.resize(date_format.size());
+  GetDateFormatA(LOCALE_USER_DEFAULT, 0, nullptr, date_format.data(),
+                 date.data(), date.capacity());
 
   std::string timestamp = date + " " + time;
   std::string level_string = std::string(internals.level_map[level]);
-  std::string write_message = "[" + date + " " + time + "|" + level_string +
-                              "] " + std::string(message);
+  std::string write_message =
+      "[" + timestamp + "|" + level_string + "] " + std::string(message);
 
   // No idea this needs to exist, but fount it here:
   // https://stackoverflow.com/questions/28618715/c-writefile-unicode-characters
