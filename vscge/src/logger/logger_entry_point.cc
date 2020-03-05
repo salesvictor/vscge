@@ -17,10 +17,12 @@
 int main() {
   HANDLE input = GetStdHandle(STD_INPUT_HANDLE);
   HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-  INPUT_RECORD buffer[100];
+
+  constexpr size_t buffer_size = 1000;
+  char buffer[buffer_size];
   while (true) {
     DWORD read = 0;
-    ReadFile(input, buffer, 100, &read, NULL);
+    ReadFile(input, buffer, buffer_size, &read, NULL);
     if (read) {
       DWORD written = 0;
       WriteFile(output, buffer, read, &written, NULL);

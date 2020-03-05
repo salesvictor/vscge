@@ -21,8 +21,13 @@
 
 namespace vs {
 namespace Logger {
+enum class Level {
+  kInfo,
+  kError,
+  kDebug,
+};
 void VS_API Initialize();
-void VS_API Log(std::string_view message);
+void VS_API Log(std::string_view message, Level level = Level::kInfo);
 }  // namespace Logger
 }  // namespace vs
 
