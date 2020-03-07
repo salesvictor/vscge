@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <vscge/profiler/profiler.h>
 #include <vscge/vscge.h>
 
 #include <string>
@@ -130,7 +131,10 @@ class GameOfLife : public vs::Application {
 };
 
 int main() {
+  VS_PROFILE_BEGIN_SESSION("Startup", "startup.json");
   GameOfLife game;
+  VS_PROFILE_END_SESSION();
+
   game.Start();
   return 0;
 }

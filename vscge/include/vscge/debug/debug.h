@@ -19,12 +19,13 @@
 
 #include "vscge/core/core.h"
 
-#define VS_STR(str) VS_STR_IMPL(str)
-#define VS_STR_IMPL(str) #str
-
-#define VS_ASSERT(cond)                                             \
-  (!!(cond) || ::vs::debug::Fail(VS_STR(cond), VS_STR(__FUNCSIG__), \
-                                 VS_STR(__LINE__), __FILE__))
+#ifdef VS_DEBUG
+#define VS_ASSERT(cond) \
+  (!!(cond) ||          \
+    ::vs::debug::Fail(VS_STR(cond), __FUNCSIG__, VS_STR(__LINE__), __FILE__))
+#else
+#define VS_ASSERT(cond)
+#endif  // VS_DEBUG
 
 namespace vs {
 namespace debug {

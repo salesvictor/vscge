@@ -21,6 +21,7 @@
 
 #include "vscge/core/types.h"
 #include "vscge/debug/debug.h"
+#include "vscge/profiler/profiler.h"
 #include "vscge/utils/conversions.h"
 
 namespace vs::Renderer {
@@ -38,6 +39,7 @@ Internals internals;
 
 void Initialize(const HANDLE &handle, const Size &window_size,
                 const Size &font_size) {
+  VS_PROFILE_FUNCTION();
   internals.font = L"Consolas";
   internals.window = {handle, window_size};
   internals.font_size = font_size;
@@ -90,12 +92,14 @@ const Pixel &GetPixelAt(Point location) {
 const Rect GetWindowRect() { return Rect(internals.window); }
 
 void DrawPixel(const Pixel &pixel) {
+  VS_PROFILE_FUNCTION();
   VS_ASSERT(Rect(internals.window).Contains(pixel.location));
   internals.screen_buffer[PointToBufferIndex(Rect(internals.window),
                                              pixel.location)] = pixel;
 }
 
 void ClearScreen() {
+  VS_PROFILE_FUNCTION();
   for (auto &pixel : internals.screen_buffer) {
     pixel.Char() = PixelBlock::kEmpty;
     pixel.Color() = PixelColor();
@@ -103,11 +107,13 @@ void ClearScreen() {
 }
 
 void DrawBuffer(const std::vector<Pixel> &buffer) {
+  VS_PROFILE_FUNCTION();
   VS_ASSERT(buffer.size() <= internals.screen_buffer.size());
   for (const auto &pixel : buffer) DrawPixel(pixel);
 }
 
 void DrawLine(const Point &p1, const Point &p2, const PixelProps &props) {
+  VS_PROFILE_FUNCTION();
   auto isLeft = [](const Point &a, const Point &b) {
     if (a.x == b.x) return a.y < b.y;
 
@@ -133,6 +139,7 @@ void DrawLine(const Point &p1, const Point &p2, const PixelProps &props) {
 }
 
 void DrawRect(const Rect &rect, const vs::PixelProps &props) {
+  VS_PROFILE_FUNCTION()
   int x0 = rect.x;
   int y0 = rect.y;
   int x1 = rect.x + rect.width - 1;
@@ -145,12 +152,14 @@ void DrawRect(const Rect &rect, const vs::PixelProps &props) {
 }
 
 void FillRect(const Rect &rect, const vs::PixelProps &props) {
+  VS_PROFILE_FUNCTION();
   for (int y = rect.y; y < internals.window.size.height; ++y) {
     DrawLine({rect.x, y}, {rect.x + rect.width, y}, props);
   }
 }
 
 void Render() {
+  VS_PROFILE_FUNCTION();
   std::vector<CHAR_INFO> write_buffer;
   for (const auto &pixel : internals.screen_buffer) {
     write_buffer.emplace_back(pixel.props);

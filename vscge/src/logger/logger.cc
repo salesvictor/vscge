@@ -19,6 +19,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "vscge/profiler/profiler.h"
+
 namespace vs::Logger {
 struct Internals {
   HANDLE write_handle = nullptr;
@@ -31,6 +33,7 @@ struct Internals {
 Internals internals;
 
 void Initialize() {
+  VS_PROFILE_FUNCTION();
   HANDLE logger_in_read;
   HANDLE logger_in_write;
 

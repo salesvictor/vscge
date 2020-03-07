@@ -33,6 +33,9 @@
 #define VS_BIND_EVENT(fn) [this](auto ev) { fn(ev); }
 #define VS_BIND_THREAD(fn) [this]() { fn(); }
 
+#define VS_STR(str) VS_STR_IMPL(str)
+#define VS_STR_IMPL(str) #str
+
 namespace vs {
 template <class Type>
 using Ref = std::shared_ptr<Type>;

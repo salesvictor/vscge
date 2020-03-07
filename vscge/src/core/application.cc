@@ -27,6 +27,7 @@
 #include "vscge/event/key_event.h"
 #include "vscge/event/mouse_event.h"
 #include "vscge/logger/logger.h"
+#include "vscge/profiler/profiler.h"
 #include "vscge/utils/conversions.h"
 
 namespace vs {
@@ -34,17 +35,20 @@ Application::Application(const Size &screen_size, const Size &font_size)
     : buffer_in_(GetStdHandle(STD_INPUT_HANDLE)) {
   SetConsoleMode(buffer_in_, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT |
                                  ENABLE_MOUSE_INPUT);
+
   Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size, font_size);
   Logger::Initialize();
 }
 
 void Application::Start() {
+  VS_PROFILE_BEGIN_SESSION("Start", "runtime.json");
   OnStart();
 
   std::thread game_loop(VS_BIND_THREAD(Application::MainLoop));
   std::thread event_loop(VS_BIND_THREAD(Application::EventListener));
   game_loop.join();
   event_loop.join();
+  VS_PROFILE_END_SESSION();
 }
 
 void Application::MainLoop() {
@@ -58,9 +62,15 @@ void Application::MainLoop() {
 
     timer.Start();
 
-    OnUpdate(timestep);
+    {
+      VS_PROFILE_SCOPE("OnUpdate");
+      OnUpdate(timestep);
+    }
 
-    Renderer::Render();
+    {
+      VS_PROFILE_SCOPE("Render");
+      Renderer::Render();
+    }
   }
 }
 
@@ -79,6 +89,7 @@ void Application::EventListener() {
       auto read_event = event_buffer.at(i);
       switch (read_event.EventType) {
         case KEY_EVENT: {
+          VS_PROFILE_SCOPE("KEY_EVENT");
           KEY_EVENT_RECORD record = read_event.Event.KeyEvent;
           Key key = static_cast<Key>(record.wVirtualKeyCode);
           bool is_down = record.bKeyDown;
@@ -104,6 +115,7 @@ void Application::EventListener() {
           break;
         }
         case MOUSE_EVENT: {
+          VS_PROFILE_SCOPE("MOUSE_EVENT");
           MOUSE_EVENT_RECORD record = read_event.Event.MouseEvent;
           Point position = record.dwMousePosition;
           MouseButtons buttons;

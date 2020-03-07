@@ -22,6 +22,7 @@
 
 #include "vscge/core/types.h"
 #include "vscge/debug/debug.h"
+#include "vscge/profiler/profiler.h"
 
 namespace vs {
 Point BufferIndexToPoint(const Rect &region, int i) {

@@ -21,6 +21,7 @@ set(
   src/core/timer.cc
   src/debug/debug.cc
   src/logger/logger.cc
+  src/profiler/profiler.cc
   src/utils/conversions.cc
   include/vscge/logger/logger.h
   include/vscge/version.h
@@ -34,6 +35,7 @@ set(
   include/vscge/event/key_event.h
   include/vscge/event/mouse_event.h
   include/vscge/logger/logger.h
+  include/vscge/profiler/profiler.h
   include/vscge/utils/conversions.h
 )
 
@@ -57,7 +59,8 @@ else()
     ",google-*"
     ",modernize-*,-modernize-use-trailing-return-type"
     ",clang-analyzer-*,-clang-diagnostic-address-of-temporary"
-    ",cppcoreguidelines-*,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-member-init"
+    ",cppcoreguidelines-*,-cppcoreguidelines-pro-type-union-access"
+    ",-cppcoreguidelines-pro-type-member-init,-cppcoreguidelines-pro-bounds-array-to-pointer-decay"
   )
   set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=${CLANG_TIDY_CHECKS} -header-filter=.*")
 endif()
@@ -102,7 +105,7 @@ find_program(
 set_target_properties(
   vscge PROPERTIES
   CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-  CXX_CPPCHECK "${CPPCHECK_EXE}"
+# CXX_CPPCHECK "${CPPCHECK_EXE}"
 )
 target_include_directories(
   vscge
