@@ -12,18 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_VERSION_H_
-#define VSCGE_INCLUDE_VSCGE_VERSION_H_
+#include "vscge/logger/tee.h"
 
-#define VSCGE_VERSION_MAJOR 0
-#define VSCGE_VERSION_MINOR 7
-#define VSCGE_VERSION_PATCH 0
+#include <iostream>
+#include <string>
 
-#define VSCGE_STR(str) VSCGE_STR_IMPL(str)
-#define VSCGE_STR_IMPL(str) #str
+namespace vs::Logger {
+Tee::Tee(std::string_view filepath) { file_.open(filepath.data()); }
 
-#define VSCGE_VERSION            \
-  VSCGE_STR(VSCGE_VERSION_MAJOR) \
-  "." VSCGE_STR(VSCGE_VERSION_MINOR) "." VSCGE_STR(VSCGE_VERSION_PATCH)
+Tee::~Tee() { file_.close(); }
 
-#endif  // VSCGE_INCLUDE_VSCGE_VERSION_H_
+template <typename Readable>
+Tee& Tee::operator<<(Readable message) {
+  std::cout << message;
+  file_ << message;
+  return *this;
+}
+
+template class Tee& Tee::operator<<(std::string);
+template class Tee& Tee::operator<<(char);
+}  // namespace vs::Logger

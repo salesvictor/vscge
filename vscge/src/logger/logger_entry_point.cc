@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <Windows.h>
+#include <iostream>
+#include <string>
+
+#include "vscge/logger/tee.h"
 
 int main() {
-  HANDLE input = GetStdHandle(STD_INPUT_HANDLE);
-  HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-
-  constexpr size_t buffer_size = 1000;
-  char buffer[buffer_size];
+  vs::Logger::Tee tee("log.txt");
+  std::string message;
   while (true) {
-    DWORD read = 0;
-    ReadFile(input, buffer, buffer_size, &read, NULL);
-    if (read) {
-      DWORD written = 0;
-      WriteFile(output, buffer, read, &written, NULL);
+    std::getline(std::cin, message);
+    if (message.size()) {
+      tee << message << '\n';
     }
   }
 

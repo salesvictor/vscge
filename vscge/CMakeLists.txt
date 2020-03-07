@@ -21,6 +21,7 @@ set(
   src/core/timer.cc
   src/debug/debug.cc
   src/logger/logger.cc
+  src/logger/tee.cc
   src/profiler/profiler.cc
   src/utils/conversions.cc
   include/vscge/logger/logger.h
@@ -35,6 +36,7 @@ set(
   include/vscge/event/key_event.h
   include/vscge/event/mouse_event.h
   include/vscge/logger/logger.h
+  include/vscge/logger/tee.h
   include/vscge/profiler/profiler.h
   include/vscge/utils/conversions.h
 )
@@ -153,3 +155,5 @@ endif()
 message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION} - done")
 
 add_executable(Logger src/logger/logger_entry_point.cc)
+target_link_libraries(Logger vs::cge)
+target_compile_features(Logger PRIVATE cxx_std_17)
