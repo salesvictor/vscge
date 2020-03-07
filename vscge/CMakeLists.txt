@@ -40,7 +40,7 @@ set(
 )
 
 add_library(
-  vscge SHARED
+  vscge STATIC
   ${VSCGE_SOURCE}
 )
 
@@ -60,7 +60,6 @@ else()
     ",modernize-*,-modernize-use-trailing-return-type"
     ",clang-analyzer-*,-clang-diagnostic-address-of-temporary"
     ",cppcoreguidelines-*,-cppcoreguidelines-pro-type-union-access"
-    ",-cppcoreguidelines-pro-type-member-init,-cppcoreguidelines-pro-bounds-array-to-pointer-decay"
   )
   set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=${CLANG_TIDY_CHECKS} -header-filter=.*")
 endif()
