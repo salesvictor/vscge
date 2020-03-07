@@ -52,9 +52,9 @@ void Application::MainLoop() {
   timer.Start();
   while (true) {
     Timestep timestep = timer.Stop();
-    std::wstring title = std::wstring(L"VS CGE - FPS: ") +
-                         std::to_wstring(static_cast<int>(1 / timestep));
-    SetConsoleTitle(title.c_str());
+    std::string title = std::string("VS CGE - FPS: ") +
+                        std::to_string(static_cast<int>(1 / timestep));
+    SetConsoleTitleA(title.c_str());
 
     timer.Start();
 
@@ -73,7 +73,7 @@ void Application::EventListener() {
     GetNumberOfConsoleInputEvents(buffer_in_, &num_events);
 
     constexpr size_t kMaxEvents = 32;
-    std::array<INPUT_RECORD, kMaxEvents> event_buffer;
+    std::array<INPUT_RECORD, kMaxEvents> event_buffer = {};
     ReadConsoleInput(buffer_in_, event_buffer.data(), num_events, &num_events);
     for (size_t i = 0; i < num_events; ++i) {
       auto read_event = event_buffer.at(i);

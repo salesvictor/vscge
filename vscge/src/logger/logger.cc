@@ -21,7 +21,7 @@
 
 namespace vs::Logger {
 struct Internals {
-  HANDLE write_handle;
+  HANDLE write_handle = nullptr;
   std::unordered_map<Level, std::string_view> level_map = {
       {Level::kInfo, "Info"},
       {Level::kError, "Error"},

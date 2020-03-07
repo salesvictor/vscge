@@ -20,23 +20,25 @@
 #include <vector>
 
 #include "vscge/core/types.h"
+#include "vscge/debug/debug.h"
 #include "vscge/utils/conversions.h"
 
 namespace vs::Renderer {
 struct Internals {
-  std::vector<Pixel> screen_buffer;
-  Window window;
+  std::vector<Pixel> screen_buffer = {};
+  Window window = {};
 
-  SMALL_RECT window_wrapper;
+  SMALL_RECT window_wrapper = {};
 
   std::wstring font = L"Consolas";
-  Size font_size;
+  Size font_size = {};
 };
 
 Internals internals;
 
 void Initialize(const HANDLE &handle, const Size &window_size,
                 const Size &font_size) {
+  internals.font = L"Consolas";
   internals.window = {handle, window_size};
   internals.font_size = font_size;
   internals.window_wrapper = SMALL_RECT(Rect(internals.window));
@@ -72,22 +74,23 @@ void Initialize(const HANDLE &handle, const Size &window_size,
   SetConsoleActiveScreenBuffer(internals.window.handle);
   internals.screen_buffer.reserve(internals.window.size.Area());
   for (int i = 0; i < internals.window.size.Area(); ++i) {
-    internals.screen_buffer.emplace_back(Pixel(
-        BufferIndexToPoint(Rect(internals.window), i), {PixelBlock::kEmpty}));
+    internals.screen_buffer.emplace_back(
+        Pixel(BufferIndexToPoint(Rect(internals.window), i),
+              PixelProps(PixelBlock::kEmpty)));
   }
 }
 
 const std::vector<Pixel> &GetBuffer() { return internals.screen_buffer; }
 
 const Pixel &GetPixelAt(Point location) {
-  return internals
-      .screen_buffer[PointToBufferIndex(Rect(internals.window), location)];
+  int index = PointToBufferIndex(Rect(internals.window), location);
+  return internals.screen_buffer[index];
 }
 
 const Rect GetWindowRect() { return Rect(internals.window); }
 
 void DrawPixel(const Pixel &pixel) {
-  assert(Rect(internals.window).Contains(pixel.location));
+  VS_ASSERT(Rect(internals.window).Contains(pixel.location));
   internals.screen_buffer[PointToBufferIndex(Rect(internals.window),
                                              pixel.location)] = pixel;
 }
@@ -100,7 +103,7 @@ void ClearScreen() {
 }
 
 void DrawBuffer(const std::vector<Pixel> &buffer) {
-  assert(buffer.size() <= internals.screen_buffer.size());
+  VS_ASSERT(buffer.size() <= internals.screen_buffer.size());
   for (const auto &pixel : buffer) DrawPixel(pixel);
 }
 
@@ -152,7 +155,7 @@ void Render() {
   for (const auto &pixel : internals.screen_buffer) {
     write_buffer.emplace_back(pixel.props);
   }
-  WriteConsoleOutput(internals.window.handle, write_buffer.data(),
-                     internals.window.size, {0, 0}, &internals.window_wrapper);
+  WriteConsoleOutputA(internals.window.handle, write_buffer.data(),
+                      internals.window.size, {0, 0}, &internals.window_wrapper);
 }
 }  // namespace vs::Renderer

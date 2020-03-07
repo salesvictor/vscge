@@ -17,23 +17,23 @@
 #include <string>
 
 
-std::wstring map =
-    L"#########......."
-    L"#..............."
-    L"#.......########"
-    L"#..............#"
-    L"#......##......#"
-    L"#......##......#"
-    L"#..............#"
-    L"###...@........#"
-    L"##.............#"
-    L"#......####..###"
-    L"#......#.......#"
-    L"#......#.......#"
-    L"#..............#"
-    L"#......#########"
-    L"#..............#"
-    L"################";
+std::string map =
+    "#########......."
+    "#..............."
+    "#.......########"
+    "#..............#"
+    "#......##......#"
+    "#......##......#"
+    "#..............#"
+    "###...@........#"
+    "##.............#"
+    "#......####..###"
+    "#......#.......#"
+    "#......#.......#"
+    "#..............#"
+    "#......#########"
+    "#..............#"
+    "################";
 
 class ExampleGame : public vs::Application {
  private:
@@ -41,7 +41,7 @@ class ExampleGame : public vs::Application {
     for (auto &ch : screen_) {
       ch = (ch == '#') ? vs::PixelBlock::kFull
                        : (ch == '.') ? vs::PixelBlock::kLightShade
-                                     : vs::PixelBlock::kLargeBlackCircle;
+                                     : vs::PixelBlock::kBlackSquare;
     }
 
     vs::Renderer::DrawBuffer(vs::StringToPixelBuffer(screen_, {0, 0, 16, 16}));
@@ -52,7 +52,7 @@ class ExampleGame : public vs::Application {
   }
 
  public:
-  std::wstring screen_;
+  std::string screen_;
 };
 
 int main() {

@@ -88,19 +88,15 @@ struct VS_API Rect {
 };
 
 // TODO(Victor): Move to a platform layer.
-enum PixelBlock : wchar_t {
-  kEmpty = L' ',
-  kUpperHalf = 0x2580,           // ▀
-  kLowerHalf = 0x2584,           // ▄
-  kFull = 0x2588,                // █
-  kLightShade = 0x2591,          // ░
-  kMediumShade = 0x2592,         // ▒
-  kDarkShade = 0x2593,           // ▓
-  kFisheye = 0x25C9,             // ◉
-  kCircleVerticalFill = 0x25CD,  // ◍
-  kBlackCircle = 0x25CF,         // ●
-  kLargeCircle = 0x25EF,         // ◯
-  kLargeBlackCircle = 0x2B24,    // ⬤
+enum PixelBlock {
+  kEmpty = ' ',
+  kUpperHalf = 223,    // ▀
+  kLowerHalf = 220,    // ▄
+  kFull = 219,         // █
+  kLightShade = 176,   // ░
+  kMediumShade = 177,  // ▒
+  kDarkShade = 178,    // ▓
+  kBlackSquare = 254,  // ■
 };
 
 // TODO(Victor): Move to a platform layer.
@@ -159,20 +155,20 @@ struct VS_API PixelProps {
   PixelColor color;
   union {
     PixelBlock block;
-    wchar_t ch;
+    char ch;
   };
 
-  constexpr PixelProps() : ch(PixelBlock::kFull), color() {}
-  constexpr PixelProps(const PixelBlock &block)
+  constexpr PixelProps() : block(PixelBlock::kFull), color() {}
+  constexpr explicit PixelProps(const PixelBlock &block)
       : block(block), color(PixelColor::BG::kWhite) {}
-  constexpr PixelProps(const wchar_t &ch) : ch(ch), color() {}
+  constexpr explicit PixelProps(const char &ch) : ch(ch), color() {}
   constexpr PixelProps(const PixelColor &color, const PixelBlock &block)
       : color(color), block(block) {}
-  constexpr PixelProps(const PixelColor &color, const wchar_t &ch)
+  constexpr PixelProps(const PixelColor &color, const char &ch)
       : color(color), ch(ch) {}
 
   constexpr operator CHAR_INFO() const {
-    return {.Char = {.UnicodeChar = ch}, .Attributes = color};
+    return {.Char = {.AsciiChar = ch}, .Attributes = color};
   }
 };
 

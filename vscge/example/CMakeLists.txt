@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_executable(Maze maze.cc)
-target_link_libraries(Maze vs::cge)
+# add_executable(Maze maze.cc)
+# target_link_libraries(Maze vs::cge)
 
 add_executable(GameOfLife game_of_life.cc)
 target_link_libraries(GameOfLife vs::cge)

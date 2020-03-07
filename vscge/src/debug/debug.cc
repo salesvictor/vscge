@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "vscge/core/timer.h"
+#include "vscge/debug/debug.h"
 
-namespace vs {
-constexpr float Timestep::GetSeconds() { return duration.count(); }
-constexpr float Timestep::GetMilliseconds() {
-  return duration.count() * 1000.0f;  // NOLINT: duration is clearly in seconds.
+#include <string>
+
+#include "vscge/logger/logger.h"
+
+namespace vs::debug {
+bool Fail(std::string cond_str, std::string function, std::string line,
+          std::string file) {
+  std::string message = "Failed assertion " + cond_str + " in " + function +
+                        ", line " + line + ", at " + file;
+  Logger::Log(message, Logger::Level::kError);
+  *((int *)0) = 0;  // NOLINT: The point is to break here.
+
+  return false;
 }
-
-void Timer::Start() { start_time_ = std::chrono::steady_clock::now(); }
-
-Timestep Timer::Stop() {
-  end_time_ = std::chrono::steady_clock::now();
-  return {end_time_ - start_time_};
-}
-}  // namespace vs
+}  // namespace vs::debug

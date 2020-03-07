@@ -21,25 +21,28 @@ class GameOfLife : public vs::Application {
   virtual void OnStart() override {
     vs::Renderer::ClearScreen();
 
-    std::wstring initial_state =
-        L"........................#............"
-        L"......................#.#............"
-        L"............##......##............##."
-        L"...........#...#....##............##."
-        L"##........#.....#...##..............."
-        L"##........#...#.##....#.#............"
-        L"..........#.....#.......#............"
-        L"...........#...#....................."
-        L"............##.......................";
+    std::string initial_state_str =
+        "........................#............"
+        "......................#.#............"
+        "............##......##............##."
+        "...........#...#....##............##."
+        "##........#.....#...##..............."
+        "##........#...#.##....#.#............"
+        "..........#.....#.......#............"
+        "...........#...#....................."
+        "............##.......................";
 
-    for (auto &ch : initial_state)
-      ch = (ch == '#') ? vs::PixelBlock::kFull : vs::PixelBlock::kEmpty;
+    std::unordered_map<char, vs::PixelProps> char_map = {
+        {'.', {vs::PixelColor::FG::kBlack, vs::PixelBlock::kEmpty}},
+        {'#', {vs::PixelColor::BG::kWhite, vs::PixelBlock::kFull}}};
 
-    vs::Renderer::DrawBuffer(
-        vs::StringToPixelBuffer(initial_state, {10, 10, 37, 9}));
+    std::vector<vs::Pixel> initial_state =
+        vs::StringToPixelBuffer(initial_state_str, {10, 10, 37, 9}, char_map);
+
+    vs::Renderer::DrawBuffer(initial_state);
 
     vs::Renderer::DrawRect(vs::Renderer::GetWindowRect(),
-                           vs::PixelBlock::kDarkShade);
+                           vs::PixelProps(vs::PixelBlock::kDarkShade));
 
     running_ = false;
   }
@@ -73,15 +76,16 @@ class GameOfLife : public vs::Application {
 
   virtual void OnUpdate(const vs::Timestep &timestep) override {
     if (running_) {
+      vs::Logger::Log("OnUpdate\n");
       std::vector<vs::Pixel> new_state = vs::Renderer::GetBuffer();
 
       auto is_alive = [](const vs::Pixel &pixel) {
         return pixel.Char() == vs::PixelBlock::kFull;
       };
 
-      auto alive_count = [this, is_alive](short x, short y) {
-        constexpr short dx[] = {-1, -1, 0, 1, 1, 1, 0, -1};
-        constexpr short dy[] = {0, -1, -1, -1, 0, 1, 1, 1};
+      auto alive_count = [is_alive](int x, int y) {
+        constexpr int dx[] = {-1, -1, 0, 1, 1, 1, 0, -1};
+        constexpr int dy[] = {0, -1, -1, -1, 0, 1, 1, 1};
 
         int count = 0;
         vs::Rect window_rect = vs::Renderer::GetWindowRect();
@@ -98,7 +102,7 @@ class GameOfLife : public vs::Application {
       };
 
       for (auto &pixel : new_state) {
-        wchar_t ch = pixel.Char();
+        vs::PixelBlock ch = pixel.Char();
         short x = pixel.x;
         short y = pixel.y;
         int count = alive_count(x, y);
@@ -111,11 +115,12 @@ class GameOfLife : public vs::Application {
         } else if (ch == vs::PixelBlock::kFull) {
           if (count < 2 || count > 3) {
             pixel.Char() = vs::PixelBlock::kEmpty;
-            pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kBlack};
+            pixel.Color() = vs::PixelColor(vs::PixelColor::BG::kBlack);
           }
         }
       }
 
+      vs::Logger::Log("Before DrawBuffer\n");
       vs::Renderer::DrawBuffer(new_state);
     }
   }

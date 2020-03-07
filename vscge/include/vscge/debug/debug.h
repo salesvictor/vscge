@@ -12,23 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
-#define VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
+#ifndef VSCGE_INCLUDE_VSCGE_DEBUG_DEBUG_H_
+#define VSCGE_INCLUDE_VSCGE_DEBUG_DEBUG_H_
 
-#include <string_view>
-#include <unordered_map>
-#include <vector>
+#include <string>
 
 #include "vscge/core/core.h"
-#include "vscge/core/types.h"
+
+#define VS_STR(str) VS_STR_IMPL(str)
+#define VS_STR_IMPL(str) #str
+
+#define VS_ASSERT(cond)                                             \
+  (!!(cond) || ::vs::debug::Fail(VS_STR(cond), VS_STR(__FUNCSIG__), \
+                                 VS_STR(__LINE__), __FILE__))
 
 namespace vs {
-VS_API Point BufferIndexToPoint(const Rect &region, int i);
-VS_API int PointToBufferIndex(const Rect &region, const Point &point);
-
-VS_API std::vector<Pixel> StringToPixelBuffer(
-    std::string_view string_buffer, const Rect &region,
-    std::unordered_map<char, PixelProps> char_map);
+namespace debug {
+VS_API bool Fail(std::string cond_str, std::string function, std::string line,
+                 std::string file);
+}  // namespace debug
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
+#endif  // VSCGE_INCLUDE_VSCGE_DEBUG_DEBUG_H_

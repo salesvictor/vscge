@@ -19,6 +19,7 @@ set(
   src/core/application.cc
   src/core/renderer.cc
   src/core/timer.cc
+  src/debug/debug.cc
   src/logger/logger.cc
   src/utils/conversions.cc
   include/vscge/logger/logger.h
@@ -28,6 +29,7 @@ set(
   include/vscge/core/core.h
   include/vscge/core/renderer.h
   include/vscge/core/timer.h
+  include/vscge/debug/debug.h
   include/vscge/event/event.h
   include/vscge/event/key_event.h
   include/vscge/event/mouse_event.h
@@ -57,7 +59,7 @@ else()
     ",clang-analyzer-*,-clang-diagnostic-address-of-temporary"
     ",cppcoreguidelines-*,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-member-init"
   )
-  set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=${CLANG_TIDY_CHECKS}")
+  set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=${CLANG_TIDY_CHECKS} -header-filter=.*")
 endif()
 
 set_target_properties(
@@ -112,7 +114,6 @@ target_include_directories(
 set(VSCGE_COMPILER "${CMAKE_CXX_COMPILER_ID}")
 
 message(STATUS "Configuring ${VSCGE_COMPILER} compiler")
-target_compile_definitions(vscge PRIVATE -D_UNICODE -DUNICODE)
 target_compile_features(vscge PRIVATE cxx_std_20)
 
 if(VSCGE_COMPILER STREQUAL "GNU")
