@@ -21,6 +21,7 @@
 
 #include "vscge/profiler/profiler.h"
 
+// TODO(Victor): Move to a platform specific layer.
 namespace vs::Logger {
 struct Internals {
   HANDLE write_handle = nullptr;

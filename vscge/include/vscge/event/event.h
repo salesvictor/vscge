@@ -18,6 +18,8 @@
 #include "vscge/core/core.h"
 
 namespace vs {
+// TODO(Victor): These events are not mutually exclusive, maybe represent them
+// as a bitfield?
 enum class EventType {
   kKey,  // Generic key event, for when you don't care.
   kKeyPressed,
@@ -28,6 +30,7 @@ enum class EventType {
   kMouseButtonReleased,
 };
 
+// TODO(Victor): See if it makes sense to add a `handled` to Event.
 struct VS_API Event {
   virtual EventType Type() const = 0;
 };
@@ -36,6 +39,9 @@ class VS_API EventDispatcher {
  public:
   explicit EventDispatcher(Ref<Event> event) : event_{event} {}
 
+  // TODO(Victor): I really do not like having a `TypeStatic()` function, but
+  // the only other way I found was a `dynamic_cast`, maybe there's a better way
+  // with C++ specific idioms.
   template <typename Type, typename Fn>
   void Dispatch(const Fn& fn) {
     if (event_->Type() == Type::TypeStatic())

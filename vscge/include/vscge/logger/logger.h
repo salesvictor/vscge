@@ -20,6 +20,8 @@
 #include "vscge/core/core.h"
 
 namespace vs {
+// TODO(Victor): See if it makes sense for Logger to be a static class, if not,
+// change the namespace to be lower case.
 namespace Logger {
 enum class Level {
   kInfo,
@@ -27,6 +29,7 @@ enum class Level {
   kDebug,
 };
 void VS_API Initialize();
+// TODO(Victor): Maybe also specify a logging file?
 void VS_API Log(std::string_view message, Level level = Level::kInfo);
 }  // namespace Logger
 }  // namespace vs

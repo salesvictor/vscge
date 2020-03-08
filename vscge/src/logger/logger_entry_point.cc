@@ -23,6 +23,7 @@ int main() {
   while (true) {
     std::getline(std::cin, message);
     if (message.size()) {
+      // TODO(Victor): add colored output to console.
       tee << message << '\n';
     }
   }

@@ -15,6 +15,7 @@
 #ifndef VSCGE_INCLUDE_VSCGE_VSCGE_H_
 #define VSCGE_INCLUDE_VSCGE_VSCGE_H_
 
+// TODO(Victor): Check what really needs to be here.
 #include "vscge/core/application.h"
 #include "vscge/core/timer.h"
 #include "vscge/event/event.h"

@@ -33,14 +33,19 @@ class VS_API Application {
 
   void Start();
 
- private:
-  void MainLoop();
-  void EventListener();
-
+ protected:
   virtual void OnStart() {}
   virtual void OnEvent(Ref<Event> event) {}
   virtual void OnUpdate(const Timestep &timestep) = 0;
 
+ private:
+  void MainLoop();
+
+  // TODO(Victor): EventListener() is not a good name, this handles input,
+  // change it.
+  void EventListener();
+
+  // TODO(Victor): This should be moved to an input system.
   HANDLE buffer_in_;
 };
 }  // namespace vs

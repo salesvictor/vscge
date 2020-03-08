@@ -52,13 +52,15 @@ void Application::Start() {
 }
 
 void Application::MainLoop() {
-  Timer timer;
+  Stopwatch timer;
   timer.Start();
   while (true) {
+    VS_PROFILE_FUNCTION();
     Timestep timestep = timer.Stop();
-    std::string title = std::string("VS CGE - FPS: ") +
-                        std::to_string(static_cast<int>(1 / timestep));
-    SetConsoleTitleA(title.c_str());
+    std::string timing_message =
+        "Timestep: " + std::to_string(timestep.Milliseconds()) +
+        " ms | FPS: " + std::to_string(static_cast<int>(1 / timestep)) + "\n";
+    Logger::Log(timing_message);
 
     timer.Start();
 
@@ -67,10 +69,7 @@ void Application::MainLoop() {
       OnUpdate(timestep);
     }
 
-    {
-      VS_PROFILE_SCOPE("Render");
-      Renderer::Render();
-    }
+    Renderer::Render();
   }
 }
 

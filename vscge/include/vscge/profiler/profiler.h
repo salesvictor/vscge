@@ -20,14 +20,22 @@
 
 #include "vscge/core/core.h"
 
-#define VS_PROFILE_BEGIN_SESSION(name, filepath) \
-  ::vs::Profiler::BeginSession(name, filepath)
-#define VS_PROFILE_END_SESSION() ::vs::Profiler::EndSession()
-#define VS_PROFILE_SCOPE(name) ::vs::Profiler::Timer timer##__LINE__(name);
-#define VS_PROFILE_FUNCTION() VS_PROFILE_SCOPE((const char*)__FUNCSIG__)
+#ifdef VS_PROFILE
+#  define VS_PROFILE_BEGIN_SESSION(name, filepath) \
+    ::vs::Profiler::BeginSession(name, filepath)
+#  define VS_PROFILE_END_SESSION() ::vs::Profiler::EndSession()
+#  define VS_PROFILE_SCOPE(name) ::vs::Profiler::Timer timer##__LINE__(name);
+#  define VS_PROFILE_FUNCTION() VS_PROFILE_SCOPE((const char*)__FUNCSIG__)
+#else
+#  define VS_PROFILE_BEGIN_SESSION(name, filepath)
+#  define VS_PROFILE_END_SESSION()
+#  define VS_PROFILE_SCOPE(name)
+#  define VS_PROFILE_FUNCTION()
+#endif  // VS_PROFILE
 
 namespace vs {
 namespace Profiler {
+// TODO(Victor): I don't think `name` is being used anywhere.
 void VS_API BeginSession(std::string_view name,
                          std::string_view filepath = "results.json");
 void VS_API EndSession();

@@ -24,13 +24,13 @@ namespace vs {
 struct VS_API Timestep {
   std::chrono::duration<float> duration;
 
-  constexpr float GetSeconds();
-  constexpr float GetMilliseconds();
+  float Seconds();
+  float Milliseconds();
 
-  constexpr operator float() const { return duration.count(); }
+  operator float() const { return duration.count(); }
 };
 
-class VS_API Timer {
+class VS_API Stopwatch {
  public:
   void Start();
   Timestep Stop();

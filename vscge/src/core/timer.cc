@@ -15,14 +15,14 @@
 #include "vscge/core/timer.h"
 
 namespace vs {
-constexpr float Timestep::GetSeconds() { return duration.count(); }
-constexpr float Timestep::GetMilliseconds() {
+float Timestep::Seconds() { return duration.count(); }
+float Timestep::Milliseconds() {
   return duration.count() * 1000.0f;  // NOLINT: duration is clearly in seconds.
 }
 
-void Timer::Start() { start_time_ = std::chrono::steady_clock::now(); }
+void Stopwatch::Start() { start_time_ = std::chrono::steady_clock::now(); }
 
-Timestep Timer::Stop() {
+Timestep Stopwatch::Stop() {
   end_time_ = std::chrono::steady_clock::now();
   return {end_time_ - start_time_};
 }

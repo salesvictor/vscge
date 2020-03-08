@@ -91,8 +91,14 @@ const Pixel &GetPixelAt(Point location) {
 
 const Rect GetWindowRect() { return Rect(internals.window); }
 
+// TODO(Victor): Pixels arealdy have a Pixel::localtion, this is duplicate
+// information here.
+//
+// There should be a better way to treat this, some ideas:
+//   * Use a unlimited screen_buffer, allowing infinite Pixels, and drawing
+//     only the ones that are on the screen.
+//   * Check if 2D arrays are contiguous and treat screen_buffer as one.
 void DrawPixel(const Pixel &pixel) {
-  VS_PROFILE_FUNCTION();
   VS_ASSERT(Rect(internals.window).Contains(pixel.location));
   internals.screen_buffer[PointToBufferIndex(Rect(internals.window),
                                              pixel.location)] = pixel;
@@ -106,6 +112,8 @@ void ClearScreen() {
   }
 }
 
+// TODO(Victor): this doesn't really make sense, should find a better buffering
+// system
 void DrawBuffer(const std::vector<Pixel> &buffer) {
   VS_PROFILE_FUNCTION();
   VS_ASSERT(buffer.size() <= internals.screen_buffer.size());

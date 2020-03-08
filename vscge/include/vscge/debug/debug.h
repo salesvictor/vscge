@@ -19,6 +19,8 @@
 
 #include "vscge/core/core.h"
 
+// TODO(Victor): For some reason this macro adds a lot of overhead to the calls
+// everywhere...
 #ifdef VS_DEBUG
 #define VS_ASSERT(cond)                                                  \
   (!!(cond) || ::vs::debug::Fail(VS_STR(cond), (const char*)__FUNCSIG__, \

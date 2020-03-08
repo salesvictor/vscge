@@ -21,6 +21,8 @@
 #include <sstream>
 #include <string>
 
+// TODO(Victor): See about making asynchronous profiling, right now the
+// profiling consumes the engine resources.
 namespace vs::Profiler {
 using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
 

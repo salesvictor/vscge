@@ -25,6 +25,8 @@
 #include "vscge/utils/conversions.h"
 
 namespace vs {
+// TODO(Victor): See if it makes sense for Renderer to be a static class, if
+// not, change the namespace to be lower case.
 namespace Renderer {
 void VS_API Initialize(const HANDLE &handle, const Size &window_size,
                        const Size &font_size);

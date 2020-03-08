@@ -81,6 +81,7 @@ struct VS_API Rect {
     return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height;
   };
 
+  // TODO(Victor): Move to a platform layer.
   constexpr operator SMALL_RECT() const {
     return {(SHORT)x, (SHORT)y, (SHORT)(x + width - 1),
             (SHORT)(y + height - 1)};
@@ -147,10 +148,14 @@ struct VS_API PixelColor {
   constexpr PixelColor(const BG &back, const FG &fore)
       : color((int)back | (int)fore) {}
 
+  // TODO(Victor): Move to a platform layer.
   constexpr operator WORD() const { return (WORD)color; };
 };
 
-// TODO(Victor): Move to a platform layer.
+// TODO(Victor): Pixels certainly have colors, but they will also have different
+// properties depending on what we are trying to do with it. For example, `char`
+// is valid only on a Console application, and PixelBlock will not make sense
+// anywhere else too...
 struct VS_API PixelProps {
   PixelColor color;
   union {
@@ -167,6 +172,7 @@ struct VS_API PixelProps {
   constexpr PixelProps(const PixelColor &color, const char &ch)
       : color(color), ch(ch) {}
 
+  // TODO(Victor): Move to a platform layer.
   constexpr operator CHAR_INFO() const {
     return {.Char = {.AsciiChar = ch}, .Attributes = color};
   }
@@ -187,7 +193,6 @@ struct VS_API Pixel {
   constexpr Pixel(const Point &location, const PixelProps &props)
       : location(location), props(props) {}
 
-  // TODO(Victor): Move to a platform layer.
   PixelBlock &Char() { return props.block; }
   constexpr const PixelBlock &Char() const { return props.block; }
 
@@ -196,6 +201,7 @@ struct VS_API Pixel {
 };
 
 struct VS_API Window {
+  // TODO(Victor): Move to a platform layer.
   HANDLE handle;
   Size size;
 

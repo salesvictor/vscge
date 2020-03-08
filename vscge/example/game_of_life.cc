@@ -18,7 +18,7 @@
 #include <string>
 
 class GameOfLife : public vs::Application {
- private:
+ protected:
   virtual void OnStart() override {
     vs::Renderer::ClearScreen();
 
@@ -48,7 +48,7 @@ class GameOfLife : public vs::Application {
     running_ = false;
   }
 
-  virtual void OnEvent(vs::Ref<vs::Event> event) {
+  virtual void OnEvent(vs::Ref<vs::Event> event) override {
     vs::EventDispatcher dispatcher{event};
     dispatcher.Dispatch<vs::KeyPressedEvent>(VS_BIND_EVENT(OnKeyPress));
     dispatcher.Dispatch<vs::MouseButtonPressedEvent>(
@@ -77,7 +77,6 @@ class GameOfLife : public vs::Application {
 
   virtual void OnUpdate(const vs::Timestep &timestep) override {
     if (running_) {
-      vs::Logger::Log("OnUpdate\n");
       std::vector<vs::Pixel> new_state = vs::Renderer::GetBuffer();
 
       auto is_alive = [](const vs::Pixel &pixel) {
@@ -102,26 +101,28 @@ class GameOfLife : public vs::Application {
         return count;
       };
 
-      for (auto &pixel : new_state) {
-        vs::PixelBlock ch = pixel.Char();
-        short x = pixel.x;
-        short y = pixel.y;
-        int count = alive_count(x, y);
+      {
+        VS_PROFILE_SCOPE("Calculating New State");
+        for (auto &pixel : new_state) {
+          vs::PixelBlock ch = pixel.Char();
+          short x = pixel.x;
+          short y = pixel.y;
+          int count = alive_count(x, y);
 
-        if (ch == vs::PixelBlock::kEmpty) {
-          if (count == 3) {
-            pixel.Char() = vs::PixelBlock::kFull;
-            pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kWhite};
-          }
-        } else if (ch == vs::PixelBlock::kFull) {
-          if (count < 2 || count > 3) {
-            pixel.Char() = vs::PixelBlock::kEmpty;
-            pixel.Color() = vs::PixelColor(vs::PixelColor::BG::kBlack);
+          if (ch == vs::PixelBlock::kEmpty) {
+            if (count == 3) {
+              pixel.Char() = vs::PixelBlock::kFull;
+              pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kWhite};
+            }
+          } else if (ch == vs::PixelBlock::kFull) {
+            if (count < 2 || count > 3) {
+              pixel.Char() = vs::PixelBlock::kEmpty;
+              pixel.Color() = vs::PixelColor(vs::PixelColor::BG::kBlack);
+            }
           }
         }
       }
 
-      vs::Logger::Log("Before DrawBuffer\n");
       vs::Renderer::DrawBuffer(new_state);
     }
   }
