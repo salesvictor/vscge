@@ -17,11 +17,27 @@
 
 # TODO(Victor): Rethink how to add examples
 
-add_executable(GameOfLife game_of_life.cc)
-target_link_libraries(GameOfLife vs::cge)
+macro(add_example name)
+  add_executable(${name} ${name}.cc)
+  target_link_libraries(${name} vs::cge)
+  set_target_properties(
+    ${name} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${VSCGE_ROOT}/examples/${name}"
+  )
 
-add_custom_command(
-  TARGET GameOfLife POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  $<TARGET_FILE:vs::cge> $<TARGET_FILE_DIR:GameOfLife>
-)
+  add_custom_target(${name}_copy)
+  add_dependencies(${name}_copy vs::cge)
+  add_custom_command(
+    TARGET ${name}_copy PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${VSCGE_ROOT}/lib/vscge.lib "${VSCGE_ROOT}/examples/${name}"
+  )
+
+  add_custom_command(
+    TARGET ${name} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:Logger> $<TARGET_FILE_DIR:${name}>
+  )
+endmacro()
+
+add_example(game_of_life)

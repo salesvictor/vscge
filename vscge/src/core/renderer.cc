@@ -101,6 +101,7 @@ const Rect GetWindowRect() { return Rect(internals.window); }
 void DrawPixel(const Pixel &pixel) {
   VS_ASSERT(Rect(internals.window).Contains(pixel.location));
   internals.screen_buffer[PointToBufferIndex(Rect(internals.window),
+                                             // NOLINTNEXTLINE
                                              pixel.location)] = pixel;
 }
 
@@ -150,8 +151,8 @@ void DrawRect(const Rect &rect, const vs::PixelProps &props) {
   VS_PROFILE_FUNCTION()
   int x0 = rect.x;
   int y0 = rect.y;
-  int x1 = rect.x + rect.width - 1;
-  int y1 = rect.y + rect.height - 1;
+  int x1 = rect.x + rect.width - 1;   // NOLINT
+  int y1 = rect.y + rect.height - 1;  // NOLINT
 
   DrawLine({x0, y0}, {x1, y0}, props);  // Top
   DrawLine({x1, y0}, {x1, y1}, props);  // Right
@@ -162,7 +163,7 @@ void DrawRect(const Rect &rect, const vs::PixelProps &props) {
 void FillRect(const Rect &rect, const vs::PixelProps &props) {
   VS_PROFILE_FUNCTION();
   for (int y = rect.y; y < internals.window.size.height; ++y) {
-    DrawLine({rect.x, y}, {rect.x + rect.width, y}, props);
+    DrawLine({rect.x, y}, {rect.x + rect.width, y}, props);  // NOLINT
   }
 }
 

@@ -27,15 +27,15 @@
 namespace vs {
 Point BufferIndexToPoint(const Rect &region, int i) {
   VS_ASSERT(i < region.width * region.height);
-  int x = region.x + (i % region.width);
-  int y = region.y + (i / region.width);
+  int x = region.x + (i % region.width);  // NOLINT
+  int y = region.y + (i / region.width);  // NOLINT
 
   return {x, y};
 }
 
 int PointToBufferIndex(const Rect &region, const Point &point) {
   VS_ASSERT(region.Contains(point));
-  return (point.y - region.y) * region.width + (point.x - region.x);
+  return (point.y - region.y) * region.width + (point.x - region.x);  // NOLINT
 }
 
 std::vector<Pixel> StringToPixelBuffer(

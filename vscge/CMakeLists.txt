@@ -148,12 +148,6 @@ if(BUILD_VSCGE_TESTS)
   message(STATUS "Configuring VSCGE unit tests - done")
 endif()
 
-if(BUILD_VSCGE_EXAMPLES)
-  message(STATUS "Configuring VSCGE examples")
-  add_subdirectory(example ${VSCGE_ROOT}/example)
-  message(STATUS "Configuring VSCGE examples - done")
-endif()
-
 message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION} - done")
 
 add_executable(Logger src/logger/logger_entry_point.cc)

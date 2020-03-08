@@ -29,4 +29,10 @@ project(
 option(BUILD_VSCGE_TESTS "Build VSCGE tests" OFF)
 option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples" ON)
 
-add_subdirectory(vscge tmp)
+add_subdirectory(vscge)
+
+if(BUILD_VSCGE_EXAMPLES)
+  message(STATUS "Configuring VSCGE examples")
+  add_subdirectory(examples tmp)
+  message(STATUS "Configuring VSCGE examples - done")
+endif()
