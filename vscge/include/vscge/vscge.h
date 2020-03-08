@@ -17,6 +17,7 @@
 
 // TODO(Victor): Check what really needs to be here.
 #include "vscge/core/application.h"
+#include "vscge/core/entry_point.h"
 #include "vscge/core/timer.h"
 #include "vscge/event/event.h"
 #include "vscge/event/key_event.h"

@@ -16,18 +16,18 @@
 #define VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
 
 #ifdef VS_SHARED
-#  ifdef _WIN32
-#    pragma warning(disable : 4251)
-#    ifdef vscge_EXPORTS
-#      define VS_API __declspec(dllexport)
-#    else
-#      define VS_API __declspec(dllimport)
-#    endif  // vscge_EXPORTS
-#  else
-#    define VS_API
-#  endif  // _WIN32
+#ifdef _WIN32
+#pragma warning(disable : 4251)
+#ifdef vscge_EXPORTS
+#define VS_API __declspec(dllexport)
 #else
-#  define VS_API
+#define VS_API __declspec(dllimport)
+#endif  // vscge_EXPORTS
+#else
+#define VS_API
+#endif  // _WIN32
+#else
+#define VS_API
 #endif  // VS_SHARED
 
 #include <memory>
@@ -39,6 +39,11 @@
 #define VS_STR(str) VS_STR_IMPL(str)
 #define VS_STR_IMPL(str) #str
 
+#define VS_REGISTER_APP(app_name)               \
+  vs::Ref<vs::Application> vs::CreateApp() {    \
+    return vs::CreateRef<app_name>(app_name()); \
+  }
+
 namespace vs {
 template <class Type>
 using Ref = std::shared_ptr<Type>;
@@ -47,6 +52,9 @@ template <class Type, typename... Args>
 constexpr Ref<Type> CreateRef(Args &&... args) {
   return std::make_shared<Type>(std::forward<Args>(args)...);
 }
+
+class Application;
+Ref<Application> VS_API CreateApp();
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_CORE_H_

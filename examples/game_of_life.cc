@@ -146,11 +146,4 @@ class GameOfLife : public vs::Application {
   std::vector<vs::Pixel> current_state_;
 };
 
-int main() {
-  VS_PROFILE_BEGIN_SESSION("Startup", "startup.json");
-  GameOfLife game;
-  VS_PROFILE_END_SESSION();
-
-  game.Start();
-  return 0;
-}
+VS_REGISTER_APP(GameOfLife);
