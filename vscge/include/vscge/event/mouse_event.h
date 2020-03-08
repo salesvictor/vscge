@@ -15,6 +15,8 @@
 #ifndef VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H_
 #define VSCGE_INCLUDE_VSCGE_EVENT_MOUSE_EVENT_H_
 
+#include <string>
+
 #include "vscge/core/types.h"
 #include "vscge/event/event.h"
 
@@ -39,6 +41,7 @@ struct VS_API MouseEvent : public Event {
   MouseButtons buttons;
 
   static constexpr EventType TypeStatic() { return EventType::kMouse; }
+  std::string TypeName() const override { return "MouseEvent"; }
   EventType Type() const override { return EventType::kMouse; }
 };
 
@@ -49,6 +52,7 @@ struct VS_API MouseMovedEvent : public MouseEvent {
   Point movement;
 
   static constexpr EventType TypeStatic() { return EventType::kMouseMoved; }
+  std::string TypeName() const override { return "MouseMovedEvent"; }
   EventType Type() const override { return EventType::kMouseMoved; }
 };
 
@@ -57,6 +61,7 @@ struct VS_API MouseButtonPressedEvent : public MouseEvent {
   static constexpr EventType TypeStatic() {
     return EventType::kMouseButtonPressed;
   }
+  std::string TypeName() const override { return "MouseButtonPressedEvent"; }
   EventType Type() const override { return EventType::kMouseButtonPressed; }
 };
 
@@ -65,9 +70,8 @@ struct VS_API MouseButtonReleasedEvent : public MouseEvent {
   static constexpr EventType TypeStatic() {
     return EventType::kMouseButtonReleased;
   }
-  EventType Type() const override {
-    return EventType::kMouseButtonReleased;
-  }
+  std::string TypeName() const override { return "MouseButtonReleasedEvent"; }
+  EventType Type() const override { return EventType::kMouseButtonReleased; }
 };
 }  // namespace vs
 

@@ -46,7 +46,7 @@ Application::Application(const Size &screen_size, const Size &font_size)
 }
 
 BOOL Application::CloseHandler(DWORD ctrl_event) {
-  Logger::Log("Stopping application!\n");
+  Logger::Log("Stopping application!");
   is_running_ = false;
   std::unique_lock lock(closing_);
   has_finished_.wait(lock);
@@ -74,8 +74,8 @@ void Application::MainLoop() {
     Timestep timestep = timer.Stop();
     std::string timing_message =
         "Timestep: " + std::to_string(timestep.Milliseconds()) +
-        " ms | FPS: " + std::to_string(static_cast<int>(1 / timestep)) + "\n";
-    Logger::Log(timing_message);
+        " ms | FPS: " + std::to_string(static_cast<int>(1 / timestep));
+    Logger::Log(timing_message, Logger::Level::kDebug);
 
     timer.Start();
 
@@ -104,24 +104,38 @@ void Application::EventListener() {
       switch (read_event.EventType) {
         case KEY_EVENT: {
           VS_PROFILE_SCOPE("KEY_EVENT");
-          KEY_EVENT_RECORD record = read_event.Event.KeyEvent;
+          KEY_EVENT_RECORD record = read_event.Event.KeyEvent;  // NOLINT
           Key key = static_cast<Key>(record.wVirtualKeyCode);
           bool is_down = record.bKeyDown;
 
-          // If first time, create a dummy KeyEvent
+          // INFO(Victor): for some reason, this can't be an std::string_view,
+          // should investigate more.
+          std::string message = "Received key " +
+                                std::to_string(static_cast<int>(key)) + ' ' +
+                                (is_down ? "down" : "up");
+          Logger::Log(message, Logger::Level::kDebug);
+
+          // If first time, create a dummy KeyReleasedEvent
           if (!previous_key_event[key]) {
-            previous_key_event[key] = CreateRef<KeyEvent>(KeyEvent{key});
+            previous_key_event[key] =
+                CreateRef<KeyReleasedEvent>(KeyReleasedEvent{key});
           }
 
-          if (previous_key_event[key]->Type() == EventType::kKeyPressed &&
+          message = "Previous state: " + previous_key_event[key]->TypeName();
+          Logger::Log(message, Logger::Level::kDebug);
+
+          if (previous_key_event[key]->Type() != EventType::kKeyReleased &&
               !is_down) {
             KeyReleasedEvent event{key};
             previous_key_event[key] = CreateRef<KeyReleasedEvent>(event);
-          } else if (previous_key_event[key]->Type() !=
-                         EventType::kKeyPressed &&
+          } else if (previous_key_event[key]->Type() ==
+                         EventType::kKeyReleased &&
                      is_down) {
             KeyPressedEvent event{key};
             previous_key_event[key] = CreateRef<KeyPressedEvent>(event);
+          } else {
+            // TODO(Victor): Add an event KeyHold.
+            previous_key_event[key] = CreateRef<KeyEvent>(KeyEvent{key});
           }
 
           OnEvent(previous_key_event[key]);
@@ -130,7 +144,7 @@ void Application::EventListener() {
         }
         case MOUSE_EVENT: {
           VS_PROFILE_SCOPE("MOUSE_EVENT");
-          MOUSE_EVENT_RECORD record = read_event.Event.MouseEvent;
+          MOUSE_EVENT_RECORD record = read_event.Event.MouseEvent;  // NOLINT
           Point position = record.dwMousePosition;
           MouseButtons buttons;
 
@@ -147,7 +161,10 @@ void Application::EventListener() {
                 CreateRef<MouseEvent>(MouseEvent{{0, 0}, {false, false}});
           }
 
+          // TODO(Victor): The logic to get button presses/releases is mostly
+          // certainly wrong.
           if (record.dwEventFlags & MOUSE_MOVED) {
+            // NOLINTNEXTLINE
             MouseMovedEvent event = {previous_mouse_event->position, position,
                                      buttons};
             previous_mouse_event = CreateRef<MouseMovedEvent>(event);

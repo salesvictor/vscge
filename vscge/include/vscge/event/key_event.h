@@ -17,6 +17,8 @@
 
 #include <Windows.h>
 
+#include <string>
+
 #include "vscge/core/core.h"
 #include "vscge/event/event.h"
 
@@ -128,18 +130,21 @@ struct VS_API KeyEvent : public Event {
   Key key;
 
   static constexpr EventType TypeStatic() { return EventType::kKey; }
+  std::string TypeName() const override { return "KeyEvent"; }
   EventType Type() const override { return EventType::kKey; }
 };
 
 struct VS_API KeyPressedEvent : public KeyEvent {
   using KeyEvent::KeyEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() { return EventType::kKeyPressed; }
+  std::string TypeName() const override { return "KeyPressedEvent"; }
   EventType Type() const override { return EventType::kKeyPressed; }
 };
 
 struct VS_API KeyReleasedEvent : public KeyEvent {
   using KeyEvent::KeyEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() { return EventType::kKeyReleased; }
+  std::string TypeName() const override { return "KeyReleasedEvent"; }
   EventType Type() const override { return EventType::kKeyReleased; }
 };
 }  // namespace vs

@@ -15,6 +15,8 @@
 #ifndef VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_
 #define VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_
 
+#include <string>
+
 #include "vscge/core/core.h"
 
 namespace vs {
@@ -33,6 +35,7 @@ enum class EventType {
 // TODO(Victor): See if it makes sense to add a `handled` to Event.
 struct VS_API Event {
   virtual EventType Type() const = 0;
+  virtual std::string TypeName() const = 0;
 };
 
 class VS_API EventDispatcher {

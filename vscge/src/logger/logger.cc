@@ -26,7 +26,7 @@ namespace vs::Logger {
 struct Internals {
   HANDLE write_handle = nullptr;
   std::unordered_map<Level, std::string_view> level_map = {
-      {Level::kInfo, "Info"},
+      {Level::kInfo, "Info "},
       {Level::kError, "Error"},
       {Level::kDebug, "Debug"}};
 };
@@ -86,9 +86,9 @@ void Log(std::string_view message, Level level) {
   std::string timestamp = date + " " + time;
   std::string level_string = std::string(internals.level_map[level]);
   std::string write_message =
-      "[" + timestamp + "|" + level_string + "] " + std::string(message);
+      "[" + timestamp + "|" + level_string + "] " + std::string(message) + '\n';
 
-  // No idea this needs to exist, but fount it here:
+  // INFO(Victor): No idea this needs to exist, but fount it here:
   // https://stackoverflow.com/questions/28618715/c-writefile-unicode-characters
   //
   // The following is for handling Unicode.
