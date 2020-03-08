@@ -120,6 +120,8 @@ set(VSCGE_COMPILER "${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "Configuring ${VSCGE_COMPILER} compiler")
 target_compile_features(vscge PRIVATE cxx_std_20)
 
+target_compile_definitions(vscge PUBLIC VS_PROFILE)
+
 if(VSCGE_COMPILER STREQUAL "GNU")
   set(COMPILE_PRIVATE_FLAGS -Wall -Wextra)
   set(COMPILE_DEBUG_FLAGS -g)

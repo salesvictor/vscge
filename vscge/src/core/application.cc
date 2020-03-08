@@ -38,6 +38,19 @@ Application::Application(const Size &screen_size, const Size &font_size)
 
   Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size, font_size);
   Logger::Initialize();
+
+  SetConsoleCtrlHandler(
+      static_cast<PHANDLER_ROUTINE>(Application::CloseHandler), true);
+
+  is_running_ = true;
+}
+
+BOOL Application::CloseHandler(DWORD ctrl_event) {
+  Logger::Log("Stopping application!\n");
+  is_running_ = false;
+  std::unique_lock lock(closing_);
+  has_finished_.wait(lock);
+  return true;
 }
 
 void Application::Start() {
@@ -49,12 +62,14 @@ void Application::Start() {
   game_loop.join();
   event_loop.join();
   VS_PROFILE_END_SESSION();
+
+  has_finished_.notify_all();
 }
 
 void Application::MainLoop() {
   Stopwatch timer;
   timer.Start();
-  while (true) {
+  while (is_running_) {
     VS_PROFILE_FUNCTION();
     Timestep timestep = timer.Stop();
     std::string timing_message =
@@ -77,7 +92,7 @@ void Application::MainLoop() {
 void Application::EventListener() {
   Ref<MouseEvent> previous_mouse_event;
   std::unordered_map<Key, Ref<KeyEvent>> previous_key_event;
-  while (true) {
+  while (is_running_) {
     DWORD num_events;
     GetNumberOfConsoleInputEvents(buffer_in_, &num_events);
 
@@ -153,22 +168,10 @@ void Application::EventListener() {
 
           break;
         }
-        case WINDOW_BUFFER_SIZE_EVENT: {
-          WINDOW_BUFFER_SIZE_RECORD record =
-              read_event.Event.WindowBufferSizeEvent;
-
+        case WINDOW_BUFFER_SIZE_EVENT:
+        case MENU_EVENT:
+        case FOCUS_EVENT:
           break;
-        }
-        case MENU_EVENT: {
-          MENU_EVENT_RECORD record = read_event.Event.MenuEvent;
-
-          break;
-        }
-        case FOCUS_EVENT: {
-          FOCUS_EVENT_RECORD record = read_event.Event.FocusEvent;
-
-          break;
-        }
       }
     }
   }

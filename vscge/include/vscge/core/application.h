@@ -17,6 +17,8 @@
 
 #include <Windows.h>
 
+#include <atomic>
+#include <condition_variable>
 #include <vector>
 
 #include "vscge/core/core.h"
@@ -45,8 +47,14 @@ class VS_API Application {
   // change it.
   void EventListener();
 
+  static BOOL WINAPI CloseHandler(DWORD ctrl_event);
+
   // TODO(Victor): This should be moved to an input system.
   HANDLE buffer_in_;
+
+  static inline std::atomic<bool> is_running_ = false;
+  static inline std::mutex closing_;
+  static inline std::condition_variable has_finished_;
 };
 }  // namespace vs
 

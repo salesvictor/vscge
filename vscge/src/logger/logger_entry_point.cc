@@ -25,6 +25,8 @@ int main() {
     if (message.size()) {
       // TODO(Victor): add colored output to console.
       tee << message << '\n';
+    } else {
+      break;
     }
   }
 
