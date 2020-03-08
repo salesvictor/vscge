@@ -20,7 +20,9 @@
 class GameOfLife : public vs::Application {
  protected:
   virtual void OnStart() override {
-    vs::Renderer::ClearScreen();
+    vs::Rect window_rect = vs::Renderer::GetWindowRect();
+    current_state_.clear();
+    current_state_.reserve(window_rect.BufferSize());
 
     std::string initial_state_str =
         "........................#............"
@@ -37,13 +39,24 @@ class GameOfLife : public vs::Application {
         {'.', {vs::PixelColor::FG::kBlack, vs::PixelBlock::kEmpty}},
         {'#', {vs::PixelColor::BG::kWhite, vs::PixelBlock::kFull}}};
 
-    std::vector<vs::Pixel> initial_state =
+    for (int x = 0; x < window_rect.width; ++x) {
+      for (int y = 0; y < window_rect.height; ++y) {
+        if (x == 0 || x == window_rect.width - 1 || y == 0 ||
+            y == window_rect.height - 1) {
+          current_state_.emplace_back(
+              vs::Pixel({x, y}, vs::PixelProps(vs::PixelBlock::kDarkShade)));
+        } else {
+          current_state_.emplace_back(vs::Pixel({x, y}, {}));
+        }
+      }
+    }
+    std::vector<vs::Pixel> glider_gun =
         vs::StringToPixelBuffer(initial_state_str, {10, 10, 37, 9}, char_map);
 
-    vs::Renderer::DrawBuffer(initial_state);
+    current_state_.insert(current_state_.end(), glider_gun.begin(),
+                          glider_gun.end());
 
-    vs::Renderer::DrawRect(vs::Renderer::GetWindowRect(),
-                           vs::PixelProps(vs::PixelBlock::kDarkShade));
+    vs::Renderer::DrawBuffer(current_state_);
 
     running_ = false;
   }
@@ -77,10 +90,10 @@ class GameOfLife : public vs::Application {
 
   virtual void OnUpdate(const vs::Timestep &timestep) override {
     if (running_) {
-      std::vector<vs::Pixel> new_state = vs::Renderer::GetBuffer();
+      std::vector<vs::Pixel> new_state = current_state_;
 
-      auto is_alive = [](const vs::Pixel &pixel) {
-        return pixel.Char() == vs::PixelBlock::kFull;
+      auto is_alive = [](const vs::PixelProps &props) {
+        return props.block == vs::PixelBlock::kFull;
       };
 
       auto alive_count = [is_alive](int x, int y) {
@@ -95,7 +108,7 @@ class GameOfLife : public vs::Application {
             continue;
           }
 
-          count += is_alive(vs::Renderer::GetPixelAt(neibourgh));
+          count += is_alive(vs::Renderer::GetPixelPropsAt(neibourgh));
         }
 
         return count;
@@ -104,17 +117,17 @@ class GameOfLife : public vs::Application {
       {
         VS_PROFILE_SCOPE("Calculating New State");
         for (auto &pixel : new_state) {
-          vs::PixelBlock ch = pixel.Char();
-          short x = pixel.x;
-          short y = pixel.y;
+          vs::PixelBlock block = pixel.Char();
+          int x = pixel.x;
+          int y = pixel.y;
           int count = alive_count(x, y);
 
-          if (ch == vs::PixelBlock::kEmpty) {
+          if (block == vs::PixelBlock::kEmpty) {
             if (count == 3) {
               pixel.Char() = vs::PixelBlock::kFull;
               pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kWhite};
             }
-          } else if (ch == vs::PixelBlock::kFull) {
+          } else if (block == vs::PixelBlock::kFull) {
             if (count < 2 || count > 3) {
               pixel.Char() = vs::PixelBlock::kEmpty;
               pixel.Color() = vs::PixelColor(vs::PixelColor::BG::kBlack);
@@ -124,11 +137,13 @@ class GameOfLife : public vs::Application {
       }
 
       vs::Renderer::DrawBuffer(new_state);
+      current_state_ = new_state;
     }
   }
 
  private:
   bool running_;
+  std::vector<vs::Pixel> current_state_;
 };
 
 int main() {

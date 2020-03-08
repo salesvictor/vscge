@@ -26,7 +26,7 @@
 
 namespace vs::Renderer {
 struct Internals {
-  std::vector<Pixel> screen_buffer = {};
+  Matrix<PixelProps> screen = {};
   Window window = {};
 
   SMALL_RECT window_wrapper = {};
@@ -74,19 +74,14 @@ void Initialize(const HANDLE &handle, const Size &window_size,
   };
   SetConsoleCursorInfo(internals.window.handle, &cci);
   SetConsoleActiveScreenBuffer(internals.window.handle);
-  internals.screen_buffer.reserve(internals.window.size.Area());
-  for (int i = 0; i < internals.window.size.Area(); ++i) {
-    internals.screen_buffer.emplace_back(
-        Pixel(BufferIndexToPoint(Rect(internals.window), i),
-              PixelProps(PixelBlock::kEmpty)));
-  }
+  internals.screen = Matrix<PixelProps>(internals.window.size,
+                                        PixelProps(PixelColor::FG::kBlack));
 }
 
-const std::vector<Pixel> &GetBuffer() { return internals.screen_buffer; }
+const std::vector<PixelProps> &GetBuffer() { return internals.screen.Buffer(); }
 
-const Pixel &GetPixelAt(Point location) {
-  int index = PointToBufferIndex(Rect(internals.window), location);
-  return internals.screen_buffer[index];
+const PixelProps &GetPixelPropsAt(Point location) {
+  return internals.screen(location);
 }
 
 const Rect GetWindowRect() { return Rect(internals.window); }
@@ -95,29 +90,25 @@ const Rect GetWindowRect() { return Rect(internals.window); }
 // information here.
 //
 // There should be a better way to treat this, some ideas:
-//   * Use a unlimited screen_buffer, allowing infinite Pixels, and drawing
+//   * Use a unlimited screen, allowing infinite Pixels, and drawing
 //     only the ones that are on the screen.
-//   * Check if 2D arrays are contiguous and treat screen_buffer as one.
+//   * Check if 2D arrays are contiguous and treat screen as one.
 void DrawPixel(const Pixel &pixel) {
   VS_ASSERT(Rect(internals.window).Contains(pixel.location));
-  internals.screen_buffer[PointToBufferIndex(Rect(internals.window),
-                                             // NOLINTNEXTLINE
-                                             pixel.location)] = pixel;
+  internals.screen(pixel.location) = pixel.props;  // NOLINT
 }
 
 void ClearScreen() {
   VS_PROFILE_FUNCTION();
-  for (auto &pixel : internals.screen_buffer) {
-    pixel.Char() = PixelBlock::kEmpty;
-    pixel.Color() = PixelColor();
-  }
+  internals.screen = Matrix<PixelProps>(internals.window.size,
+                                        PixelProps(PixelColor::FG::kBlack));
 }
 
 // TODO(Victor): this doesn't really make sense, should find a better buffering
 // system
 void DrawBuffer(const std::vector<Pixel> &buffer) {
   VS_PROFILE_FUNCTION();
-  VS_ASSERT(buffer.size() <= internals.screen_buffer.size());
+  VS_ASSERT(buffer.size() <= internals.screen.size());
   for (const auto &pixel : buffer) DrawPixel(pixel);
 }
 
@@ -167,11 +158,12 @@ void FillRect(const Rect &rect, const vs::PixelProps &props) {
   }
 }
 
+// TODO(Victor): Move to platform specific layer.
 void Render() {
   VS_PROFILE_FUNCTION();
   std::vector<CHAR_INFO> write_buffer;
-  for (const auto &pixel : internals.screen_buffer) {
-    write_buffer.emplace_back(pixel.props);
+  for (const auto &props : internals.screen.Buffer()) {
+    write_buffer.emplace_back(props);
   }
   WriteConsoleOutputA(internals.window.handle, write_buffer.data(),
                       internals.window.size, {0, 0}, &internals.window_wrapper);

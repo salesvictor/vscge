@@ -59,6 +59,39 @@ struct VS_API Size {
   constexpr operator COORD() const { return {(SHORT)width, (SHORT)height}; };
 };
 
+template <class Elem>
+class VS_API Matrix {
+ public:
+  Matrix() = default;
+  Matrix(int rows, int cols) : size_({rows, cols}), data_(size_.Area()) {}
+  Matrix(int rows, int cols, const Elem &default_elem) : Matrix(rows, cols) {
+    for (auto &elem : data_) {
+      elem = default_elem;
+    }
+  }
+  Matrix(Size size) : Matrix(size.width, size.height) {}
+  Matrix(Size size, const Elem &default_elem)
+      : Matrix(size.width, size.height, default_elem) {}
+
+  Elem &operator()(int row, int col) {
+    return const_cast<Elem &>(std::as_const(*this)(row, col));
+  }
+  const Elem &operator()(int row, int col) const {
+    return data_[row * size_.width + col];
+  }
+
+  Elem &operator()(Point location) { return (*this)(location.y, location.x); }
+  const Elem &operator()(Point location) const {
+    return (*this)(location.x, location.y);
+  }
+
+  const std::vector<Elem> &Buffer() const { return data_; }
+
+ private:
+  Size size_;
+  std::vector<Elem> data_;
+};
+
 struct VS_API Rect {
   int x;
   int y;
@@ -163,10 +196,12 @@ struct VS_API PixelProps {
     char ch;
   };
 
-  constexpr PixelProps() : block(PixelBlock::kFull), color() {}
+  constexpr PixelProps() : block(PixelBlock::kEmpty), color() {}
   constexpr explicit PixelProps(const PixelBlock &block)
       : block(block), color(PixelColor::BG::kWhite) {}
   constexpr explicit PixelProps(const char &ch) : ch(ch), color() {}
+  constexpr explicit PixelProps(const PixelColor &color)
+      : block(PixelBlock::kEmpty) {}
   constexpr PixelProps(const PixelColor &color, const PixelBlock &block)
       : color(color), block(block) {}
   constexpr PixelProps(const PixelColor &color, const char &ch)
@@ -189,6 +224,8 @@ struct VS_API Pixel {
   };
 
   PixelProps props;
+
+  Pixel() = default;
 
   constexpr Pixel(const Point &location, const PixelProps &props)
       : location(location), props(props) {}

@@ -31,8 +31,8 @@ namespace Renderer {
 void VS_API Initialize(const HANDLE &handle, const Size &window_size,
                        const Size &font_size);
 
-const VS_API std::vector<Pixel> &GetBuffer();
-const VS_API Pixel &GetPixelAt(Point location);
+const VS_API std::vector<PixelProps> &GetBuffer();
+const VS_API PixelProps &GetPixelPropsAt(Point location);
 const VS_API Rect GetWindowRect();
 
 void VS_API ClearScreen();
