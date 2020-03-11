@@ -22,13 +22,13 @@
 
 #include "vscge/core/types.h"
 #include "vscge/debug/debug.h"
-#include "vscge/profiler/profiler.h"
+#include "vscge/instrumentation/profiler.h"
 
 namespace vs {
 Point BufferIndexToPoint(const Rect &region, int i) {
-  VS_ASSERT(i < region.width * region.height);
-  int x = region.x + (i % region.width);  // NOLINT
-  int y = region.y + (i / region.width);  // NOLINT
+  VS_ASSERT(i < region.width * region.height);  // NOLINT
+  int x = region.x + (i % region.width);        // NOLINT
+  int y = region.y + (i / region.width);        // NOLINT
 
   return {x, y};
 }

@@ -19,7 +19,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "vscge/profiler/profiler.h"
+#include "vscge/instrumentation/profiler.h"
 
 // TODO(Victor): Move to a platform specific layer.
 namespace vs::Logger {
@@ -28,8 +28,10 @@ struct Internals {
   std::unordered_map<Level, std::string_view> level_map = {
       {Level::kInfo, "Info "},
       {Level::kError, "Error"},
-      {Level::kDebug, "Debug"}};
-};
+      {Level::kDebug, "Debug"},
+      {Level::kCore, "Core "},
+  };
+};  // namespace vs::Logger
 
 Internals internals;
 
@@ -70,6 +72,7 @@ void Initialize() {
 }
 
 void Log(std::string_view message, Level level) {
+  VS_PROFILE_FUNCTION();
   // I could use the Ex API, but that means Unicode, and I didn't like it.
   constexpr std::string_view date_format = "ddMMMyyyy";
   constexpr std::string_view time_format = "HH':'mm':'ss";

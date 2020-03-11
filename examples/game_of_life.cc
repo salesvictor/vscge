@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <vscge/profiler/profiler.h>
+#include <vscge/instrumentation/profiler.h>
 #include <vscge/vscge.h>
 
 #include <string>
@@ -20,6 +20,7 @@
 class GameOfLife : public vs::Application {
  protected:
   virtual void OnStart() override {
+    VS_PROFILE_FUNCTION();
     vs::Rect window_rect = vs::Renderer::GetWindowRect();
     current_state_.clear();
     current_state_.reserve(window_rect.BufferSize());
@@ -62,6 +63,7 @@ class GameOfLife : public vs::Application {
   }
 
   virtual void OnEvent(vs::Ref<vs::Event> event) override {
+    VS_PROFILE_FUNCTION();
     vs::EventDispatcher dispatcher{event};
     dispatcher.Dispatch<vs::KeyPressedEvent>(VS_BIND_EVENT(OnKeyPress));
     dispatcher.Dispatch<vs::MouseButtonPressedEvent>(
@@ -90,6 +92,7 @@ class GameOfLife : public vs::Application {
 
   virtual void OnUpdate(const vs::Timestep &timestep) override {
     if (running_) {
+      VS_PROFILE_FUNCTION();
       std::vector<vs::Pixel> new_state = current_state_;
 
       auto is_alive = [](const vs::PixelProps &props) {

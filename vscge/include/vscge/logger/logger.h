@@ -27,6 +27,7 @@ enum class Level {
   kInfo,
   kError,
   kDebug,
+  kCore,
 };
 void VS_API Initialize();
 // TODO(Victor): Maybe also specify a logging file?

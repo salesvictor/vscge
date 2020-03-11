@@ -21,7 +21,7 @@
 
 #include "vscge/core/types.h"
 #include "vscge/debug/debug.h"
-#include "vscge/profiler/profiler.h"
+#include "vscge/instrumentation/profiler.h"
 #include "vscge/utils/conversions.h"
 
 namespace vs::Renderer {
@@ -94,8 +94,8 @@ const Rect GetWindowRect() { return Rect(internals.window); }
 //     only the ones that are on the screen.
 //   * Check if 2D arrays are contiguous and treat screen as one.
 void DrawPixel(const Pixel &pixel) {
-  VS_ASSERT(Rect(internals.window).Contains(pixel.location));
-  internals.screen(pixel.location) = pixel.props;  // NOLINT
+  VS_ASSERT(Rect(internals.window).Contains(pixel.location));  // NOLINT
+  internals.screen(pixel.location) = pixel.props;              // NOLINT
 }
 
 void ClearScreen() {
@@ -108,7 +108,6 @@ void ClearScreen() {
 // system
 void DrawBuffer(const std::vector<Pixel> &buffer) {
   VS_PROFILE_FUNCTION();
-  VS_ASSERT(buffer.size() <= internals.screen.size());
   for (const auto &pixel : buffer) DrawPixel(pixel);
 }
 

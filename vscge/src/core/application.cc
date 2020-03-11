@@ -26,8 +26,8 @@
 #include "vscge/event/event.h"
 #include "vscge/event/key_event.h"
 #include "vscge/event/mouse_event.h"
+#include "vscge/instrumentation/profiler.h"
 #include "vscge/logger/logger.h"
-#include "vscge/profiler/profiler.h"
 #include "vscge/utils/conversions.h"
 
 namespace vs {
@@ -75,14 +75,11 @@ void Application::MainLoop() {
     std::string timing_message =
         "Timestep: " + std::to_string(timestep.Milliseconds()) +
         " ms | FPS: " + std::to_string(static_cast<int>(1 / timestep));
-    Logger::Log(timing_message, Logger::Level::kDebug);
+    Logger::Log(timing_message, Logger::Level::kCore);
 
     timer.Start();
 
-    {
-      VS_PROFILE_SCOPE("OnUpdate");
-      OnUpdate(timestep);
-    }
+    OnUpdate(timestep);
 
     Renderer::Render();
   }
@@ -113,7 +110,7 @@ void Application::EventListener() {
           std::string message = "Received key " +
                                 std::to_string(static_cast<int>(key)) + ' ' +
                                 (is_down ? "down" : "up");
-          Logger::Log(message, Logger::Level::kDebug);
+          Logger::Log(message, Logger::Level::kCore);
 
           // If first time, create a dummy KeyReleasedEvent
           if (!previous_key_event[key]) {
@@ -122,7 +119,7 @@ void Application::EventListener() {
           }
 
           message = "Previous state: " + previous_key_event[key]->TypeName();
-          Logger::Log(message, Logger::Level::kDebug);
+          Logger::Log(message, Logger::Level::kCore);
 
           if (previous_key_event[key]->Type() != EventType::kKeyReleased &&
               !is_down) {

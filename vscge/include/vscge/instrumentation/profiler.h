@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_PROFILER_PROFILER_H_
-#define VSCGE_INCLUDE_VSCGE_PROFILER_PROFILER_H_
+#ifndef VSCGE_INCLUDE_VSCGE_INSTRUMENTATION_PROFILER_H_
+#define VSCGE_INCLUDE_VSCGE_INSTRUMENTATION_PROFILER_H_
 
 #include <chrono>
 #include <string>
@@ -53,4 +53,4 @@ class VS_API Timer {
 }  // namespace Profiler
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_PROFILER_PROFILER_H_
+#endif  // VSCGE_INCLUDE_VSCGE_INSTRUMENTATION_PROFILER_H_

@@ -1,6 +1,6 @@
 #include "vscge/core/application.h"
 #include "vscge/core/core.h"
-#include "vscge/profiler/profiler.h"
+#include "vscge/instrumentation/profiler.h"
 
 int main() {
   VS_PROFILE_BEGIN_SESSION("Startup", "startup.json");

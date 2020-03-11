@@ -20,9 +20,9 @@ set(
   src/core/renderer.cc
   src/core/timer.cc
   src/debug/debug.cc
+  src/instrumentation/profiler.cc
   src/logger/logger.cc
   src/logger/tee.cc
-  src/profiler/profiler.cc
   src/utils/conversions.cc
   include/vscge/logger/logger.h
   include/vscge/version.h
@@ -35,9 +35,9 @@ set(
   include/vscge/event/event.h
   include/vscge/event/key_event.h
   include/vscge/event/mouse_event.h
+  include/vscge/instrumentation/profiler.h
   include/vscge/logger/logger.h
   include/vscge/logger/tee.h
-  include/vscge/profiler/profiler.h
   include/vscge/utils/conversions.h
 )
 

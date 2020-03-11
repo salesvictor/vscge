@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "vscge/profiler/profiler.h"
+#include "vscge/instrumentation/profiler.h"
 
 #include <fstream>
 #include <iomanip>
