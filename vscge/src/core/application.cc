@@ -31,7 +31,7 @@
 #include "vscge/utils/conversions.h"
 
 namespace vs {
-Application::Application(const Size &screen_size, const Size &font_size)
+Application::Application(const Size& screen_size, const Size& font_size)
     : buffer_in_(GetStdHandle(STD_INPUT_HANDLE)) {
   SetConsoleMode(buffer_in_, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT |
                                  ENABLE_MOUSE_INPUT);
@@ -93,7 +93,7 @@ void Application::EventListener() {
     DWORD num_events;
     GetNumberOfConsoleInputEvents(buffer_in_, &num_events);
 
-    constexpr size_t kMaxEvents = 32;
+    constexpr size_t kMaxEvents                       = 32;
     std::array<INPUT_RECORD, kMaxEvents> event_buffer = {};
     ReadConsoleInput(buffer_in_, event_buffer.data(), num_events, &num_events);
     for (size_t i = 0; i < num_events; ++i) {
@@ -102,8 +102,8 @@ void Application::EventListener() {
         case KEY_EVENT: {
           VS_PROFILE_SCOPE("KEY_EVENT");
           KEY_EVENT_RECORD record = read_event.Event.KeyEvent;  // NOLINT
-          Key key = static_cast<Key>(record.wVirtualKeyCode);
-          bool is_down = record.bKeyDown;
+          Key key                 = static_cast<Key>(record.wVirtualKeyCode);
+          bool is_down            = record.bKeyDown;
 
           // INFO(Victor): for some reason, this can't be an std::string_view,
           // should investigate more.
@@ -142,7 +142,7 @@ void Application::EventListener() {
         case MOUSE_EVENT: {
           VS_PROFILE_SCOPE("MOUSE_EVENT");
           MOUSE_EVENT_RECORD record = read_event.Event.MouseEvent;  // NOLINT
-          Point position = record.dwMousePosition;
+          Point position            = record.dwMousePosition;
           MouseButtons buttons;
 
           if (record.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED) {
@@ -164,7 +164,7 @@ void Application::EventListener() {
             // NOLINTNEXTLINE
             MouseMovedEvent event = {previous_mouse_event->position, position,
                                      buttons};
-            previous_mouse_event = CreateRef<MouseMovedEvent>(event);
+            previous_mouse_event  = CreateRef<MouseMovedEvent>(event);
           } else {
             if ((previous_mouse_event->buttons.left && !buttons.left) ||
                 (previous_mouse_event->buttons.right && !buttons.right)) {

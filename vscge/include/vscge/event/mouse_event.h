@@ -22,7 +22,7 @@
 
 namespace vs {
 struct VS_API MouseButtons {
-  bool left = false;
+  bool left  = false;
   bool right = false;
 };
 

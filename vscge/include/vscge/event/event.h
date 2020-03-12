@@ -34,7 +34,7 @@ enum class EventType {
 
 // TODO(Victor): See if it makes sense to add a `handled` to Event.
 struct VS_API Event {
-  virtual EventType Type() const = 0;
+  virtual EventType Type() const       = 0;
   virtual std::string TypeName() const = 0;
 };
 

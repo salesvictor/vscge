@@ -27,28 +27,28 @@
 namespace vs::Renderer {
 struct Internals {
   Matrix<PixelProps> screen = {};
-  Window window = {};
+  Window window             = {};
 
   SMALL_RECT window_wrapper = {};
 
   std::wstring font = L"Consolas";
-  Size font_size = {};
+  Size font_size    = {};
 };
 
 Internals internals;
 
-void Initialize(const HANDLE &handle, const Size &window_size,
-                const Size &font_size) {
+void Initialize(const HANDLE& handle, const Size& window_size,
+                const Size& font_size) {
   VS_PROFILE_FUNCTION();
-  internals.font = L"Consolas";
-  internals.window = {handle, window_size};
-  internals.font_size = font_size;
+  internals.font           = L"Consolas";
+  internals.window         = {handle, window_size};
+  internals.font_size      = font_size;
   internals.window_wrapper = SMALL_RECT(Rect(internals.window));
 
   // Font needs to be set before knowing largest possible size.
   CONSOLE_FONT_INFOEX cfi = {
-      .cbSize = sizeof(CONSOLE_FONT_INFOEX),
-      .nFont = 0,
+      .cbSize     = sizeof(CONSOLE_FONT_INFOEX),
+      .nFont      = 0,
       .dwFontSize = internals.font_size,
       .FontFamily = FF_DONTCARE,
       .FontWeight = FW_NORMAL,
@@ -69,7 +69,7 @@ void Initialize(const HANDLE &handle, const Size &window_size,
                        &internals.window_wrapper);
 
   CONSOLE_CURSOR_INFO cci = {
-      .dwSize = 1,
+      .dwSize   = 1,
       .bVisible = false,
   };
   SetConsoleCursorInfo(internals.window.handle, &cci);
@@ -78,9 +78,9 @@ void Initialize(const HANDLE &handle, const Size &window_size,
                                         PixelProps(PixelColor::FG::kBlack));
 }
 
-const std::vector<PixelProps> &GetBuffer() { return internals.screen.Buffer(); }
+const std::vector<PixelProps>& GetBuffer() { return internals.screen.Buffer(); }
 
-const PixelProps &GetPixelPropsAt(Point location) {
+const PixelProps& GetPixelPropsAt(Point location) {
   return internals.screen(location);
 }
 
@@ -93,7 +93,7 @@ const Rect GetWindowRect() { return Rect(internals.window); }
 //   * Use a unlimited screen, allowing infinite Pixels, and drawing
 //     only the ones that are on the screen.
 //   * Check if 2D arrays are contiguous and treat screen as one.
-void DrawPixel(const Pixel &pixel) {
+void DrawPixel(const Pixel& pixel) {
   VS_ASSERT(Rect(internals.window).Contains(pixel.location));  // NOLINT
   internals.screen(pixel.location) = pixel.props;              // NOLINT
 }
@@ -106,14 +106,14 @@ void ClearScreen() {
 
 // TODO(Victor): this doesn't really make sense, should find a better buffering
 // system
-void DrawBuffer(const std::vector<Pixel> &buffer) {
+void DrawBuffer(const std::vector<Pixel>& buffer) {
   VS_PROFILE_FUNCTION();
-  for (const auto &pixel : buffer) DrawPixel(pixel);
+  for (const auto& pixel : buffer) DrawPixel(pixel);
 }
 
-void DrawLine(const Point &p1, const Point &p2, const PixelProps &props) {
+void DrawLine(const Point& p1, const Point& p2, const PixelProps& props) {
   VS_PROFILE_FUNCTION();
-  auto isLeft = [](const Point &a, const Point &b) {
+  auto isLeft = [](const Point& a, const Point& b) {
     if (a.x == b.x) return a.y < b.y;
 
     return a.x < b.x;
@@ -137,7 +137,7 @@ void DrawLine(const Point &p1, const Point &p2, const PixelProps &props) {
   }
 }
 
-void DrawRect(const Rect &rect, const vs::PixelProps &props) {
+void DrawRect(const Rect& rect, const vs::PixelProps& props) {
   VS_PROFILE_FUNCTION()
   int x0 = rect.x;
   int y0 = rect.y;
@@ -150,7 +150,7 @@ void DrawRect(const Rect &rect, const vs::PixelProps &props) {
   DrawLine({x0, y1}, {x0, y0}, props);  // Left
 }
 
-void FillRect(const Rect &rect, const vs::PixelProps &props) {
+void FillRect(const Rect& rect, const vs::PixelProps& props) {
   VS_PROFILE_FUNCTION();
   for (int y = rect.y; y < internals.window.size.height; ++y) {
     DrawLine({rect.x, y}, {rect.x + rect.width, y}, props);  // NOLINT
@@ -161,7 +161,7 @@ void FillRect(const Rect &rect, const vs::PixelProps &props) {
 void Render() {
   VS_PROFILE_FUNCTION();
   std::vector<CHAR_INFO> write_buffer;
-  for (const auto &props : internals.screen.Buffer()) {
+  for (const auto& props : internals.screen.Buffer()) {
     write_buffer.emplace_back(props);
   }
   WriteConsoleOutputA(internals.window.handle, write_buffer.data(),

@@ -30,15 +30,15 @@
 namespace vs {
 class VS_API Application {
  public:
-  Application(const Size &screen_size = {240, 120},
-              const Size &font_size = {4, 4});
+  Application(const Size& screen_size = {240, 120},
+              const Size& font_size   = {4, 4});
 
   void Start();
 
  protected:
   virtual void OnStart() {}
   virtual void OnEvent(Ref<Event> event) {}
-  virtual void OnUpdate(const Timestep &timestep) = 0;
+  virtual void OnUpdate(const Timestep& timestep) = 0;
 
  private:
   void MainLoop();

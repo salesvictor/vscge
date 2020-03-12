@@ -24,8 +24,9 @@
 // TODO(Victor): Move to a platform specific layer.
 namespace vs::Logger {
 struct Internals {
-  bool initialized = false;
+  bool initialized    = false;
   HANDLE write_handle = nullptr;
+
   std::unordered_map<Level, std::string_view> level_map = {
       {Level::kInfo, "Info "},
       {Level::kError, "Error"},
@@ -42,22 +43,22 @@ void Initialize() {
   HANDLE logger_in_write;
 
   SECURITY_ATTRIBUTES sa = {
-      .nLength = sizeof(SECURITY_ATTRIBUTES),
+      .nLength        = sizeof(SECURITY_ATTRIBUTES),
       .bInheritHandle = TRUE,
   };
   CreatePipe(&logger_in_read, &logger_in_write, &sa, 0);
   SetHandleInformation(logger_in_write, HANDLE_FLAG_INHERIT, 0);
   STARTUPINFOA si = {
-      .cb = sizeof(STARTUPINFOA),
+      .cb      = sizeof(STARTUPINFOA),
       .lpTitle = "Logger",
-      .dwX = 0,
-      .dwY = 0,
+      .dwX     = 0,
+      .dwY     = 0,
       .dwFlags =
           STARTF_USEPOSITION | STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW,
       .wShowWindow = SW_SHOWNOACTIVATE,
-      .hStdInput = logger_in_read,
+      .hStdInput   = logger_in_read,
   };
-  PROCESS_INFORMATION pi = {};
+  PROCESS_INFORMATION pi     = {};
   std::string logger_command = "Logger.exe";
   CreateProcessA(nullptr, logger_command.data(), nullptr, nullptr, TRUE,
                  CREATE_NEW_CONSOLE, nullptr, nullptr, &si, &pi);
@@ -70,7 +71,7 @@ void Initialize() {
                SWP_NOMOVE | SWP_NOSIZE);
 
   internals.write_handle = logger_in_write;
-  internals.initialized = true;
+  internals.initialized  = true;
 }
 
 bool IsInitialized() { return internals.initialized; }
@@ -82,7 +83,7 @@ void Log(std::string_view message, Level level) {
   constexpr std::string_view time_format = "HH':'mm':'ss";
 
   std::string time;
-  time.resize(time_format.size() - 4);  // NOLINT: removin the '
+  time.resize(time_format.size() - 4);  // NOLINT: removing the '
   GetTimeFormatA(LOCALE_USER_DEFAULT, 0, nullptr, time_format.data(),
                  time.data(), time.capacity());
   std::string date;
@@ -90,7 +91,7 @@ void Log(std::string_view message, Level level) {
   GetDateFormatA(LOCALE_USER_DEFAULT, 0, nullptr, date_format.data(),
                  date.data(), date.capacity());
 
-  std::string timestamp = date + " " + time;
+  std::string timestamp    = date + " " + time;
   std::string level_string = std::string(internals.level_map[level]);
   std::string write_message =
       "[" + timestamp + "|" + level_string + "] " + std::string(message) + '\n';

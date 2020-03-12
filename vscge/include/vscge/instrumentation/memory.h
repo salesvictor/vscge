@@ -40,9 +40,7 @@ struct VS_API Memory {
     return unit;
   }
 
-  operator std::string() {
-    return std::to_string(HumanReadable()) + Unit();
-  }
+  operator std::string() { return std::to_string(HumanReadable()) + Unit(); }
 
  private:
   void UpdateUnit() {
@@ -56,7 +54,7 @@ struct VS_API Memory {
 Memory memory = {};
 
 void* operator new(std::size_t size) {
-  memory.size +=size;
+  memory.size += size;
   return std::malloc(size);
 }
 

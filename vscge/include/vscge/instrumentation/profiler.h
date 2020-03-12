@@ -24,8 +24,8 @@
 #  define VS_PROFILE_BEGIN_SESSION(name, filepath) \
     ::vs::Profiler::BeginSession(name, filepath)
 #  define VS_PROFILE_END_SESSION() ::vs::Profiler::EndSession()
-#  define VS_PROFILE_SCOPE(name) ::vs::Profiler::Timer timer##__LINE__(name);
-#  define VS_PROFILE_FUNCTION() VS_PROFILE_SCOPE((const char*)__FUNCSIG__)
+#  define VS_PROFILE_SCOPE(name)   ::vs::Profiler::Timer timer##__LINE__(name);
+#  define VS_PROFILE_FUNCTION()    VS_PROFILE_SCOPE((const char*)__FUNCSIG__)
 #else
 #  define VS_PROFILE_BEGIN_SESSION(name, filepath)
 #  define VS_PROFILE_END_SESSION()

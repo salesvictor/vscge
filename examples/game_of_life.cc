@@ -93,8 +93,7 @@ class GameOfLife : public vs::Application {
 
   virtual void OnUpdate(const vs::Timestep& timestep) override {
     VS_PROFILE_FUNCTION();
-    vs::Logger::Log("Memory: " + std::string(memory),
-                    vs::Logger::Level::kCore);
+    vs::Logger::Log("Memory: " + std::string(memory), vs::Logger::Level::kCore);
     if (running_) {
       std::vector<vs::Pixel> new_state = current_state_;
 

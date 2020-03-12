@@ -23,11 +23,11 @@
 #include "vscge/core/types.h"
 
 namespace vs {
-VS_API Point BufferIndexToPoint(const Rect &region, int i);
-VS_API int PointToBufferIndex(const Rect &region, const Point &point);
+VS_API Point BufferIndexToPoint(const Rect& region, int i);
+VS_API int PointToBufferIndex(const Rect& region, const Point& point);
 
 VS_API std::vector<Pixel> StringToPixelBuffer(
-    std::string_view string_buffer, const Rect &region,
+    std::string_view string_buffer, const Rect& region,
     std::unordered_map<char, PixelProps> char_map);
 }  // namespace vs
 

@@ -1,0 +1,20 @@
+# Use the Google style in this project.
+BasedOnStyle: Google
+
+# Some folks prefer to write "int& foo" while others prefer "int &foo".  The
+# Google Style Guide only asks for consistency within a project, we chose
+# "int& foo" for this project:
+DerivePointerAlignment: false
+PointerAlignment:       Left
+
+# This makes pre-processor directives start with '#' and also ident.
+IndentPPDirectives: AfterHash
+
+# I like alignment.
+AlignConsecutiveAssignments: true
+AlignConsecutiveMacros:      true
+AlignEscapedNewlines:        Left
+AlignTrailingComments:       true
+
+# This shouldn't go to the next line.
+CommentPragmas: '^ NOLINT'

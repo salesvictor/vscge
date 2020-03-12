@@ -24,7 +24,7 @@ bool Fail(std::string cond_str, std::string function, std::string line,
   std::string message = "Failed assertion " + cond_str + " in " + function +
                         ", line " + line + ", at " + file;
   Logger::Log(message, Logger::Level::kError);
-  *((int *)0) = 0;  // NOLINT: The point is to break here.
+  *((int*)0) = 0;  // NOLINT: The point is to break here.
 
   return false;
 }
