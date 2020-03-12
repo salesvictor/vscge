@@ -35,6 +35,7 @@ set(
   include/vscge/event/event.h
   include/vscge/event/key_event.h
   include/vscge/event/mouse_event.h
+  include/vscge/instrumentation/memory.h
   include/vscge/instrumentation/profiler.h
   include/vscge/logger/logger.h
   include/vscge/logger/tee.h

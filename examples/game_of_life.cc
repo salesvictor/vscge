@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <vscge/instrumentation/memory.h>
 #include <vscge/instrumentation/profiler.h>
 #include <vscge/vscge.h>
 
@@ -90,12 +91,14 @@ class GameOfLife : public vs::Application {
     }
   }
 
-  virtual void OnUpdate(const vs::Timestep &timestep) override {
+  virtual void OnUpdate(const vs::Timestep& timestep) override {
+    VS_PROFILE_FUNCTION();
+    vs::Logger::Log("Memory: " + std::string(memory),
+                    vs::Logger::Level::kCore);
     if (running_) {
-      VS_PROFILE_FUNCTION();
       std::vector<vs::Pixel> new_state = current_state_;
 
-      auto is_alive = [](const vs::PixelProps &props) {
+      auto is_alive = [](const vs::PixelProps& props) {
         return props.block == vs::PixelBlock::kFull;
       };
 
@@ -103,7 +106,7 @@ class GameOfLife : public vs::Application {
         constexpr int dx[] = {-1, -1, 0, 1, 1, 1, 0, -1};
         constexpr int dy[] = {0, -1, -1, -1, 0, 1, 1, 1};
 
-        int count = 0;
+        int count            = 0;
         vs::Rect window_rect = vs::Renderer::GetWindowRect();
         for (int i = 0; i < 8; i++) {
           vs::Point neibourgh = {x + dx[i], y + dy[i]};
@@ -119,20 +122,20 @@ class GameOfLife : public vs::Application {
 
       {
         VS_PROFILE_SCOPE("Calculating New State");
-        for (auto &pixel : new_state) {
+        for (auto& pixel : new_state) {
           vs::PixelBlock block = pixel.Char();
-          int x = pixel.x;
-          int y = pixel.y;
-          int count = alive_count(x, y);
+          int x                = pixel.x;
+          int y                = pixel.y;
+          int count            = alive_count(x, y);
 
           if (block == vs::PixelBlock::kEmpty) {
             if (count == 3) {
-              pixel.Char() = vs::PixelBlock::kFull;
+              pixel.Char()  = vs::PixelBlock::kFull;
               pixel.Color() = vs::PixelColor{vs::PixelColor::BG::kWhite};
             }
           } else if (block == vs::PixelBlock::kFull) {
             if (count < 2 || count > 3) {
-              pixel.Char() = vs::PixelBlock::kEmpty;
+              pixel.Char()  = vs::PixelBlock::kEmpty;
               pixel.Color() = vs::PixelColor(vs::PixelColor::BG::kBlack);
             }
           }

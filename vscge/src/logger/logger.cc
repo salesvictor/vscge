@@ -24,6 +24,7 @@
 // TODO(Victor): Move to a platform specific layer.
 namespace vs::Logger {
 struct Internals {
+  bool initialized = false;
   HANDLE write_handle = nullptr;
   std::unordered_map<Level, std::string_view> level_map = {
       {Level::kInfo, "Info "},
@@ -69,7 +70,10 @@ void Initialize() {
                SWP_NOMOVE | SWP_NOSIZE);
 
   internals.write_handle = logger_in_write;
+  internals.initialized = true;
 }
+
+bool IsInitialized() { return internals.initialized; }
 
 void Log(std::string_view message, Level level) {
   VS_PROFILE_FUNCTION();

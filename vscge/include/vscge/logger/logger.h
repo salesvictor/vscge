@@ -30,6 +30,7 @@ enum class Level {
   kCore,
 };
 void VS_API Initialize();
+bool VS_API IsInitialized();
 // TODO(Victor): Maybe also specify a logging file?
 void VS_API Log(std::string_view message, Level level = Level::kInfo);
 }  // namespace Logger
