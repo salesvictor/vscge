@@ -14,6 +14,9 @@
 
 set(VERSION_FILE "vscge/include/vscge/version.h")
 
+# TODO(Victor): This check is happening at configuration time only, should
+# change to be done at build time, because files can be edited and not be
+# configured again.
 find_package(Git)
 if(Git_FOUND)
   execute_process(
@@ -26,9 +29,14 @@ if(Git_FOUND)
     string(REPLACE "\n" ";" CHANGED_FILES_LIST ${CHANGED_FILES})
     list(LENGTH CHANGED_FILES_LIST CHANGE_SIZE)
     list(FIND CHANGED_FILES_LIST ${VERSION_FILE} VERSION_INDEX)
-    message(STATUS "Files changed: ${CHANGED_FILES_LIST}")
+    message(DEBUG "Files changed: ${CHANGED_FILES_LIST}")
+
+    # TODO(Victor): This fails with just one change, fix it.
     if(${CHANGE_SIZE} GREATER 0 AND ${VERSION_INDEX} EQUAL -1)
-      message(FATAL_ERROR "Detected ${CHANGE_SIZE} file changes, but no version change, update the version")
+      message(
+        FATAL_ERROR
+        "Detected ${CHANGE_SIZE} file changes, but no version change, update the version!"
+      )
     endif()
   endif()
 endif()
@@ -40,7 +48,8 @@ file(
 string(
   REGEX REPLACE ".+VSCGE_VERSION_MAJOR[ ]+([0-9]+).*"
   "\\1" VSCGE_VERSION_MAJOR
-  "${VSCGE_VERSION_PARTS}")
+  "${VSCGE_VERSION_PARTS}"
+)
 string(
   REGEX REPLACE ".+VSCGE_VERSION_MINOR[ ]+([0-9]+).*"
   "\\1" VSCGE_VERSION_MINOR
@@ -52,4 +61,7 @@ string(
   "${VSCGE_VERSION_PARTS}"
 )
 
-set(VSCGE_VERSION "${VSCGE_VERSION_MAJOR}.${VSCGE_VERSION_MINOR}.${VSCGE_VERSION_PATCH}")
+set(
+  VSCGE_VERSION
+  "${VSCGE_VERSION_MAJOR}.${VSCGE_VERSION_MINOR}.${VSCGE_VERSION_PATCH}"
+)

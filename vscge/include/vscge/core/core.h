@@ -15,23 +15,10 @@
 #ifndef VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
 #define VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
 
-#ifdef VS_SHARED
-#  ifdef _WIN32
-#    pragma warning(disable : 4251)
-#    ifdef vscge_EXPORTS
-#      define VS_API __declspec(dllexport)
-#    else
-#      define VS_API __declspec(dllimport)
-#    endif  // vscge_EXPORTS
-#  else
-#    define VS_API
-#  endif  // _WIN32
-#else
-#  define VS_API
-#endif  // VS_SHARED
-
 #include <memory>
 #include <utility>
+
+#include "vscge/core/api.h"
 
 #define VS_BIND_EVENT(fn)  [this](auto ev) { fn(ev); }
 #define VS_BIND_THREAD(fn) [this]() { fn(); }

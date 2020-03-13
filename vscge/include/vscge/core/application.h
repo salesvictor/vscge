@@ -21,6 +21,7 @@
 #include <condition_variable>
 #include <vector>
 
+#include "vscge/core/api.h"
 #include "vscge/core/core.h"
 #include "vscge/core/renderer.h"
 #include "vscge/core/timer.h"

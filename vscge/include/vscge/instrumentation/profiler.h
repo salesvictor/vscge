@@ -20,7 +20,7 @@
 
 #include "vscge/core/core.h"
 
-#ifdef VS_PROFILE
+#ifdef VS_ENABLE_PROFILER
 #  define VS_PROFILE_BEGIN_SESSION(name, filepath) \
     ::vs::Profiler::BeginSession(name, filepath)
 #  define VS_PROFILE_END_SESSION() ::vs::Profiler::EndSession()

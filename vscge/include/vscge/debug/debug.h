@@ -19,11 +19,23 @@
 
 #include "vscge/core/core.h"
 
+#if defined(_MSC_VER)
+#  define VS_FUNC_LOG __FUNCSIG__
+#elif defined(__GNUC__)
+#  define VS_FUNC_LOG __PRETTY_FUNC__
+#else
+#  error "Unknown compiler"
+#endif
+
 // TODO(Victor): For some reason this macro adds a lot of overhead to the calls
 // everywhere...
-#define VS_ASSERT(cond)                                                  \
-  (!!(cond) || ::vs::debug::Fail(VS_STR(cond), (const char*)__FUNCSIG__, \
-                                 VS_STR(__LINE__), __FILE__))
+#ifdef VS_ENABLE_ASSERTS
+#  define VS_ASSERT(cond)                                                  \
+    (!!(cond) || ::vs::debug::Fail(VS_STR(cond), (const char*)VS_FUNC_LOG, \
+                                   VS_STR(__LINE__), __FILE__))
+#else
+#  define VS_ASSERT(cond)
+#endif
 
 namespace vs {
 namespace debug {

@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION}")
+# TODO(Victor): Make a function/macro for these ".../... - done" things?
+message(CHECK_START "Configuring VSCGE version: ${VSCGE_VERSION}")
+list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+# TODO(Victor): Change this to a module-driven approach ala OpenCV.
 set(
   VSCGE_SOURCE
   src/core/application.cc
@@ -43,47 +46,54 @@ set(
 )
 
 add_library(
-  vscge STATIC
+  vscge
   ${VSCGE_SOURCE}
 )
 
+# Static checking
+# ==============================================================================
+# TODO(Victor): Find a better way to handle static checkers.
+message(CHECK_START "Finding static checkers")
+list(APPEND CMAKE_MESSAGE_INDENT "  ")
+
+message(CHECK_START "Finding clang-tidy")
 find_program(
   CLANG_TIDY_EXE
   NAMES "clang-tidy"
   DOC "Path to clang-tidy"
 )
 if(NOT CLANG_TIDY_EXE)
-  message(STATUS "clang-tidy not found")
+  message(CHECK_FAIL "not found")
 else()
-  message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-  set(CLANG_TIDY_CHECKS "-*")
+  message(CHECK_PASS "found: ${CLANG_TIDY_EXE}")
+  set(CLANG_TIDY_CHECKS "-*") # Disable everything by default.
   string(
     APPEND CLANG_TIDY_CHECKS
     ",google-*"
-    ",modernize-*,-modernize-use-trailing-return-type"
-    ",clang-analyzer-*,-clang-diagnostic-address-of-temporary"
-    ",cppcoreguidelines-*,-cppcoreguidelines-pro-type-union-access"
+    ",modernize-*"
+    ",-modernize-use-trailing-return-type" # Doesn't really comply with Google's Style Guide.
+    ",clang-analyzer-*"
+    # ",-clang-diagnostic-address-of-temporary"
+    ",cppcoreguidelines-*"
+    ",-cppcoreguidelines-pro-type-union-access" # We need this to get off warnings from using the Windows API.
   )
   set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=${CLANG_TIDY_CHECKS} -header-filter=.*")
+  set_target_properties(
+    vscge PROPERTIES
+    CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+  )
 endif()
 
-set_target_properties(
-  vscge PROPERTIES
-  VERSION ${PROJECT_VERSION}
-  ARCHIVE_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
-  LIBRARY_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
-  RUNTIME_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
-)
+message(CHECK_START "Finding cpplint")
 find_program(
   CPPLINT_EXE
   NAMES "cpplint"
   DOC "Path to cpplint"
 )
 if(NOT CPPLINT_EXE)
-  message(STATUS "cpplint not found")
+  message(CHECK_FAIL "not found")
 else()
-  message(STATUS "cpplint found: ${CPPLINT_EXE}")
-  message(STATUS "configuring cpplint")
+  message(CHECK_PASS "found: ${CPPLINT_EXE}")
   set(VSCGE_LINT_FILES "")
   foreach(file ${VSCGE_SOURCE})
     list(APPEND VSCGE_LINT_FILES "vscge/${file}")
@@ -98,16 +108,33 @@ else()
     COMMENT "Linting project"
     VERBATIM
   )
-  message(STATUS "configuring cpplint - done")
 endif()
+
+message(CHECK_START "Finding cppcheck")
 find_program(
   CPPCHECK_EXE
   NAMES "cppcheck"
 )
+if(NOT CPPCHECK_EXE)
+  message(CHECK_FAIL "not found")
+else()
+  message(CHECK_PASS "found: ${CPPCHECK_EXE}")
+  # set_target_properties(
+  #   vscge PROPERTIES
+  #   CXX_CPPCHECK "${CPPCHECK_EXE}"
+  # )
+endif()
+
+list(POP_BACK CMAKE_MESSAGE_INDENT)
+message(CHECK_PASS "done")
+# ==============================================================================
+
 set_target_properties(
   vscge PROPERTIES
-  CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-# CXX_CPPCHECK "${CPPCHECK_EXE}"
+  VERSION ${PROJECT_VERSION}
+  ARCHIVE_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
+  LIBRARY_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
+  RUNTIME_OUTPUT_DIRECTORY ${VSCGE_ROOT}/bin
 )
 target_include_directories(
   vscge
@@ -116,12 +143,15 @@ target_include_directories(
   PRIVATE src
 )
 
-set(VSCGE_COMPILER "${CMAKE_CXX_COMPILER_ID}")
 
-message(STATUS "Configuring ${VSCGE_COMPILER} compiler")
+# Compiler configuration.
+# ==============================================================================
+set(VSCGE_COMPILER "${CMAKE_CXX_COMPILER_ID}")
+message(CHECK_START "Configuring ${VSCGE_COMPILER} compiler")
+
+# TODO(Victor): Check C++20 compatibility.
 target_compile_features(vscge PRIVATE cxx_std_20)
 
-target_compile_definitions(vscge PUBLIC VS_PROFILE)
 
 if(VSCGE_COMPILER STREQUAL "GNU")
   set(COMPILE_PRIVATE_FLAGS -Wall -Wextra)
@@ -139,18 +169,38 @@ target_compile_options(
   PUBLIC $<$<CONFIG:DEBUG>: ${COMPILE_DEBUG_FLAGS}>
   PUBLIC $<$<CONFIG:RELEASE>: ${COMPILE_RELEASE_FLAGS}>
 )
-message(STATUS "Configuring ${VSCGE_COMPILER} compiler - done")
+message(CHECK_PASS "done")
+# ==============================================================================
 
 add_library(vs::cge ALIAS vscge)
 
 if(BUILD_VSCGE_TESTS)
-  message(STATUS "Configuring VSCGE unit tests")
+  message(CHECK_START "Configuring VSCGE tests")
+  list(APPEND CMAKE_MESSAGE_INDENT "  ")
   add_subdirectory(test ${VSCGE_ROOT}/test)
-  message(STATUS "Configuring VSCGE unit tests - done")
+  list(POP_BACK CMAKE_MESSAGE_INDENT)
+  message(CHECK_PASS "done")
 endif()
 
-message(STATUS "Configuring VSCGE version: ${VSCGE_VERSION} - done")
+list(POP_BACK CMAKE_MESSAGE_INDENT)
+message(CHECK_PASS "done")
 
-add_executable(Logger src/logger/logger_entry_point.cc)
-target_link_libraries(Logger vs::cge)
-target_compile_features(Logger PRIVATE cxx_std_17)
+# Options handling
+# ==============================================================================
+# TODO(Victor): Make a macro to handle options?
+if(BUILD_SHARED_LIBS)
+  target_compile_definitions(vscge PUBLIC VS_DLL)
+  target_compile_definitions(vscge PRIVATE VS_DLL_EXPORTS)
+endif()
+if(VS_ENABLE_PROFILER)
+  target_compile_definitions(vscge PUBLIC VS_ENABLE_PROFILER)
+endif()
+if(VS_ENABLE_ASSERTS)
+  target_compile_definitions(vscge PUBLIC VS_ENABLE_ASSERTS)
+endif()
+if(VS_ENABLE_LOGGER)
+  add_executable(Logger src/logger/logger_entry_point.cc)
+  target_link_libraries(Logger vs::cge)
+  target_compile_features(Logger PRIVATE cxx_std_17)
+endif()
+# ==============================================================================

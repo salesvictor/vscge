@@ -20,14 +20,22 @@ set(VSCGE_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 include(cmake/VSCGEVersion.cmake)
 
 project(
-  vscge
+  VSCGE
   VERSION ${VSCGE_VERSION}
-  DESCRIPTION "VS Console Game Engine"
+  DESCRIPTION "VS Component Game Engine"
   LANGUAGES CXX
 )
 
+# Options
+# ==============================================================================
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 option(BUILD_VSCGE_TESTS "Build VSCGE tests" OFF)
 option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples" ON)
+
+option(VS_ENABLE_ASSERTS "Enable VS_ASSERT* macros" ON)
+option(VS_ENABLE_PROFILER "Enable profiler" ON)
+option(VS_ENABLE_LOGGER "Enable logger" ON)
+# ==============================================================================
 
 add_subdirectory(vscge)
 
