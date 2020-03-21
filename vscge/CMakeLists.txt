@@ -50,6 +50,7 @@ add_library(
   ${VSCGE_SOURCE}
 )
 
+# ==============================================================================
 # Static checking
 # ==============================================================================
 # TODO(Victor): Find a better way to handle static checkers.
@@ -69,7 +70,7 @@ else()
   set(CLANG_TIDY_CHECKS "-*") # Disable everything by default.
   string(
     APPEND CLANG_TIDY_CHECKS
-    ",google-*"
+    ",google-*" # Use Google Style.
     ",modernize-*"
     ",-modernize-use-trailing-return-type" # Doesn't really comply with Google's Style Guide.
     ",clang-analyzer-*"
@@ -144,6 +145,7 @@ target_include_directories(
 )
 
 
+# ==============================================================================
 # Compiler configuration.
 # ==============================================================================
 set(VSCGE_COMPILER "${CMAKE_CXX_COMPILER_ID}")
@@ -158,7 +160,7 @@ if(VSCGE_COMPILER STREQUAL "GNU")
   set(COMPILE_DEBUG_FLAGS -g)
   set(COMPILE_RELEASE_FLAGS -O2)
 elseif(VSCGE_COMPILER STREQUAL "MSVC")
-  set(COMPILE_PRIVATE_FLAGS /std:c++latest)
+  set(COMPILE_PRIVATE_FLAGS /MP /Wall /WX /std:c++latest)
   set(COMPILE_DEBUG_FLAGS /std:c++latest)
   set(COMPILE_RELEASE_FLAGS /std:c++latest)
 endif()
