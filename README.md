@@ -71,6 +71,7 @@ TBD.
 ## C++
 
 * [Bartek's coding blog](https://www.bfilipek.com/)
+* [Fluent C++](https://www.fluentcpp.com/)
 * [Simplify C++](https://arne-mertz.de/)
 
 ## CMake
