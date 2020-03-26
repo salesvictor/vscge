@@ -20,6 +20,7 @@
 #include <array>
 #include <string>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include "vscge/core/timer.h"
@@ -28,30 +29,39 @@
 #include "vscge/event/mouse_event.h"
 #include "vscge/instrumentation/profiler.h"
 #include "vscge/logger/logger.h"
-#include "vscge/utils/conversions.h"
+
+// TODO(Victor): Remove this after fixing renderer.
+#pragma warning(disable : 4100)
 
 namespace vs {
+#if 0
 Application::Application(const Size& screen_size, const Size& font_size)
     : buffer_in_(GetStdHandle(STD_INPUT_HANDLE)) {
   SetConsoleMode(buffer_in_, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT |
                                  ENABLE_MOUSE_INPUT);
 
-  Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size, font_size);
+  Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size,
+  font_size);
   Logger::Initialize();
 
+#if 0
   SetConsoleCtrlHandler(
       static_cast<PHANDLER_ROUTINE>(Application::CloseHandler), true);
+#endif
 
   is_running_ = true;
 }
+#endif
 
-BOOL Application::CloseHandler(DWORD ctrl_event) {
+#if 0
+BOOL Application::CloseHandler(DWORD) {
   Logger::Log("Stopping application!");
   is_running_ = false;
   std::unique_lock lock(closing_);
   has_finished_.wait(lock);
   return true;
 }
+#endif
 
 void Application::Start() {
   VS_PROFILE_BEGIN_SESSION("Start", "runtime.json");
@@ -81,7 +91,7 @@ void Application::MainLoop() {
 
     OnUpdate(timestep);
 
-    Renderer::Render();
+    // Renderer::Render();
   }
 }
 
@@ -142,7 +152,7 @@ void Application::EventListener() {
         case MOUSE_EVENT: {
           VS_PROFILE_SCOPE("MOUSE_EVENT");
           MOUSE_EVENT_RECORD record = read_event.Event.MouseEvent;  // NOLINT
-          Point position            = record.dwMousePosition;
+          Point position = {record.dwMousePosition.X, record.dwMousePosition.Y};
           MouseButtons buttons;
 
           if (record.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED) {

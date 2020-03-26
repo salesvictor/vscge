@@ -31,14 +31,14 @@
 namespace vs {
 class VS_API Application {
  public:
-  Application(const Size& screen_size = {240, 120},
-              const Size& font_size   = {4, 4});
+  Application(const Size& = {240, 120},
+              const Size& = {4, 4});
 
   void Start();
 
  protected:
   virtual void OnStart() {}
-  virtual void OnEvent(Ref<Event> event) {}
+  virtual void OnEvent(Ref<Event>) {}
   virtual void OnUpdate(const Timestep& timestep) = 0;
 
  private:

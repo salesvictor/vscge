@@ -22,7 +22,6 @@
 #include "vscge/core/types.h"
 #include "vscge/debug/debug.h"
 #include "vscge/instrumentation/profiler.h"
-#include "vscge/utils/conversions.h"
 
 namespace vs::Renderer {
 struct Internals {

@@ -13,26 +13,27 @@
 # limitations under the License.
 
 # TODO(Victor): Make a function/macro for these ".../... - done" things?
-message(CHECK_START "Configuring VSCGE version: ${VSCGE_VERSION}")
-list(APPEND CMAKE_MESSAGE_INDENT "  ")
+vscge_check("Configuring VSCGE version: ${VSCGE_VERSION}")
+# message(CHECK_START "Configuring VSCGE version: ${VSCGE_VERSION}")
+# list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 # TODO(Victor): Change this to a module-driven approach ala OpenCV.
 set(
   VSCGE_SOURCE
   src/core/application.cc
-  src/core/renderer.cc
+  # src/core/renderer.cc
   src/core/timer.cc
   src/debug/debug.cc
   src/instrumentation/profiler.cc
   src/logger/logger.cc
   src/logger/tee.cc
-  src/utils/conversions.cc
+  # src/utils/conversions.cc
   include/vscge/logger/logger.h
   include/vscge/version.h
   include/vscge/vscge.h
   include/vscge/core/application.h
   include/vscge/core/core.h
-  include/vscge/core/renderer.h
+  # include/vscge/core/renderer.h
   include/vscge/core/timer.h
   include/vscge/debug/debug.h
   include/vscge/event/event.h
@@ -42,7 +43,7 @@ set(
   include/vscge/instrumentation/profiler.h
   include/vscge/logger/logger.h
   include/vscge/logger/tee.h
-  include/vscge/utils/conversions.h
+  # include/vscge/utils/conversions.h
 )
 
 add_library(
@@ -50,23 +51,35 @@ add_library(
   ${VSCGE_SOURCE}
 )
 
+find_package(Python3 COMPONENTS Interpreter)
+add_custom_target(
+  swizzle_generator
+  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 1 > ${VSCGE_SOURCE_ROOT}/vscge/include/vscge/math/detail/swizzle_vec1.inc
+  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 2 > ${VSCGE_SOURCE_ROOT}/vscge/include/vscge/math/detail/swizzle_vec2.inc
+  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 3 > ${VSCGE_SOURCE_ROOT}/vscge/include/vscge/math/detail/swizzle_vec3.inc
+  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 4 > ${VSCGE_SOURCE_ROOT}/vscge/include/vscge/math/detail/swizzle_vec4.inc
+  COMMENT "Building swizzles"
+  VERBATIM
+)
+
+add_dependencies(vscge swizzle_generator)
+
 # ==============================================================================
 # Static checking
 # ==============================================================================
-# TODO(Victor): Find a better way to handle static checkers.
-message(CHECK_START "Finding static checkers")
-list(APPEND CMAKE_MESSAGE_INDENT "  ")
+# TODO(Victor): Find a better way to handle static checkers, maybe on a .cmake?
+vscge_check("Finding static checkers")
 
-message(CHECK_START "Finding clang-tidy")
+vscge_check("Finding clang-tidy")
 find_program(
   CLANG_TIDY_EXE
   NAMES "clang-tidy"
   DOC "Path to clang-tidy"
 )
 if(NOT CLANG_TIDY_EXE)
-  message(CHECK_FAIL "not found")
+  vscge_fail("not found")
 else()
-  message(CHECK_PASS "found: ${CLANG_TIDY_EXE}")
+  vscge_pass("found: ${CLANG_TIDY_EXE}")
   set(CLANG_TIDY_CHECKS "-*") # Disable everything by default.
   string(
     APPEND CLANG_TIDY_CHECKS
@@ -85,16 +98,16 @@ else()
   )
 endif()
 
-message(CHECK_START "Finding cpplint")
+vscge_check("Finding cpplint")
 find_program(
   CPPLINT_EXE
   NAMES "cpplint"
   DOC "Path to cpplint"
 )
 if(NOT CPPLINT_EXE)
-  message(CHECK_FAIL "not found")
+  vscge_fail("not found")
 else()
-  message(CHECK_PASS "found: ${CPPLINT_EXE}")
+  vscge_pass("found: ${CPPLINT_EXE}")
   set(VSCGE_LINT_FILES "")
   foreach(file ${VSCGE_SOURCE})
     list(APPEND VSCGE_LINT_FILES "vscge/${file}")
@@ -111,15 +124,15 @@ else()
   )
 endif()
 
-message(CHECK_START "Finding cppcheck")
+vscge_check("Finding cppcheck")
 find_program(
   CPPCHECK_EXE
   NAMES "cppcheck"
 )
 if(NOT CPPCHECK_EXE)
-  message(CHECK_FAIL "not found")
+  vscge_fail("not found")
 else()
-  message(CHECK_PASS "found: ${CPPCHECK_EXE}")
+  vscge_pass("found: ${CPPCHECK_EXE}")
   # set_target_properties(
   #   vscge PROPERTIES
   #   CXX_CPPCHECK "${CPPCHECK_EXE}"
@@ -149,20 +162,44 @@ target_include_directories(
 # Compiler configuration.
 # ==============================================================================
 set(VSCGE_COMPILER "${CMAKE_CXX_COMPILER_ID}")
-message(CHECK_START "Configuring ${VSCGE_COMPILER} compiler")
+set(VSCGE_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}")
+set(VSCGE_SIMULATED_COMPILER "${CMAKE_CXX_SIMULATE_ID}")
+vscge_check("Configuring ${VSCGE_COMPILER} ${VSCGE_COMPILER_VERSION} compiler")
 
-# TODO(Victor): Check C++20 compatibility.
-target_compile_features(vscge PRIVATE cxx_std_20)
+if(NOT VSCGE_SIMULATED_COMPILER STREQUAL "")
+  message(STATUS "Simulating compiler ${VSCGE_SIMULATED_COMPILER}")
+endif()
 
+# TODO(Victor): Check for C++20 compatibility, so that we can use
+# [[no_unique_address]] attribute for swizzles.
+target_compile_features(vscge PUBLIC cxx_std_17)
 
-if(VSCGE_COMPILER STREQUAL "GNU")
+if(VSCGE_COMPILER STREQUAL "Clang")
+  set(COMPILE_PRIVATE_FLAGS /W4 /WX)
+
+  set(COMPILE_RELEASE_FLAGS -O2)
+elseif(VSCGE_COMPILER STREQUAL "GNU")
   set(COMPILE_PRIVATE_FLAGS -Wall -Wextra)
   set(COMPILE_DEBUG_FLAGS -g)
   set(COMPILE_RELEASE_FLAGS -O2)
 elseif(VSCGE_COMPILER STREQUAL "MSVC")
+
   set(COMPILE_PRIVATE_FLAGS /MP /Wall /WX /std:c++latest)
-  set(COMPILE_DEBUG_FLAGS /std:c++latest)
-  set(COMPILE_RELEASE_FLAGS /std:c++latest)
+
+  # Disables anoying warnings.
+  list(APPEND COMPILE_PRIVATE_FLAGS /wd4514 /wd4710 /wd4820 /wd4668 /wd5039)
+
+  # default/copy/move assignment/constructors implicitly deleted.
+  list(APPEND COMPILE_PRIVATE_FLAGS /wd4625 /wd4626 /wd5026 /wd5027 /wd4623)
+
+  # Spectre something.
+  list(APPEND COMPILE_PRIVATE_FLAGS /wd5045)
+
+  # conversions that make inter API a pain.
+  list(APPEND COMPILE_PRIVATE_FLAGS /wd4267 /wd4365)
+
+  set(COMPILE_DEBUG_FLAGS)
+  set(COMPILE_RELEASE_FLAGS)
 endif()
 
 target_compile_options(
@@ -171,21 +208,10 @@ target_compile_options(
   PUBLIC $<$<CONFIG:DEBUG>: ${COMPILE_DEBUG_FLAGS}>
   PUBLIC $<$<CONFIG:RELEASE>: ${COMPILE_RELEASE_FLAGS}>
 )
-message(CHECK_PASS "done")
+
+vscge_pass()
 # ==============================================================================
 
-add_library(vs::cge ALIAS vscge)
-
-if(BUILD_VSCGE_TESTS)
-  message(CHECK_START "Configuring VSCGE tests")
-  list(APPEND CMAKE_MESSAGE_INDENT "  ")
-  add_subdirectory(test ${VSCGE_ROOT}/test)
-  list(POP_BACK CMAKE_MESSAGE_INDENT)
-  message(CHECK_PASS "done")
-endif()
-
-list(POP_BACK CMAKE_MESSAGE_INDENT)
-message(CHECK_PASS "done")
 
 # Options handling
 # ==============================================================================
@@ -205,4 +231,15 @@ if(VS_ENABLE_LOGGER)
   target_link_libraries(Logger vs::cge)
   target_compile_features(Logger PRIVATE cxx_std_17)
 endif()
+#]]
+if(BUILD_VSCGE_TESTS)
+  vscge_check("Configuring VSCGE tests")
+  add_subdirectory(test ${VSCGE_ROOT}/test)
+  vscge_pass()
+endif()
 # ==============================================================================
+
+add_library(vs::cge ALIAS vscge)
+vscge_pass()
+
+add_executable(test WIN32 src/platform/windows/entry_point.cc)

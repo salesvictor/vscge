@@ -40,4 +40,4 @@ macro(add_example name)
   )
 endmacro()
 
-add_example(game_of_life)
+# add_example(game_of_life)

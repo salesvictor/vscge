@@ -40,21 +40,21 @@ struct Internals {
   std::ofstream output_stream;
 };
 
-Internals internals;
+static Internals internals;
 
-void WriteHeader() {
+static void WriteHeader() {
   internals.output_stream << R"({"otherData": {},"traceEvents":[{})";
   internals.output_stream.flush();
 }
 
-void WriteFooter() {
+static void WriteFooter() {
   internals.output_stream << "]}";
   internals.output_stream.flush();
 }
 
 // Note: you must already own lock on mutex before
 // calling InternalEndSession()
-void EndSessionImpl() {
+static void EndSessionImpl() {
   if (internals.current_session) {
     WriteFooter();
     internals.output_stream.close();

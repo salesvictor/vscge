@@ -22,8 +22,8 @@
 
 #include "vscge/core/core.h"
 #include "vscge/core/types.h"
-#include "vscge/utils/conversions.h"
 
+/*
 namespace vs {
 // TODO(Victor): See if it makes sense for Renderer to be a static class, if
 // not, change the namespace to be lower case.
@@ -47,5 +47,6 @@ void VS_API FillRect(const Rect& rect, const PixelProps& props = {});
 void VS_API Render();
 }  // namespace Renderer
 }  // namespace vs
+*/
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H_

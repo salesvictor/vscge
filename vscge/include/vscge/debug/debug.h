@@ -39,8 +39,8 @@
 
 namespace vs {
 namespace debug {
-VS_API bool Fail(std::string cond_str, std::string function, std::string line,
-                 std::string file);
+[[noreturn]] VS_API void Fail(std::string cond_str, std::string function,
+                              std::string line, std::string file);
 }  // namespace debug
 }  // namespace vs
 

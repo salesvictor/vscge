@@ -35,7 +35,7 @@ struct Internals {
   };
 };  // namespace vs::Logger
 
-Internals internals;
+static Internals internals;
 
 void Initialize() {
   VS_PROFILE_FUNCTION();
@@ -48,16 +48,15 @@ void Initialize() {
   };
   CreatePipe(&logger_in_read, &logger_in_write, &sa, 0);
   SetHandleInformation(logger_in_write, HANDLE_FLAG_INHERIT, 0);
-  STARTUPINFOA si = {
-      .cb      = sizeof(STARTUPINFOA),
-      .lpTitle = "Logger",
-      .dwX     = 0,
-      .dwY     = 0,
-      .dwFlags =
-          STARTF_USEPOSITION | STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW,
-      .wShowWindow = SW_SHOWNOACTIVATE,
-      .hStdInput   = logger_in_read,
-  };
+  STARTUPINFOA si = {};
+  si.cb           = sizeof(STARTUPINFOA);
+  si.lpTitle      = const_cast<char*>("Logger");  // NOLINT: C API...
+  si.dwX          = 0;
+  si.dwY          = 0;
+  si.dwFlags = STARTF_USEPOSITION | STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+  si.wShowWindow = SW_SHOWNOACTIVATE;
+  si.hStdInput   = logger_in_read;
+
   PROCESS_INFORMATION pi     = {};
   std::string logger_command = "Logger.exe";
   CreateProcessA(nullptr, logger_command.data(), nullptr, nullptr, TRUE,

@@ -18,6 +18,7 @@ set(VSCGE_ROOT ${CMAKE_CURRENT_BINARY_DIR})
 set(VSCGE_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(cmake/VSCGEVersion.cmake)
+include(cmake/VSCGEUtils.cmake)
 
 project(
   VSCGE
@@ -30,8 +31,8 @@ project(
 # Options
 # ==============================================================================
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
-option(BUILD_VSCGE_TESTS "Build VSCGE tests" OFF)
-option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples" ON)
+option(BUILD_VSCGE_TESTS "Build VSCGE tests" ON)
+option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples" OFF)
 
 option(VS_ENABLE_ASSERTS "Enable VS_ASSERT* macros" ON)
 option(VS_ENABLE_PROFILER "Enable profiler" ON)
@@ -40,8 +41,10 @@ option(VS_ENABLE_LOGGER "Enable logger" ON)
 
 add_subdirectory(vscge)
 
+#[[
 if(BUILD_VSCGE_EXAMPLES)
   message(STATUS "Configuring VSCGE examples")
   add_subdirectory(examples tmp)
   message(STATUS "Configuring VSCGE examples - done")
 endif()
+#]]

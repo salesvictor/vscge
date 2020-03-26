@@ -12,22 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "vscge/debug/debug.h"
+#include <gtest/gtest.h>
 
-#include <exception>
-#include <string>
-
-#include "vscge/logger/logger.h"
-
-namespace vs::debug {
-void Fail(std::string cond_str, std::string function, std::string line,
-          std::string file) {
-  std::string message = "Failed assertion " + cond_str + " in " + function +
-                        ", line " + line + ", at " + file;
-  Logger::Log(message, Logger::Level::kError);
-  // *(static_cast<volatile int*>(nullptr)) = 0;  // NOLINT: The point is to
-  // break here.
-
-  std::terminate();
+TEST(GoogleTestTest, Ok) {
+  EXPECT_EQ(1, 1);
 }
-}  // namespace vs::debug

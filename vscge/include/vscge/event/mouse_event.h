@@ -28,16 +28,12 @@ struct VS_API MouseButtons {
 
 struct VS_API MouseEvent : public Event {
   MouseEvent() = default;
-  MouseEvent(Point position, MouseButtons buttons)
+  MouseEvent(const Point& position, const MouseButtons& buttons)
       : position{position}, buttons{buttons} {}
 
-  union {
-    struct {
-      int x;
-      int y;
-    };
-    Point position;
-  };
+  virtual ~MouseEvent() = default;
+
+  Point position;
   MouseButtons buttons;
 
   static constexpr EventType TypeStatic() { return EventType::kMouse; }
@@ -45,9 +41,9 @@ struct VS_API MouseEvent : public Event {
   EventType Type() const override { return EventType::kMouse; }
 };
 
-struct VS_API MouseMovedEvent : public MouseEvent {
+struct VS_API MouseMovedEvent final : public MouseEvent {
   MouseMovedEvent(Point before, Point after, MouseButtons buttons)
-      : MouseEvent(after, buttons), movement(after - before) {}
+      : MouseEvent(after, buttons), movement{after - before} {}
 
   Point movement;
 
@@ -56,7 +52,7 @@ struct VS_API MouseMovedEvent : public MouseEvent {
   EventType Type() const override { return EventType::kMouseMoved; }
 };
 
-struct VS_API MouseButtonPressedEvent : public MouseEvent {
+struct VS_API MouseButtonPressedEvent final : public MouseEvent {
   using MouseEvent::MouseEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() {
     return EventType::kMouseButtonPressed;
@@ -65,7 +61,7 @@ struct VS_API MouseButtonPressedEvent : public MouseEvent {
   EventType Type() const override { return EventType::kMouseButtonPressed; }
 };
 
-struct VS_API MouseButtonReleasedEvent : public MouseEvent {
+struct VS_API MouseButtonReleasedEvent final : public MouseEvent {
   using MouseEvent::MouseEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() {
     return EventType::kMouseButtonReleased;

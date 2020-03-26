@@ -11,3 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+macro(vscge_check message)
+  message(CHECK_START ${message})
+  list(APPEND CMAKE_MESSAGE_INDENT "  ")
+endmacro()
+
+macro(vscge_pass)
+  list(POP_BACK CMAKE_MESSAGE_INDENT)
+  message(CHECK_PASS "done")
+endmacro()
+
+macro(vscge_fail)
+  list(POP_BACK CMAKE_MESSAGE_INDENT)
+  message(CHECK_PASS "failed")
+endmacro()

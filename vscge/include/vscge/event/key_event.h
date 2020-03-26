@@ -127,6 +127,8 @@ struct VS_API KeyEvent : public Event {
   KeyEvent() = default;
   explicit KeyEvent(Key key) : key(key) {}
 
+  virtual ~KeyEvent() = default;
+
   Key key;
 
   static constexpr EventType TypeStatic() { return EventType::kKey; }
@@ -134,14 +136,14 @@ struct VS_API KeyEvent : public Event {
   EventType Type() const override { return EventType::kKey; }
 };
 
-struct VS_API KeyPressedEvent : public KeyEvent {
+struct VS_API KeyPressedEvent final : public KeyEvent {
   using KeyEvent::KeyEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() { return EventType::kKeyPressed; }
   std::string TypeName() const override { return "KeyPressedEvent"; }
   EventType Type() const override { return EventType::kKeyPressed; }
 };
 
-struct VS_API KeyReleasedEvent : public KeyEvent {
+struct VS_API KeyReleasedEvent final : public KeyEvent {
   using KeyEvent::KeyEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() { return EventType::kKeyReleased; }
   std::string TypeName() const override { return "KeyReleasedEvent"; }
