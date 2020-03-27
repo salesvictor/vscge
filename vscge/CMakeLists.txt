@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO(Victor): Make a function/macro for these ".../... - done" things?
 vscge_check("Configuring VSCGE version: ${VSCGE_VERSION}")
-# message(CHECK_START "Configuring VSCGE version: ${VSCGE_VERSION}")
-# list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 # TODO(Victor): Change this to a module-driven approach ala OpenCV.
 set(
@@ -139,8 +136,22 @@ else()
   # )
 endif()
 
-list(POP_BACK CMAKE_MESSAGE_INDENT)
-message(CHECK_PASS "done")
+vscge_check("Finding iwyu")
+find_program(
+  IWYU_EXE
+  NAMES "include-what-you-use"
+)
+if(NOT IWYU_EXE)
+  vscge_fail("not found")
+else()
+  vscge_pass("found: ${IWYU_EXE}")
+  set_target_properties(
+    vscge PROPERTIES
+    CXX_INCLUDE_WHAT_YOU_USE "${IWYU_EXE}"
+  )
+endif()
+
+vscge_pass("done")
 # ==============================================================================
 
 set_target_properties(
