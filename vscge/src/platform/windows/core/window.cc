@@ -12,23 +12,56 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "vscge/core/window.h"
+
 #include <Windows.h>
+
+#include "vscge/core/core.h"
+#include "vscge/logger/logger.h"
 
 LRESULT CALLBACK WindowProc(HWND window_handle, UINT message_code,
                             WPARAM w_param, LPARAM l_param) {
+  if (message_code == WM_DESTROY) {
+    vs::Logger::Log("Stopping application!");
+    vs::Window::is_running_ = false;
+    std::unique_lock lock(vs::Window::closing_);
+    vs::Window::has_finished_.wait(lock);
+    PostQuitMessage(0);
+    return 0;
+  }
   return DefWindowProc(window_handle, message_code, w_param, l_param);
 }
 
-int WINAPI WinMain(HINSTANCE instance, HINSTANCE not_used, PSTR args,
-                   int show_flags) {
+namespace vs {
+void Window::Initialize() {
+  // TODO(Victor): The way Windows works is that the message queue is thread
+  // dependant, that means that the thread that creates the window is the one
+  // that receives its messages.
+  //
+  // That means that we have to create the window in the same thread as the
+  // InputHandler, should think of a better way to do this...
+  std::thread input_loop(VS_BIND_THREAD(Window::InputHandler));
+  input_loop.detach();
+
+  Window::is_running_ = true;
+}
+
+void Window::InputHandler() {
   constexpr char window_class_name[] = "Application";
 
-  WNDCLASSEXA window_class   = {};
+  HINSTANCE instance = GetModuleHandle(nullptr);
+
+  WNDCLASSEXA window_class{};
   window_class.cbSize        = sizeof(WNDCLASSEXA);
   window_class.style         = CS_VREDRAW | CS_HREDRAW;
   window_class.lpfnWndProc   = WindowProc;
   window_class.hInstance     = instance;
   window_class.lpszClassName = window_class_name;
+
+  STARTUPINFOA startup_info{};
+  GetStartupInfoA(&startup_info);
+
+  int show_flags = startup_info.wShowWindow;
 
   RegisterClassExA(&window_class);
   HWND window_handle =
@@ -36,11 +69,10 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE not_used, PSTR args,
                       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                       CW_USEDEFAULT, nullptr, nullptr, instance, nullptr);
   ShowWindow(window_handle, show_flags);
-
   MSG message;
   while (GetMessage(&message, nullptr, 0, 0)) {
     TranslateMessage(&message);
     DispatchMessage(&message);
   }
-  return 0;
 }
+}  // namespace vs

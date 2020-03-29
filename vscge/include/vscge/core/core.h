@@ -32,10 +32,10 @@
   }
 
 namespace vs {
-template <class Type>
+template <typename Type>
 using Ref = std::shared_ptr<Type>;
 
-template <class Type, typename... Args>
+template <typename Type, typename... Args>
 constexpr Ref<Type> CreateRef(Args&&... args) {
   return std::make_shared<Type>(std::forward<Args>(args)...);
 }

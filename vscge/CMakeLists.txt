@@ -30,6 +30,7 @@ set(
   include/vscge/vscge.h
   include/vscge/core/application.h
   include/vscge/core/core.h
+  include/vscge/core/entry_point.h
   # include/vscge/core/renderer.h
   include/vscge/core/timer.h
   include/vscge/debug/debug.h
@@ -43,6 +44,13 @@ set(
   # include/vscge/utils/conversions.h
 )
 
+if(VS_TARGET_PLATFORM STREQUAL "Windows")
+  add_subdirectory(src/platform/windows)
+elseif(VS_TARGET_PLATFORM STREQUAL "Windows Console")
+  add_subdirectory(srd/platform/windows_console)
+endif()
+
+vscge_debug("${VSCGE_SOURCE}")
 add_library(
   vscge
   ${VSCGE_SOURCE}
@@ -168,7 +176,6 @@ target_include_directories(
   PRIVATE src
 )
 
-
 # ==============================================================================
 # Compiler configuration.
 # ==============================================================================
@@ -181,8 +188,6 @@ if(NOT VSCGE_SIMULATED_COMPILER STREQUAL "")
   message(STATUS "Simulating compiler ${VSCGE_SIMULATED_COMPILER}")
 endif()
 
-# TODO(Victor): Check for C++20 compatibility, so that we can use
-# [[no_unique_address]] attribute for swizzles.
 target_compile_features(vscge PUBLIC cxx_std_17)
 
 if(VSCGE_COMPILER STREQUAL "Clang")
@@ -195,7 +200,7 @@ elseif(VSCGE_COMPILER STREQUAL "GNU")
   set(COMPILE_RELEASE_FLAGS -O2)
 elseif(VSCGE_COMPILER STREQUAL "MSVC")
 
-  set(COMPILE_PRIVATE_FLAGS /MP /Wall /WX /std:c++latest)
+  set(COMPILE_PRIVATE_FLAGS /MP /Wall /WX)
 
   # Disables anoying warnings.
   list(APPEND COMPILE_PRIVATE_FLAGS /wd4514 /wd4710 /wd4820 /wd4668 /wd5039)
@@ -222,8 +227,6 @@ target_compile_options(
 
 vscge_pass()
 # ==============================================================================
-
-
 # Options handling
 # ==============================================================================
 # TODO(Victor): Make a macro to handle options?
@@ -252,5 +255,3 @@ endif()
 
 add_library(vs::cge ALIAS vscge)
 vscge_pass()
-
-add_executable(test WIN32 src/platform/windows/entry_point.cc)

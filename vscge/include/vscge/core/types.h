@@ -15,7 +15,6 @@
 #ifndef VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
 #define VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
 
-#include "vscge/core/core.h"
 #include "vscge/math/vector.h"
 
 namespace vs {
@@ -50,14 +49,6 @@ struct VS_API Vertex {
   float x;
   float y;
   float z;
-};
-
-struct VS_API Window {
-  // TODO(Victor): Move to a platform layer.
-  // HANDLE handle;
-  Size size;
-
-  constexpr operator Rect() const { return {0, 0, size.width, size.height}; }
 };
 }  // namespace vs
 

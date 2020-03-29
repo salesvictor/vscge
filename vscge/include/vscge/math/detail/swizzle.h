@@ -92,17 +92,45 @@ struct VS_LOCAL Swizzle {
   }                                                                      \
   bool operator op(const Elem1& elem) const {                            \
     return (((*this)[idxs1] op elem) && ...);                            \
-  }                                                                      \
-  friend bool operator op(const Elem1& elem, const Swizzle& swizzle) {   \
-    return ((elem op swizzle[idxs1]) && ...);                            \
   }
+  // friend bool operator op(const Elem1& elem, const Swizzle& swizzle) {   \
+    // return ((elem op swizzle[idxs1]) && ...);                            \
+  // }
 
   CREATE_RELATIONAL_OPERATOR(==);
   CREATE_RELATIONAL_OPERATOR(<=);
   CREATE_RELATIONAL_OPERATOR(<);
   CREATE_RELATIONAL_OPERATOR(>=);
   CREATE_RELATIONAL_OPERATOR(>);
-};  // namespace detail
+};
+
+// TODO(Victor): MSVC is broken as of 19.25, it will be fixed with Visual
+// Studio 16.7.
+template <template <typename> class VecT1, class Elem1, int... idxs1>
+bool operator==(const Elem1& elem,
+                const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
+  return ((elem == swizzle[idxs1]) && ...);
+}
+template <template <typename> class VecT1, class Elem1, int... idxs1>
+bool operator<=(const Elem1& elem,
+                const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
+  return ((elem <= swizzle[idxs1]) && ...);
+}
+template <template <typename> class VecT1, class Elem1, int... idxs1>
+bool operator<(const Elem1& elem,
+               const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
+  return ((elem < swizzle[idxs1]) && ...);
+}
+template <template <typename> class VecT1, class Elem1, int... idxs1>
+bool operator>=(const Elem1& elem,
+                const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
+  return ((elem >= swizzle[idxs1]) && ...);
+}
+template <template <typename> class VecT1, class Elem1, int... idxs1>
+bool operator>(const Elem1& elem,
+               const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
+  return ((elem > swizzle[idxs1]) && ...);
+}
 }  // namespace detail
 }  // namespace vs
 

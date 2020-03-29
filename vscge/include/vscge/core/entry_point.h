@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//      https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_ENTRY_POINT_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_ENTRY_POINT_H_
+
 #include "vscge/core/application.h"
 #include "vscge/core/core.h"
 #include "vscge/instrumentation/profiler.h"
 
+namespace vs {
 int main() {
   VS_PROFILE_BEGIN_SESSION("Startup", "startup.json");
   vs::Ref<vs::Application> app = vs::CreateApp();
   VS_PROFILE_END_SESSION();
 
-  app->Start();
+  app->Initialize();
+
   return 0;
 }
+}  // namespace vs
+
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_ENTRY_POINT_H_

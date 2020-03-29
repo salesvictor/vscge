@@ -12,17 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# add_executable(Maze maze.cc)
-# target_link_libraries(Maze vs::cge)
-
-# TODO(Victor): Rethink how to add examples
-
-macro(add_example name)
-  add_executable(${name} ${name}.cc)
+macro(add_example name platform)
+  add_executable(
+    ${name}
+    ${platform}/${name}.cc
+  )
+  if(${platform} STREQUAL "Windows")
+    set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE TRUE)
+  endif()
   target_link_libraries(${name} vs::cge)
   set_target_properties(
     ${name} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${VSCGE_ROOT}/examples/${name}"
+    RUNTIME_OUTPUT_DIRECTORY "${VSCGE_ROOT}/examples/${platform}/${name}"
   )
 
   add_custom_target(${name}_copy)
@@ -30,7 +31,7 @@ macro(add_example name)
   add_custom_command(
     TARGET ${name}_copy PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${VSCGE_ROOT}/lib/vscge.lib "${VSCGE_ROOT}/examples/${name}"
+    ${VSCGE_ROOT}/lib/vscge.lib "${VSCGE_ROOT}/examples/${platform}/${name}"
   )
 
   add_custom_command(
@@ -41,3 +42,4 @@ macro(add_example name)
 endmacro()
 
 # add_example(game_of_life)
+add_example(blank_window "Windows")

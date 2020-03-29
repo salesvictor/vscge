@@ -26,36 +26,26 @@
 #include "vscge/core/renderer.h"
 #include "vscge/core/timer.h"
 #include "vscge/core/types.h"
+#include "vscge/core/window.h"
 #include "vscge/event/event.h"
 
 namespace vs {
 class VS_API Application {
  public:
-  Application(const Size& = {240, 120},
-              const Size& = {4, 4});
+  Application(const Size& = {240, 120}, const Size& = {4, 4});
 
-  void Start();
+  void Initialize();
 
  protected:
   virtual void OnStart() {}
   virtual void OnEvent(Ref<Event>) {}
-  virtual void OnUpdate(const Timestep& timestep) = 0;
+  virtual void OnUpdate(const Timestep&) = 0;
+
+  virtual ~Application() = default;
 
  private:
   void MainLoop();
-
-  // TODO(Victor): EventListener() is not a good name, this handles input,
-  // change it.
-  void EventListener();
-
-  static BOOL WINAPI CloseHandler(DWORD ctrl_event);
-
-  // TODO(Victor): This should be moved to an input system.
-  HANDLE buffer_in_;
-
-  static inline std::atomic<bool> is_running_ = false;
-  static inline std::mutex closing_;
-  static inline std::condition_variable has_finished_;
+  Window window_;
 };
 }  // namespace vs
 

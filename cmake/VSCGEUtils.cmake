@@ -12,6 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+macro(vscge_debug)
+  if(VS_DEVELOPER_MODE)
+    list(APPEND CMAKE_MESSAGE_CONTEXT "debug")
+    message(STATUS "${ARGN}")
+    list(POP_BACK CMAKE_MESSAGE_CONTEXT)
+  endif()
+endmacro()
+
 macro(vscge_check message)
   message(CHECK_START ${message})
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
@@ -34,3 +42,22 @@ macro(vscge_fail)
     message(CHECK_FAIL "failed")
   endif()
 endmacro()
+
+function(vscge_option option description default)
+  set(${option} ${default} CACHE STRING ${description})
+
+  set(POSSIBLE_VALUES ${default})
+  if(${default} STREQUAL "ON")
+    list(APPEND POSSIBLE_VALUES OFF)
+  elseif(${default} STREQUAL "OFF")
+    list(APPEND POSSIBLE_VALUES ON)
+  elseif(NOT ${ARGC} EQUAL 0)
+    list(APPEND POSSIBLE_VALUES ${ARGN})
+  endif()
+
+  list(SORT POSSIBLE_VALUES)
+
+  set_property(CACHE ${option} PROPERTY STRINGS ${POSSIBLE_VALUES})
+
+  vscge_debug("${option}|${description}|${default}|${POSSIBLE_VALUES}|${${option}}")
+endfunction()

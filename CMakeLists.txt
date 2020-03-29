@@ -30,21 +30,28 @@ project(
 # ==============================================================================
 # Options
 # ==============================================================================
-option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
-option(BUILD_VSCGE_TESTS "Build VSCGE tests" ON)
-option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples" OFF)
+if(VS_DEVELOPER_MODE)
+  set(CMAKE_MESSAGE_CONTEXT_SHOW TRUE)
+endif()
 
-option(VS_ENABLE_ASSERTS "Enable VS_ASSERT* macros" ON)
-option(VS_ENABLE_PROFILER "Enable profiler" ON)
-option(VS_ENABLE_LOGGER "Enable logger" ON)
+vscge_option(BUILD_SHARED_LIBS    "Build using shared libraries" OFF)
+vscge_option(BUILD_VSCGE_TESTS    "Build VSCGE tests"            ON)
+vscge_option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples"         ON)
+
+vscge_option(VS_ENABLE_ASSERTS  "Enable VS_ASSERT* macros" ON)
+vscge_option(VS_ENABLE_PROFILER "Enable profiler"          ON)
+vscge_option(VS_ENABLE_LOGGER   "Enable logger"            ON)
+
+vscge_option(VS_TARGET_PLATFORM "End-user platform" "Windows" "Windows Console")
+
+# TODO(Victor): Turn this off on prod
+vscge_option(VS_DEVELOPER_MODE "Engine Developer" ON)
 # ==============================================================================
 
 add_subdirectory(vscge)
 
-#[[
 if(BUILD_VSCGE_EXAMPLES)
-  message(STATUS "Configuring VSCGE examples")
+  vscge_check("Configuring VSCGE examples")
   add_subdirectory(examples tmp)
-  message(STATUS "Configuring VSCGE examples - done")
+  vscge_pass()
 endif()
-#]]

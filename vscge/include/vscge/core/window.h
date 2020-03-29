@@ -12,18 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_VERSION_H_
-#define VSCGE_INCLUDE_VSCGE_VERSION_H_
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_WINDOW_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_WINDOW_H_
 
-#define VSCGE_VERSION_MAJOR 0
-#define VSCGE_VERSION_MINOR 13
-#define VSCGE_VERSION_PATCH 0
+#include <atomic>
+#include <mutex>
 
-#define VSCGE_STR(str)      VSCGE_STR_IMPL(str)
-#define VSCGE_STR_IMPL(str) #str
+#include "vscge/core/api.h"
+#include "vscge/core/types.h"
 
-#define VSCGE_VERSION            \
-  VSCGE_STR(VSCGE_VERSION_MAJOR) \
-  "." VSCGE_STR(VSCGE_VERSION_MINOR) "." VSCGE_STR(VSCGE_VERSION_PATCH)
+namespace vs {
+class VS_API Window {
+ public:
+  Size size_;
 
-#endif  // VSCGE_INCLUDE_VSCGE_VERSION_H_
+  void Initialize();
+
+  // TODO(Victor): Check if these **really** need to be static...
+  static inline std::atomic<bool> is_running_ = true;
+  static inline std::mutex closing_;
+  static inline std::condition_variable has_finished_;
+
+ private:
+  void InputHandler();
+};
+}  // namespace vs
+
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_WINDOW_H_

@@ -18,7 +18,7 @@
 #include <chrono>
 #include <string>
 
-#include "vscge/core/core.h"
+#include "vscge/core/api.h"
 
 #ifdef VS_ENABLE_PROFILER
 #  define VS_PROFILE_BEGIN_SESSION(name, filepath) \

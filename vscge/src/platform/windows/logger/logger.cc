@@ -21,7 +21,6 @@
 
 #include "vscge/instrumentation/profiler.h"
 
-// TODO(Victor): Move to a platform specific layer.
 namespace vs::Logger {
 struct Internals {
   bool initialized    = false;
@@ -42,10 +41,10 @@ void Initialize() {
   HANDLE logger_in_read;
   HANDLE logger_in_write;
 
-  SECURITY_ATTRIBUTES sa = {
-      .nLength        = sizeof(SECURITY_ATTRIBUTES),
-      .bInheritHandle = TRUE,
-  };
+  SECURITY_ATTRIBUTES sa = {};
+  sa.nLength             = sizeof(SECURITY_ATTRIBUTES);
+  sa.bInheritHandle      = TRUE,
+
   CreatePipe(&logger_in_read, &logger_in_write, &sa, 0);
   SetHandleInformation(logger_in_write, HANDLE_FLAG_INHERIT, 0);
   STARTUPINFOA si = {};
@@ -53,12 +52,15 @@ void Initialize() {
   si.lpTitle      = const_cast<char*>("Logger");  // NOLINT: C API...
   si.dwX          = 0;
   si.dwY          = 0;
+
   si.dwFlags = STARTF_USEPOSITION | STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+
   si.wShowWindow = SW_SHOWNOACTIVATE;
   si.hStdInput   = logger_in_read;
 
   PROCESS_INFORMATION pi     = {};
   std::string logger_command = "Logger.exe";
+
   CreateProcessA(nullptr, logger_command.data(), nullptr, nullptr, TRUE,
                  CREATE_NEW_CONSOLE, nullptr, nullptr, &si, &pi);
   CloseHandle(pi.hProcess);
@@ -95,7 +97,7 @@ void Log(std::string_view message, Level level) {
   std::string write_message =
       "[" + timestamp + "|" + level_string + "] " + std::string(message) + '\n';
 
-  // INFO(Victor): No idea this needs to exist, but fount it here:
+  // INFO(Victor): No idea why this needs to exist, but fount it here:
   // https://stackoverflow.com/questions/28618715/c-writefile-unicode-characters
   //
   // The following is for handling Unicode.
