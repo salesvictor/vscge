@@ -15,12 +15,13 @@
 #ifndef VSCGE_INCLUDE_VSCGE_CORE_ENTRY_POINT_H_
 #define VSCGE_INCLUDE_VSCGE_CORE_ENTRY_POINT_H_
 
+#include "vscge/core/api.h"
 #include "vscge/core/application.h"
 #include "vscge/core/core.h"
 #include "vscge/instrumentation/profiler.h"
 
 namespace vs {
-int main() {
+inline int VS_LOCAL main() {
   VS_PROFILE_BEGIN_SESSION("Startup", "startup.json");
   vs::Ref<vs::Application> app = vs::CreateApp();
   VS_PROFILE_END_SESSION();

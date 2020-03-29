@@ -22,7 +22,6 @@ set(
   src/core/timer.cc
   src/debug/debug.cc
   src/instrumentation/profiler.cc
-  src/logger/logger.cc
   src/logger/tee.cc
   # src/utils/conversions.cc
   include/vscge/logger/logger.h
