@@ -1,1 +1,2 @@
 swizzle_vec*.inc linguist-generated
+tool/cinclude2dot.pl linguist-vendored
