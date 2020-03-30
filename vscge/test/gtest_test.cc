@@ -12,18 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_VERSION_H_
-#define VSCGE_INCLUDE_VSCGE_VERSION_H_
+#include <gtest/gtest.h>
 
-#define VSCGE_VERSION_MAJOR 0
-#define VSCGE_VERSION_MINOR 13
-#define VSCGE_VERSION_PATCH 4
-
-#define VSCGE_STR(str)      VSCGE_STR_IMPL(str)
-#define VSCGE_STR_IMPL(str) #str
-
-#define VSCGE_VERSION            \
-  VSCGE_STR(VSCGE_VERSION_MAJOR) \
-  "." VSCGE_STR(VSCGE_VERSION_MINOR) "." VSCGE_STR(VSCGE_VERSION_PATCH)
-
-#endif  // VSCGE_INCLUDE_VSCGE_VERSION_H_
+TEST(GTestTest, Working) {
+  EXPECT_EQ(1, 1);
+}

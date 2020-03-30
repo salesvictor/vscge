@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "vscge/math/vector.h"
+
 #include <gtest/gtest.h>
-#include <vscge/math/vector.h>
 
 #include <array>
 
+#include "util.h"
+
 using namespace vs;
 
-TEST(VectorTest, ConstructionFloat) {
+TEST(VectorConstructionTest, Float) {
   Vec2 v{};
 
   EXPECT_EQ(v.x, 0.0f);
@@ -35,7 +38,7 @@ TEST(VectorTest, ConstructionFloat) {
   EXPECT_EQ(q.y, 2.0f);
 }
 
-TEST(VectorTest, ConstructionInt) {
+TEST(VectorConstructionTest, Int) {
   Vec2i v{};
 
   EXPECT_EQ(v.x, 0);
@@ -49,6 +52,11 @@ TEST(VectorTest, ConstructionInt) {
   Vec2i q{2, 2};
   EXPECT_EQ(q.x, 2);
   EXPECT_EQ(q.y, 2);
+}
+
+TEST(VectorDataTest, Float) {
+  Vec2 v{1.0f, 2.0f};
+  EXPECT_EQ(v.data, (std::array{1.0f, 2.0f}));
 }
 
 TEST(VectorTest, Size) {
@@ -67,4 +75,28 @@ TEST(VectorTest, Size) {
   EXPECT_EQ(sizeof(Vec2i), sizeof(std::array<int, 2>));
   EXPECT_EQ(sizeof(Vec3i), sizeof(std::array<int, 3>));
   EXPECT_EQ(sizeof(Vec4i), sizeof(std::array<int, 4>));
+}
+
+TEST(VectorOperationTest, Add) {
+  Vec2 v1{3.0f, 4.0f};
+  EXPECT_VEC_EQ(v1 + v1, Vec2(6.0f, 8.0f));
+  EXPECT_VEC_EQ(v1, Vec2(3.0f, 4.0f));
+
+  Vec2 v2{7.0f, 6.0f};
+  EXPECT_VEC_EQ(v1 + v2, Vec2(10.0f, 10.0f));
+  EXPECT_VEC_EQ(v1, Vec2(3.0f, 4.0f));
+  EXPECT_VEC_EQ(v2, Vec2(7.0f, 6.0f));
+
+  Vec2 v3{-6.0f, -8.0f};
+  EXPECT_VEC_EQ(v1 + v1 + v3, Vec2{});
+  EXPECT_VEC_EQ(v1, Vec2(3.0f, 4.0f));
+  EXPECT_VEC_EQ(v3, Vec2(-6.0f, -8.0f));
+}
+
+TEST(VectorOperationTest, Subtract) {
+  Vec2 v1{3.0f, 4.0f};
+  EXPECT_VEC_EQ(v1 - v1, Vec2{});
+
+  Vec2 v2{-3.0f, -4.0f};
+  EXPECT_VEC_EQ(v1 - v2, Vec2(6.0f, 8.0f));
 }

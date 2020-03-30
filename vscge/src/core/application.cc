@@ -29,11 +29,8 @@
 #include "vscge/logger/logger.h"
 #include "vscge/util/macro.h"
 
-// TODO(Victor): Remove this after fixing renderer.
-#pragma warning(disable : 4100)
-
 namespace vs {
-Application::Application(const Size& screen_size, const Size& font_size) {
+Application::Application(const Size&, const Size&) {
   window_.Initialize();
 #if 0
   Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size,

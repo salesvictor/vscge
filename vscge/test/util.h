@@ -12,8 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef VSCGE_TEST_UTIL_H_
+#define VSCGE_TEST_UTIL_H_
+
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-TEST(GoogleTestTest, Ok) {
-  EXPECT_EQ(1, 1);
+// Adapted from
+// https://stackoverflow.com/questions/28768359/comparison-of-floating-point-arrays-using-google-test-and-google-mock
+MATCHER_P(VsFloatNear, tol, "Out of range") {
+  return (std::get<0>(arg) > std::get<1>(arg) - tol &&
+          std::get<0>(arg) < std::get<1>(arg) + tol);
 }
+
+#define EXPECT_VEC_EQ(val1, val2) \
+  EXPECT_THAT((val1).data,        \
+              ::testing::Pointwise(VsFloatNear(1e-4f), (val2).data))
+
+#endif  // VSCGE_TEST_UTIL_H_

@@ -25,65 +25,135 @@
 
 namespace vs {
 namespace detail {
-template <template <typename> class VecT1, class Elem1, int... idxs1>
+template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 struct VS_LOCAL Swizzle;
 
 template <class Elem>
-struct VS_LOCAL Vec1Base {
+struct VS_LOCAL Vec1Base : Swizzle<Vec1Base, Elem, 0> {
   std::array<Elem, 1> data;
 
   operator Elem() const { return data[0]; }
 
-  template <int index>
+  template <std::size_t index>
   Vec1Base(const Swizzle<Vec1Base, Elem, index>& swizzle) {
     data[0] = swizzle[index];
   }
 };
 
-template <template <typename> class VecT1, class Elem1, int... idxs1>
+template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 struct VS_LOCAL Swizzle {
-  Elem1& operator[](int index) { return reinterpret_cast<Elem1*>(this)[index]; }
-  const Elem1& operator[](int index) const {
+  Elem1& operator[](std::size_t index) { return reinterpret_cast<Elem1*>(this)[index]; }
+  const Elem1& operator[](std::size_t index) const {
     return reinterpret_cast<const Elem1*>(this)[index];
   }
 
-  // Formatting off to let the preprocessor work
-  // clang-format off
-#define CREATE_ARITHMETIC_OPERATOR(op)                                       \
-  template <template <typename> class VecT2, class Elem2, int... idxs2>      \
-  Swizzle& operator op##=(const Swizzle<VecT2, Elem2, idxs2...>& other) {    \
-    static_assert(sizeof...(idxs1) == sizeof...(idxs2),                      \
-                  "Your swizzles have different sizes!");                    \
-                                                                             \
-    (((*this)[idxs1] op##= other[idxs2]), ...);                              \
-    return *this;                                                            \
-  }                                                                          \
-  template <template <typename> class VecT2, class Elem2, int... idxs2>      \
-  friend Swizzle operator op(Swizzle left,                                   \
-                             const Swizzle<VecT2, Elem2, idxs2...>& right) { \
-    static_assert(sizeof...(idxs1) == sizeof...(idxs2),                      \
-                  "Your swizzles have different sizes!");                    \
-                                                                             \
-    left op##= right;                                                        \
-    return left;                                                             \
-  }                                                                          \
-  Swizzle& operator op##=(const Elem1& elem) {                               \
-    (((*this)[idxs1] op##= elem), ...);                                      \
-    return *this;                                                            \
-  }                                                                          \
-  friend Swizzle operator op(const Elem1& elem, Swizzle swizzle) {           \
-    ((swizzle[idxs1] = swizzle[idxs1] op elem), ...);                        \
-    return swizzle;                                                          \
-  }
-  // clang-format on
+  Swizzle() = default;
+  Swizzle(const Swizzle& other) { (((*this)[idxs1] = other[idxs1]), ...); }
+  Swizzle(Swizzle&& other) { (((*this)[idxs1] = other[idxs1]), ...); }
 
-  CREATE_ARITHMETIC_OPERATOR(+);
-  CREATE_ARITHMETIC_OPERATOR(-);
-  CREATE_ARITHMETIC_OPERATOR(*);
-  CREATE_ARITHMETIC_OPERATOR(/);
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
+  Swizzle& operator=(const Swizzle<VecT2, Elem2, idxs2...>& other) {
+    static_assert(sizeof...(idxs1) == sizeof...(idxs2),
+                  "Your swizzles have different sizes!");
+
+    (((*this)[idxs1] = other[idxs2]), ...);
+    return *this;
+  }
+  Swizzle& operator=(const Elem1& elem) {
+    (((*this)[idxs1] += elem), ...);
+    return *this;
+  }
+
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
+  Swizzle& operator+=(const Swizzle<VecT2, Elem2, idxs2...>& other) {
+    static_assert(sizeof...(idxs1) == sizeof...(idxs2),
+                  "Your swizzles have different sizes!");
+
+    (((*this)[idxs1] += other[idxs2]), ...);
+    return *this;
+  }
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
+  friend VecT1<Elem1> operator+(Swizzle left,
+                                const Swizzle<VecT2, Elem2, idxs2...>& right) {
+    static_assert(sizeof...(idxs1) == sizeof...(idxs2),
+                  "Your swizzles have different sizes!");
+
+    left += right;
+    return left;
+  }
+  Swizzle& operator+=(const Elem1& elem) {
+    (((*this)[idxs1] += elem), ...);
+    return *this;
+  }
+  friend VecT1<Elem1> operator+(const Elem1& elem, Swizzle swizzle) {
+    ((swizzle[idxs1] = elem + swizzle[idxs1]), ...);
+    return swizzle;
+  }
+
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
+  Swizzle& operator-=(const Swizzle<VecT2, Elem2, idxs2...>& other) {
+    static_assert(sizeof...(idxs1) == sizeof...(idxs2),
+                  "Your swizzles have different sizes!");
+
+    (((*this)[idxs1] -= other[idxs2]), ...);
+    return *this;
+  }
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
+  friend VecT1<Elem1> operator-(Swizzle left,
+                                const Swizzle<VecT2, Elem2, idxs2...>& right) {
+    static_assert(sizeof...(idxs1) == sizeof...(idxs2),
+                  "Your swizzles have different sizes!");
+
+    left -= right;
+    return left;
+  }
+  Swizzle& operator-=(const Elem1& elem) {
+    (((*this)[idxs1] -= elem), ...);
+    return *this;
+  }
+  friend VecT1<Elem1> operator-(const Elem1& elem, Swizzle swizzle) {
+    ((swizzle[idxs1] = elem - swizzle[idxs1]), ...);
+    return swizzle;
+  }
+
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
+  friend VecT1<Elem1> operator*(Swizzle left,
+                                const Swizzle<VecT2, Elem2, idxs2...>& right) {
+    static_assert(sizeof...(idxs1) == sizeof...(idxs2),
+                  "Your swizzles have different sizes!");
+
+    left *= right;
+    return left;
+  }
+  Swizzle& operator*=(const Elem1& elem) {
+    (((*this)[idxs1] *= elem), ...);
+    return *this;
+  }
+  friend VecT1<Elem1> operator*(const Elem1& elem, Swizzle swizzle) {
+    ((swizzle[idxs1] = elem * swizzle[idxs1]), ...);
+    return swizzle;
+  }
+
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
+  friend VecT1<Elem1> operator/(Swizzle left,
+                                const Swizzle<VecT2, Elem2, idxs2...>& right) {
+    static_assert(sizeof...(idxs1) == sizeof...(idxs2),
+                  "Your swizzles have different sizes!");
+
+    left /= right;
+    return left;
+  }
+  Swizzle& operator/=(const Elem1& elem) {
+    (((*this)[idxs1] /= elem), ...);
+    return *this;
+  }
+  friend VecT1<Elem1> operator/(const Elem1& elem, Swizzle swizzle) {
+    ((swizzle[idxs1] = elem / swizzle[idxs1]), ...);
+    return swizzle;
+  }
 
 #define CREATE_RELATIONAL_OPERATOR(op)                                   \
-  template <template <typename> class VecT2, class Elem2, int... idxs2>  \
+  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>  \
   bool operator op(const Swizzle<VecT2, Elem2, idxs2...>& other) const { \
     static_assert(sizeof...(idxs1) == sizeof...(idxs2),                  \
                   "Your swizzles have different sizes!");                \
@@ -106,27 +176,27 @@ struct VS_LOCAL Swizzle {
 
 // TODO(Victor): MSVC is broken as of 19.25, it will be fixed with Visual
 // Studio 16.7.
-template <template <typename> class VecT1, class Elem1, int... idxs1>
+template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 bool operator==(const Elem1& elem,
                 const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
   return ((elem == swizzle[idxs1]) && ...);
 }
-template <template <typename> class VecT1, class Elem1, int... idxs1>
+template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 bool operator<=(const Elem1& elem,
                 const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
   return ((elem <= swizzle[idxs1]) && ...);
 }
-template <template <typename> class VecT1, class Elem1, int... idxs1>
+template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 bool operator<(const Elem1& elem,
                const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
   return ((elem < swizzle[idxs1]) && ...);
 }
-template <template <typename> class VecT1, class Elem1, int... idxs1>
+template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 bool operator>=(const Elem1& elem,
                 const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
   return ((elem >= swizzle[idxs1]) && ...);
 }
-template <template <typename> class VecT1, class Elem1, int... idxs1>
+template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 bool operator>(const Elem1& elem,
                const Swizzle<VecT1, Elem1, idxs1...>& swizzle) {
   return ((elem > swizzle[idxs1]) && ...);

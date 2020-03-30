@@ -13,7 +13,8 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-#include <vscge/math/vector.h>
+
+#include "vscge/math/vector.h"
 
 using namespace vs;
 

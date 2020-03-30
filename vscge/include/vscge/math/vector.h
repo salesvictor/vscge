@@ -36,26 +36,30 @@ struct VS_API Vec4Base;
 // std::memcpy!
 template <class Elem>
 struct VS_API Vec2Base : public detail::Swizzle<Vec2Base, Elem, 0, 1> {
+  Vec2Base() = default;
+
   template <class... Elems>
   Vec2Base(const Elems&... elems) {
     static_assert(sizeof...(Elems) == 2, "Too many elements in constructor!");
 
-    int own_index = 0;
-    (((*this)[own_index++] = elems), ...);
+    std::size_t own_index = 0;
+    ((data[own_index++] = elems), ...);
   }
 
-  template <template <typename> class VecT, int... idxs>
+  Vec2Base(const Vec2Base& other) : data{other.data} {}
+
+  template <template <typename> class VecT, std::size_t... idxs>
   Vec2Base(const detail::Swizzle<VecT, Elem, idxs...>& swizzle) {
     static_assert(sizeof...(idxs) == 2, "Too many indices in swizzle!");
 
-    int own_index = 0;
+    std::size_t own_index = 0;
     // TODO(Victor): This might fail!
     // (std::memcpy(
     // reinterpret_cast<std::byte*>(this) + own_index * stride,
     // reinterpret_cast<const std::byte*>(&swizzle) + idxs * stride,
     // sizeof(Elem)),
     // ...);
-    (((*this)[own_index++] = swizzle[idxs]), ...);  // NOLINT
+    ((data[own_index++] = swizzle[idxs]), ...);
   }
 
   union {
@@ -64,7 +68,6 @@ struct VS_API Vec2Base : public detail::Swizzle<Vec2Base, Elem, 0, 1> {
 #include "vscge/math/detail/swizzle_vec2.inc"
   };
 
-  Vec2Base() = default;
 };
 
 using Vec2  = Vec2Base<float>;
@@ -82,11 +85,11 @@ struct VS_API Vec3Base : public detail::Swizzle<Vec3Base, Elem, 0, 1, 2> {
 
   Vec3Base(Elem x, Elem y, Elem z) : data{x, y, z} {}
 
-  template <int... idxs>
+  template <std::size_t... idxs>
   Vec3Base(const detail::Swizzle<Vec3Base, Elem, idxs...>& swizzle) {
     static_assert(sizeof...(idxs) == 3, "Too many indices in swizzle!");
 
-    int own_index = 0;
+    std::size_t own_index = 0;
     (((*this)[own_index++] = swizzle[idxs]), ...);  // NOLINT
   }
 };
@@ -106,11 +109,11 @@ struct VS_API Vec4Base : public detail::Swizzle<Vec4Base, Elem, 0, 1, 2, 3> {
 
   Vec4Base(Elem x, Elem y, Elem z, Elem w) : data{x, y, z, w} {}
 
-  template <int... idxs>
+  template <std::size_t... idxs>
   Vec4Base(const detail::Swizzle<Vec4Base, Elem, idxs...>& swizzle) {
     static_assert(sizeof...(idxs) == 4, "Too many indices in swizzle!");
 
-    int own_index = 0;
+    std::size_t own_index = 0;
     (((*this)[own_index++] = swizzle[idxs]), ...);  // NOLINT
   }
 };
