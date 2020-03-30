@@ -17,7 +17,7 @@
 
 #include <string>
 
-#include "vscge/core/core.h"
+#include "vscge/core/api.h"
 
 #if defined(_MSC_VER)
 #  define VS_FUNC_LOG __FUNCSIG__

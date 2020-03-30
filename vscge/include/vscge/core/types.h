@@ -15,6 +15,7 @@
 #ifndef VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
 #define VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
 
+#include "vscge/core/api.h"
 #include "vscge/math/vector.h"
 
 namespace vs {

@@ -17,7 +17,7 @@
 
 #include <string>
 
-#include "vscge/core/core.h"
+#include "vscge/core/api.h"
 
 namespace vs {
 // TODO(Victor): See if it makes sense for Logger to be a static class, if not,

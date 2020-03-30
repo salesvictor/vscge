@@ -15,10 +15,8 @@
 #ifndef VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
 #define VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
 
-#include <memory>
-#include <utility>
-
 #include "vscge/core/api.h"
+#include "vscge/memory/memory.h"
 
 #define VS_BIND_EVENT(fn)  [this](auto ev) { fn(ev); }
 #define VS_BIND_THREAD(fn) [this]() { fn(); }
@@ -32,14 +30,6 @@
   }
 
 namespace vs {
-template <typename Type>
-using Ref = std::shared_ptr<Type>;
-
-template <typename Type, typename... Args>
-constexpr Ref<Type> CreateRef(Args&&... args) {
-  return std::make_shared<Type>(std::forward<Args>(args)...);
-}
-
 class Application;
 Ref<Application> VS_API CreateApp();
 }  // namespace vs

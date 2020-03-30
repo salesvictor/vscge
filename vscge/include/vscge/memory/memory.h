@@ -12,33 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_CORE_TIMER_H_
-#define VSCGE_INCLUDE_VSCGE_CORE_TIMER_H_
+#ifndef VSCGE_INCLUDE_VSCGE_MEMORY_MEMORY_H_
+#define VSCGE_INCLUDE_VSCGE_MEMORY_MEMORY_H_
 
-#include <chrono>
-#include <ratio>
-
-#include "vscge/core/api.h"
+#include <memory>
 
 namespace vs {
-struct VS_API Timestep {
-  std::chrono::duration<float> duration;
+template <typename Type>
+using Ref = std::shared_ptr<Type>;
 
-  float Seconds();
-  float Milliseconds();
-
-  operator float() const { return duration.count(); }
-};
-
-class VS_API Stopwatch {
- public:
-  void Start();
-  Timestep Stop();
-
- private:
-  std::chrono::time_point<std::chrono::steady_clock> start_time_;
-  std::chrono::time_point<std::chrono::steady_clock> end_time_;
-};
+template <typename Type, typename... Args>
+constexpr Ref<Type> CreateRef(Args&&... args) {
+  return std::make_shared<Type>(std::forward<Args>(args)...);
+}
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_CORE_TIMER_H_
+#endif  // VSCGE_INCLUDE_VSCGE_MEMORY_MEMORY_H_

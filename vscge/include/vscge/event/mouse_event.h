@@ -17,6 +17,7 @@
 
 #include <string>
 
+#include "vscge/core/api.h"
 #include "vscge/core/types.h"
 #include "vscge/event/event.h"
 

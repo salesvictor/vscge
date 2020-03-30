@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "vscge/core/core.h"
+#include "vscge/core/api.h"
 #include "vscge/core/types.h"
 
 /*

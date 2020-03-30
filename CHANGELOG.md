@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.13.1] - 2020-03-29
 
+### Changed
+
+- Include header dependencies.
+
+## [0.13.1] - 2020-03-29
+
 ### Fixed
 
 - Linker problem with entry point.

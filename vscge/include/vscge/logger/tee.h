@@ -18,7 +18,7 @@
 #include <fstream>
 #include <string>
 
-#include "vscge/core/core.h"
+#include "vscge/core/api.h"
 
 namespace vs {
 namespace Logger {

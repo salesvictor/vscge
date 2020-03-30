@@ -19,10 +19,12 @@
 
 #include <string>
 
-#include "vscge/core/core.h"
+#include "vscge/core/api.h"
 #include "vscge/event/event.h"
 
 namespace vs {
+
+// TODO(Victor): Move to platform.
 enum class Key {
   kEscape = VK_ESCAPE,
 

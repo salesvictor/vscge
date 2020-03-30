@@ -18,8 +18,7 @@
 #include <cstdlib>
 #include <string>
 
-#include "vscge/core/core.h"
-#include "vscge/logger/logger.h"
+#include "vscge/core/api.h"
 
 struct VS_API Memory {
   std::size_t size = 0;
