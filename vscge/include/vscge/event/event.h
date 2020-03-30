@@ -15,47 +15,8 @@
 #ifndef VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_
 #define VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_
 
-#include <string>
-
-#include "vscge/core/api.h"
-#include "vscge/memory/memory.h"
-
-namespace vs {
-// TODO(Victor): These events are not mutually exclusive, maybe represent them
-// as a bitfield?
-enum class EventType {
-  kKey,  // Generic key event, for when you don't care.
-  kKeyPressed,
-  kKeyReleased,
-  kMouse,  // Generic mouse event, for when you don't care.
-  kMouseMoved,
-  kMouseButtonPressed,
-  kMouseButtonReleased,
-};
-
-// TODO(Victor): See if it makes sense to add a `handled` to Event.
-struct VS_API Event {
-  virtual ~Event()                     = default;
-  virtual EventType Type() const       = 0;
-  virtual std::string TypeName() const = 0;
-};
-
-class VS_API EventDispatcher {
- public:
-  explicit EventDispatcher(Ref<Event> event) : event_{event} {}
-
-  // TODO(Victor): I really do not like having a `TypeStatic()` function, but
-  // the only other way I found was a `dynamic_cast`, maybe there's a better way
-  // with C++ specific idioms.
-  template <typename Type, typename Fn>
-  void Dispatch(const Fn& fn) {
-    if (event_->Type() == Type::TypeStatic())
-      fn(std::static_pointer_cast<Type>(event_));
-  }
-
- private:
-  Ref<Event> event_;
-};
-}  // namespace vs
+#include "vscge/event/base_event.h"
+#include "vscge/event/key_event.h"
+#include "vscge/event/mouse_event.h"
 
 #endif  // VSCGE_INCLUDE_VSCGE_EVENT_EVENT_H_

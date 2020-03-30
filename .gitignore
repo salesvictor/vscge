@@ -6,3 +6,6 @@ out/
 
 .vs/
 .vscode/
+
+# TODO(Victor): Remove this when ready
+doc/

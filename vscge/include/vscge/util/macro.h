@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_VERSION_H_
-#define VSCGE_INCLUDE_VSCGE_VERSION_H_
+#ifndef VSCGE_INCLUDE_VSCGE_UTILS_MACRO_H_
+#define VSCGE_INCLUDE_VSCGE_UTILS_MACRO_H_
 
-#define VSCGE_VERSION_MAJOR 0
-#define VSCGE_VERSION_MINOR 13
-#define VSCGE_VERSION_PATCH 3
+#define VS_BIND_EVENT(fn)  [this](auto ev) { fn(ev); }
+#define VS_BIND_THREAD(fn) [this]() { fn(); }
 
-#define VSCGE_STR(str)      VSCGE_STR_IMPL(str)
-#define VSCGE_STR_IMPL(str) #str
+#define VS_STR(str)      VS_STR_IMPL(str)
+#define VS_STR_IMPL(str) #str
 
-#define VSCGE_VERSION            \
-  VSCGE_STR(VSCGE_VERSION_MAJOR) \
-  "." VSCGE_STR(VSCGE_VERSION_MINOR) "." VSCGE_STR(VSCGE_VERSION_PATCH)
-
-#endif  // VSCGE_INCLUDE_VSCGE_VERSION_H_
+#endif  // VSCGE_INCLUDE_VSCGE_UTILS_MACRO_H_

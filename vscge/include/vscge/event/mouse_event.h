@@ -19,7 +19,7 @@
 
 #include "vscge/core/api.h"
 #include "vscge/core/types.h"
-#include "vscge/event/event.h"
+#include "vscge/event/base_event.h"
 
 namespace vs {
 struct VS_API MouseButtons {

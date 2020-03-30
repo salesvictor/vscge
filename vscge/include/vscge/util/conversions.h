@@ -12,26 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
-#define VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
+#ifndef VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
+#define VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
+
+#include <string_view>
+#include <unordered_map>
+#include <vector>
 
 #include "vscge/core/api.h"
-#include "vscge/memory/memory.h"
-
-#define VS_BIND_EVENT(fn)  [this](auto ev) { fn(ev); }
-#define VS_BIND_THREAD(fn) [this]() { fn(); }
-
-#define VS_STR(str)      VS_STR_IMPL(str)
-#define VS_STR_IMPL(str) #str
-
-#define VS_REGISTER_APP(app_name)               \
-  vs::Ref<vs::Application> vs::CreateApp() {    \
-    return vs::CreateRef<app_name>(app_name()); \
-  }
+#include "vscge/core/types.h"
 
 namespace vs {
-class Application;
-Ref<Application> VS_API CreateApp();
+VS_API Point BufferIndexToPoint(const Rect& region, int i);
+VS_API int PointToBufferIndex(const Rect& region, const Point& point);
+
+// VS_API std::vector<Pixel> StringToPixelBuffer(
+// std::string_view string_buffer, const Rect& region,
+// std::unordered_map<char, PixelProps> char_map);
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_CORE_CORE_H_
+#endif  // VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_

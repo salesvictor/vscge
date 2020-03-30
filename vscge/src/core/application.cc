@@ -25,10 +25,9 @@
 
 #include "vscge/core/timer.h"
 #include "vscge/event/event.h"
-#include "vscge/event/key_event.h"
-#include "vscge/event/mouse_event.h"
 #include "vscge/instrumentation/profiler.h"
 #include "vscge/logger/logger.h"
+#include "vscge/util/macro.h"
 
 // TODO(Victor): Remove this after fixing renderer.
 #pragma warning(disable : 4100)

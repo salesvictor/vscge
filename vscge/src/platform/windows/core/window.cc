@@ -16,8 +16,8 @@
 
 #include <Windows.h>
 
-#include "vscge/core/core.h"
 #include "vscge/logger/logger.h"
+#include "vscge/util/macro.h"
 
 LRESULT CALLBACK WindowProc(HWND window_handle, UINT message_code,
                             WPARAM w_param, LPARAM l_param) {

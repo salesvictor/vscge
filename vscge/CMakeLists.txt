@@ -28,7 +28,6 @@ set(
   include/vscge/version.h
   include/vscge/vscge.h
   include/vscge/core/application.h
-  include/vscge/core/core.h
   include/vscge/core/entry_point.h
   # include/vscge/core/renderer.h
   include/vscge/core/timer.h

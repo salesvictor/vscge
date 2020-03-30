@@ -17,13 +17,20 @@
 
 #include "vscge/core/api.h"
 #include "vscge/core/application.h"
-#include "vscge/core/core.h"
 #include "vscge/instrumentation/profiler.h"
+#include "vscge/memory/memory.h"
+
+#define VS_REGISTER_APP(app_name)               \
+  vs::Ref<vs::Application> vs::CreateApp() {    \
+    return vs::CreateRef<app_name>(app_name()); \
+  }
 
 namespace vs {
+Ref<Application> VS_API CreateApp();
+
 inline int VS_LOCAL main() {
   VS_PROFILE_BEGIN_SESSION("Startup", "startup.json");
-  vs::Ref<vs::Application> app = vs::CreateApp();
+  Ref<Application> app = vs::CreateApp();
   VS_PROFILE_END_SESSION();
 
   app->Initialize();

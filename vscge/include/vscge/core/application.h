@@ -22,12 +22,11 @@
 #include <vector>
 
 #include "vscge/core/api.h"
-#include "vscge/core/core.h"
-#include "vscge/core/renderer.h"
 #include "vscge/core/timer.h"
 #include "vscge/core/types.h"
 #include "vscge/core/window.h"
 #include "vscge/event/event.h"
+#include "vscge/memory/memory.h"
 
 namespace vs {
 class VS_API Application {

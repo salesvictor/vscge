@@ -5,8 +5,6 @@
 #include <unordered_map>
 
 #include "vscge/event/event.h"
-#include "vscge/event/key_event.h"
-#include "vscge/event/mouse_event.h"
 #include "vscge/instrumentation/profiler.h"
 #include "vscge/logger/logger.h"
 
