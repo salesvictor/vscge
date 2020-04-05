@@ -22,17 +22,17 @@
 LRESULT CALLBACK WindowProc(HWND window_handle, UINT message_code,
                             WPARAM w_param, LPARAM l_param) {
   if (message_code == WM_DESTROY) {
-    vs::Logger::Log("Stopping application!");
-    vs::Window::is_running_ = false;
-    std::unique_lock lock(vs::Window::closing_);
-    vs::Window::has_finished_.wait(lock);
+    vs::platform::Logger::Log("Stopping application!");
+    vs::platform::Window::is_running_ = false;
+    std::unique_lock lock(vs::platform::Window::closing_);
+    vs::platform::Window::has_finished_.wait(lock);
     PostQuitMessage(0);
     return 0;
   }
   return DefWindowProc(window_handle, message_code, w_param, l_param);
 }
 
-namespace vs {
+namespace vs::platform {
 void Window::Initialize() {
   // TODO(Victor): The way Windows works is that the message queue is thread
   // dependant, that means that the thread that creates the window is the one
@@ -75,4 +75,4 @@ void Window::InputHandler() {
     DispatchMessage(&message);
   }
 }
-}  // namespace vs
+}  // namespace vs::platform

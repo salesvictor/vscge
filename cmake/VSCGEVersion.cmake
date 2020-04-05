@@ -34,7 +34,7 @@ if(Git_FOUND)
     # TODO(Victor): This fails with just one change, fix it.
     if(${CHANGE_SIZE} GREATER 0 AND ${VERSION_INDEX} EQUAL -1)
       message(
-        FATAL_ERROR
+        AUTHOR_WARNING
         "Detected ${CHANGE_SIZE} file changes, but no version change, update the version!"
       )
     endif()

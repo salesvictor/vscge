@@ -39,7 +39,7 @@
 
 namespace vs {
 namespace debug {
-[[noreturn]] VS_API void Fail(std::string cond_str, std::string function,
+[[noreturn]] VS_API void Fail(std::string cond, std::string function,
                               std::string line, std::string file);
 }  // namespace debug
 }  // namespace vs

@@ -12,23 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
-#define VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
+#ifndef VSCGE_INCLUDE_VSCGE_MEMORY_REFERENCE_H_
+#define VSCGE_INCLUDE_VSCGE_MEMORY_REFERENCE_H_
 
-#include <string_view>
-#include <unordered_map>
-#include <vector>
-
-#include "vscge/core/api.h"
-#include "vscge/core/types.h"
+#include <memory>
 
 namespace vs {
-VS_API Point BufferIndexToPoint(const Rect& region, int i);
-VS_API int PointToBufferIndex(const Rect& region, const Point& point);
+template <typename Type>
+using Ref = std::shared_ptr<Type>;
 
-// VS_API std::vector<Pixel> StringToPixelBuffer(
-// std::string_view string_buffer, const Rect& region,
-// std::unordered_map<char, PixelProps> char_map);
+template <typename Type, typename... Args>
+constexpr Ref<Type> CreateRef(Args&&... args) {
+  return std::make_shared<Type>(std::forward<Args>(args)...);
+}
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_UTILS_CONVERSIONS_H_
+#endif  // VSCGE_INCLUDE_VSCGE_MEMORY_REFERENCE_H_

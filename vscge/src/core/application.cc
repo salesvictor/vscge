@@ -36,7 +36,7 @@ Application::Application(const Size&, const Size&) {
   Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size,
   font_size);
 #endif
-  Logger::Initialize();
+  platform::Logger::Initialize();
 }
 
 void Application::Initialize() {
@@ -47,19 +47,19 @@ void Application::Initialize() {
   game_loop.join();
   VS_PROFILE_END_SESSION();
 
-  Window::has_finished_.notify_all();
+  platform::Window::has_finished_.notify_all();
 }
 
 void Application::MainLoop() {
   Stopwatch timer;
   timer.Start();
-  while (Window::is_running_) {
+  while (platform::Window::is_running_) {
     VS_PROFILE_FUNCTION();
     Timestep timestep = timer.Stop();
     std::string timing_message =
         "Timestep: " + std::to_string(timestep.Milliseconds()) +
         " ms | FPS: " + std::to_string(static_cast<int>(1 / timestep));
-    Logger::Log(timing_message, Logger::Level::kCore);
+    platform::Logger::Log(timing_message, platform::Logger::Level::kCore);
 
     timer.Start();
 

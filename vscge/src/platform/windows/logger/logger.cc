@@ -21,7 +21,7 @@
 
 #include "vscge/instrumentation/profiler.h"
 
-namespace vs::Logger {
+namespace vs::platform::Logger {
 struct Internals {
   bool initialized    = false;
   HANDLE write_handle = nullptr;
@@ -97,7 +97,7 @@ void Log(std::string_view message, Level level) {
   std::string write_message =
       "[" + timestamp + "|" + level_string + "] " + std::string(message) + '\n';
 
-  // INFO(Victor): No idea why this needs to exist, but fount it here:
+  // NOTE(Victor): No idea why this needs to exist, but fount it here:
   // https://stackoverflow.com/questions/28618715/c-writefile-unicode-characters
   //
   // The following is for handling Unicode.
@@ -113,4 +113,4 @@ void Log(std::string_view message, Level level) {
   WriteFile(internals.write_handle, write_message.data(), write_message.size(),
             &written, nullptr);
 }
-}  // namespace vs::Logger
+}  // namespace vs::platform::Logger

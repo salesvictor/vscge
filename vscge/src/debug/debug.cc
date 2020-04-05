@@ -20,11 +20,11 @@
 #include "vscge/logger/logger.h"
 
 namespace vs::debug {
-void Fail(std::string cond_str, std::string function, std::string line,
+void Fail(std::string cond, std::string function, std::string line,
           std::string file) {
-  std::string message = "Failed assertion " + cond_str + " in " + function +
+  std::string message = "Failed assertion " + cond + " in " + function +
                         ", line " + line + ", at " + file;
-  Logger::Log(message, Logger::Level::kError);
+  platform::Logger::Log(message, platform::Logger::Level::kError);
   // *(static_cast<volatile int*>(nullptr)) = 0;  // NOLINT: The point is to
   // break here.
 

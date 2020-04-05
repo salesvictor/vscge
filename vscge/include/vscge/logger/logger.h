@@ -20,6 +20,7 @@
 #include "vscge/core/api.h"
 
 namespace vs {
+namespace platform {
 // TODO(Victor): See if it makes sense for Logger to be a static class, if not,
 // change the namespace to be lower case.
 namespace Logger {
@@ -34,6 +35,7 @@ bool VS_API IsInitialized();
 // TODO(Victor): Maybe also specify a logging file?
 void VS_API Log(std::string_view message, Level level = Level::kInfo);
 }  // namespace Logger
+}  // namespace platform
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_LOGGER_LOGGER_H_

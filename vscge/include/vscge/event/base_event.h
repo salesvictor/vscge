@@ -18,7 +18,7 @@
 #include <string>
 
 #include "vscge/core/api.h"
-#include "vscge/memory/memory.h"
+#include "vscge/memory/reference.h"
 
 namespace vs {
 // TODO(Victor): These events are not mutually exclusive, maybe represent them

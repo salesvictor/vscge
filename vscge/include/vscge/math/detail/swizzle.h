@@ -42,15 +42,22 @@ struct VS_LOCAL Vec1Base : Swizzle<Vec1Base, Elem, 0> {
 
 template <template <typename> class VecT1, class Elem1, std::size_t... idxs1>
 struct VS_LOCAL Swizzle {
-  Elem1& operator[](std::size_t index) { return reinterpret_cast<Elem1*>(this)[index]; }
+  Elem1& operator[](std::size_t index) {
+    return reinterpret_cast<Elem1*>(this)[index];
+  }
   const Elem1& operator[](std::size_t index) const {
     return reinterpret_cast<const Elem1*>(this)[index];
   }
 
   Swizzle() = default;
   Swizzle(const Swizzle& other) { (((*this)[idxs1] = other[idxs1]), ...); }
+
+  // NOTE(Victor): We need this move constructor because the arithmetic
+  // operators uses it!
   Swizzle(Swizzle&& other) { (((*this)[idxs1] = other[idxs1]), ...); }
 
+  // TODO(Victor): Maybe use a python script to generate all the operators and
+  // `#include` them here?
   template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>
   Swizzle& operator=(const Swizzle<VecT2, Elem2, idxs2...>& other) {
     static_assert(sizeof...(idxs1) == sizeof...(idxs2),
@@ -153,7 +160,8 @@ struct VS_LOCAL Swizzle {
   }
 
 #define CREATE_RELATIONAL_OPERATOR(op)                                   \
-  template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>  \
+  template <template <typename> class VecT2, class Elem2,                \
+            std::size_t... idxs2>                                        \
   bool operator op(const Swizzle<VecT2, Elem2, idxs2...>& other) const { \
     static_assert(sizeof...(idxs1) == sizeof...(idxs2),                  \
                   "Your swizzles have different sizes!");                \

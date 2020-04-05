@@ -22,6 +22,7 @@
 #include "vscge/core/types.h"
 
 namespace vs {
+namespace platform {
 class VS_API Window {
  public:
   Size size_;
@@ -36,6 +37,7 @@ class VS_API Window {
  private:
   void InputHandler();
 };
+}  // namespace platform
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_WINDOW_H_

@@ -26,7 +26,7 @@
 #include "vscge/core/types.h"
 #include "vscge/core/window.h"
 #include "vscge/event/event.h"
-#include "vscge/memory/memory.h"
+#include "vscge/memory/reference.h"
 
 namespace vs {
 class VS_API Application {
@@ -44,7 +44,7 @@ class VS_API Application {
 
  private:
   void MainLoop();
-  Window window_;
+  platform::Window window_;
 };
 }  // namespace vs
 

@@ -18,7 +18,7 @@
 #include "vscge/core/api.h"
 #include "vscge/core/application.h"
 #include "vscge/instrumentation/profiler.h"
-#include "vscge/memory/memory.h"
+#include "vscge/memory/reference.h"
 
 #define VS_REGISTER_APP(app_name)               \
   vs::Ref<vs::Application> vs::CreateApp() {    \

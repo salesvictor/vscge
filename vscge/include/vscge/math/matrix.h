@@ -46,7 +46,7 @@ class VS_API Matrix {
     }
   }
 
-  Elem& operator()(Point location) { return (*this)(location.y, location.x); }
+  Elem& operator()(Point location) { return (*this)(location.x, location.y); }
   const Elem& operator()(Point location) const {
     return (*this)(location.x, location.y);
   }
@@ -59,12 +59,24 @@ class VS_API Matrix {
 };
 
 template <class Elem>
-using Mat3_ = Matrix<Elem, 3, 3>;
-using Mat3  = Mat3_<float>;
+using Mat2Base = Matrix<Elem, 2, 2>;
+using Mat2     = Mat2Base<float>;
 
 template <class Elem>
-using Mat4_ = Matrix<Elem, 4, 4>;
-using Mat4  = Mat4_<float>;
+using Mat3Base = Matrix<Elem, 3, 3>;
+using Mat3     = Mat3Base<float>;
+
+template <class Elem>
+using Mat4Base = Matrix<Elem, 4, 4>;
+using Mat4     = Mat4Base<float>;
+
+template <class Elem>
+using Mat34Base = Matrix<Elem, 3, 4>;
+using Mat34     = Mat34Base<float>;
+
+template <class Elem>
+using Mat43Base = Matrix<Elem, 4, 3>;
+using Mat43     = Mat43Base<float>;
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_MATH_MATRIX_H_
