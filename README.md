@@ -2,8 +2,6 @@
 
 # VS Component Game Engine
 
-----
-
 # About
 
 This engine is being designed so that I could have a big C++ project and learn all the components that make one.
@@ -14,7 +12,7 @@ I want as much as possible to be modularized, so that the individual components 
 
 ## Multiplatform
 
-Although much of what's been done so far is Windows specific, I use Arch btw, and want this to compile and run on other OSes eventually.
+Although much of what's been done so far is Windows specific, I want this to compile and run on other OSes eventually.
 
 ## Barebones
 
