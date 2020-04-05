@@ -63,9 +63,11 @@ if(BUILD_VSCGE_TESTS)
 endif()
 
 find_package(Doxygen REQUIRED dot)
-add_custom_target(
-    graphviz ALL
-    COMMAND ${CMAKE_COMMAND} "--graphviz=graphviz/vscge.dot" .
-    COMMAND ${DOXYGEN_DOT_EXECUTABLE} -Tpng graphviz/vscge.dot -o graphviz/vscge.png
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-)
+if(Doxygen_FOUND)
+  add_custom_target(
+      graphviz ALL
+      COMMAND ${CMAKE_COMMAND} "--graphviz=graphviz/vscge.dot" .
+      COMMAND ${DOXYGEN_DOT_EXECUTABLE} -Tpng graphviz/vscge.dot -o graphviz/vscge.png
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+  )
+endif()
