@@ -61,3 +61,49 @@ function(vscge_option option description default)
 
   vscge_debug("${option}|${description}|${default}|${POSSIBLE_VALUES}|${${option}}")
 endfunction()
+
+macro(vscge_add_module module)
+  vscge_check("Configuring vs::${module}")
+  set(HEADER_ONLY memory util misc math)
+  set(INTERFACE_OR_PUBLIC "PUBLIC")
+  unset(MODULE_TYPE)
+  if(${module} IN_LIST HEADER_ONLY)
+    set(MODULE_TYPE "INTERFACE")
+    set(INTERFACE_OR_PUBLIC "INTERFACE")
+  endif()
+  add_library(${module} ${MODULE_TYPE})
+  if(NOT "${MODULE_TYPE}" STREQUAL "INTERFACE")
+    set_target_properties(${module} PROPERTIES LINKER_LANGUAGE CXX)
+  endif()
+  target_compile_features(${module} ${INTERFACE_OR_PUBLIC} cxx_std_17)
+  target_include_directories(
+    ${module}
+    ${INTERFACE_OR_PUBLIC}
+      ${module}/include/
+    ${INTERFACE_OR_PUBLIC} $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${module}/include>
+    ${INTERFACE_OR_PUBLIC} $<INSTALL_INTERFACE:${module}/include>
+  )
+  if(NOT ${module} STREQUAL "misc")
+    target_link_libraries(${module} ${INTERFACE_OR_PUBLIC} misc)
+    add_subdirectory(${module})
+  endif()
+  add_library(vs::${module} ALIAS ${module})
+  target_link_libraries(vscge PUBLIC vs::${module})
+  vscge_pass()
+endmacro()
+
+macro(vscge_target_sources_platform target)
+  if(VS_TARGET_PLATFORM STREQUAL "Windows")
+    set(PLATFORM_PREFIX src/platform/windows)
+  elseif(VS_TARGET_PLATFORM STREQUAL "Windows Console")
+    set(PLATFORM_PREFIX src/platform/windows_console)
+  endif()
+
+  foreach(SOURCE_FILE ${ARGN})
+    target_sources(
+      ${target}
+      PRIVATE
+        ${PLATFORM_PREFIX}/${SOURCE_FILE}
+    )
+  endforeach()
+endmacro()

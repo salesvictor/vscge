@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(VERSION_FILE "vscge/include/vscge/version.h")
+set(VERSION_FILE "modules/misc/include/vscge/version.h")
 
 # TODO(Victor): This check is happening at configuration time only, should
 # change to be done at build time, because files can be edited and not be

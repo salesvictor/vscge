@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 set(VSCGE_ROOT ${CMAKE_CURRENT_BINARY_DIR})
 set(VSCGE_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
@@ -48,10 +48,24 @@ vscge_option(VS_TARGET_PLATFORM "End-user platform" "Windows" "Windows Console")
 vscge_option(VS_DEVELOPER_MODE "Engine Developer" ON)
 # ==============================================================================
 
-add_subdirectory(vscge)
+add_subdirectory(modules)
 
 if(BUILD_VSCGE_EXAMPLES)
   vscge_check("Configuring VSCGE examples")
   add_subdirectory(examples tmp)
   vscge_pass()
 endif()
+
+if(BUILD_VSCGE_TESTS)
+  vscge_check("Configuring VSCGE tests")
+  add_subdirectory(tests tests)
+  vscge_pass()
+endif()
+
+find_package(Doxygen REQUIRED dot)
+add_custom_target(
+    graphviz ALL
+    COMMAND ${CMAKE_COMMAND} "--graphviz=graphviz/vscge.dot" .
+    COMMAND ${DOXYGEN_DOT_EXECUTABLE} -Tpng graphviz/vscge.dot -o graphviz/vscge.png
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+)

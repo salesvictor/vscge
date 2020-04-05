@@ -1,0 +1,31 @@
+target_sources(
+  core
+  PUBLIC
+    include/vscge/core/application.h
+    include/vscge/core/entry_point.h
+    include/vscge/core/renderer.h
+    include/vscge/core/timer.h
+    include/vscge/core/types.h
+    include/vscge/core/window.h
+  PRIVATE
+    src/application.cc
+    src/renderer.cc
+    src/timer.cc
+)
+
+vscge_target_sources_platform(
+  core
+  entry_point.cc
+  window.cc
+)
+
+target_link_libraries(
+  core
+  PUBLIC
+    vs::math
+    vs::event
+    vs::instrumentation
+    vs::debug
+    vs::logger
+    vs::util
+)
