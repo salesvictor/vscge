@@ -62,7 +62,7 @@ if(BUILD_VSCGE_TESTS)
   vscge_pass()
 endif()
 
-find_package(Doxygen REQUIRED dot)
+find_package(Doxygen OPTIONAL dot)
 if(Doxygen_FOUND)
   add_custom_target(
       graphviz ALL
