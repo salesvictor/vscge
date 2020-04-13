@@ -3,6 +3,7 @@ Checks: >
   bugprone-*,
   google-*,
   misc-*,
+  -misc-non-private-member-variables-in-classes,
   modernize-*,
   -modernize-use-trailing-return-type, # I don't really like this.
   performance-*,

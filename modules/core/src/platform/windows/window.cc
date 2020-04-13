@@ -16,13 +16,13 @@
 
 #include <Windows.h>
 
-#include "vscge/logger/logger.h"
+// #include "vscge/logger/logger.h"
 #include "vscge/util/macro.h"
 
 LRESULT CALLBACK WindowProc(HWND window_handle, UINT message_code,
                             WPARAM w_param, LPARAM l_param) {
   if (message_code == WM_DESTROY) {
-    vs::platform::Logger::Log("Stopping application!");
+    // vs::platform::Logger::Log("Stopping application!");
     vs::platform::Window::is_running_ = false;
     std::unique_lock lock(vs::platform::Window::closing_);
     vs::platform::Window::has_finished_.wait(lock);
@@ -33,13 +33,14 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message_code,
 }
 
 namespace vs::platform {
-void Window::Initialize() {
+void Window::Initialize(const Size& screen_size) {
   // TODO(Victor): The way Windows works is that the message queue is thread
   // dependant, that means that the thread that creates the window is the one
   // that receives its messages.
   //
   // That means that we have to create the window in the same thread as the
   // InputHandler, should think of a better way to do this...
+  size_ = screen_size;
   std::thread input_loop(VS_BIND_THREAD(Window::InputHandler));
   input_loop.detach();
 
@@ -47,7 +48,7 @@ void Window::Initialize() {
 }
 
 void Window::InputHandler() {
-  constexpr char window_class_name[] = "Application";
+  constexpr char window_class_name[] = "Application"; // NOLINT
 
   HINSTANCE instance = GetModuleHandle(nullptr);
 
@@ -64,11 +65,11 @@ void Window::InputHandler() {
   int show_flags = startup_info.wShowWindow;
 
   RegisterClassExA(&window_class);
-  HWND window_handle =
-      CreateWindowExA(0, window_class_name, "VSCGE", WS_OVERLAPPEDWINDOW,
-                      CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-                      CW_USEDEFAULT, nullptr, nullptr, instance, nullptr);
-  ShowWindow(window_handle, show_flags);
+  handle_ = CreateWindowExA(0, window_class_name, "VSCGE", WS_OVERLAPPEDWINDOW,
+                            CW_USEDEFAULT, CW_USEDEFAULT, size_.width,
+                            size_.height, nullptr, nullptr, instance, nullptr);
+  ShowWindow(static_cast<HWND>(handle_), show_flags);
+  is_initialized_ = true;
   MSG message;
   while (GetMessage(&message, nullptr, 0, 0)) {
     TranslateMessage(&message);

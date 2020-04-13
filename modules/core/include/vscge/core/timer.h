@@ -27,7 +27,7 @@ struct VS_API Timestep {
   float Seconds();
   float Milliseconds();
 
-  operator float() const { return duration.count(); }
+  operator float() const { return duration.count(); } // NOLINT: non-explicit here to facilitate API use.
 };
 
 class VS_API Stopwatch {

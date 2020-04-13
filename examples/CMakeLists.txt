@@ -43,3 +43,4 @@ endmacro()
 
 # add_example(game_of_life)
 add_example(blank_window "Windows")
+add_example(cube         "Windows")

@@ -133,27 +133,27 @@ struct VS_API KeyEvent : public Event {
   KeyEvent() = default;
   explicit KeyEvent(Key key) : key(key) {}
 
-  virtual ~KeyEvent() = default;
+  ~KeyEvent() override = default;
 
   Key key;
 
   static constexpr EventType TypeStatic() { return EventType::kKey; }
-  std::string TypeName() const override { return "KeyEvent"; }
-  EventType Type() const override { return EventType::kKey; }
+  [[nodiscard]] std::string TypeName() const override { return "KeyEvent"; }
+  [[nodiscard]] EventType Type() const override { return EventType::kKey; }
 };
 
 struct VS_API KeyPressedEvent final : public KeyEvent {
   using KeyEvent::KeyEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() { return EventType::kKeyPressed; }
-  std::string TypeName() const override { return "KeyPressedEvent"; }
-  EventType Type() const override { return EventType::kKeyPressed; }
+  [[nodiscard]] std::string TypeName() const override { return "KeyPressedEvent"; }
+  [[nodiscard]] EventType Type() const override { return EventType::kKeyPressed; }
 };
 
 struct VS_API KeyReleasedEvent final : public KeyEvent {
   using KeyEvent::KeyEvent;  // Nothing new to add.
   static constexpr EventType TypeStatic() { return EventType::kKeyReleased; }
-  std::string TypeName() const override { return "KeyReleasedEvent"; }
-  EventType Type() const override { return EventType::kKeyReleased; }
+  [[nodiscard]] std::string TypeName() const override { return "KeyReleasedEvent"; }
+  [[nodiscard]] EventType Type() const override { return EventType::kKeyReleased; }
 };
 }  // namespace vs
 

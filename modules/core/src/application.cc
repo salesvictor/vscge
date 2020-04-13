@@ -30,21 +30,17 @@
 #include "vscge/util/macro.h"
 
 namespace vs {
-Application::Application(const Size&, const Size&) {
-  window_.Initialize();
-#if 0
-  Renderer::Initialize(GetStdHandle(STD_OUTPUT_HANDLE), screen_size,
-  font_size);
-#endif
-  platform::Logger::Initialize();
+Application::Application(const Size& screen_size, const Size& pixel_size) {
+  window_.Initialize(screen_size);
+  while (!window_.is_initialized_) continue;
+  renderer_.Initialize(window_, pixel_size);
+  logger_.Initialize();
 }
 
 void Application::Initialize() {
   VS_PROFILE_BEGIN_SESSION("Start", "runtime.json");
   OnStart();
-
-  std::thread game_loop(VS_BIND_THREAD(Application::MainLoop));
-  game_loop.join();
+  MainLoop();
   VS_PROFILE_END_SESSION();
 
   platform::Window::has_finished_.notify_all();
@@ -59,13 +55,13 @@ void Application::MainLoop() {
     std::string timing_message =
         "Timestep: " + std::to_string(timestep.Milliseconds()) +
         " ms | FPS: " + std::to_string(static_cast<int>(1 / timestep));
-    platform::Logger::Log(timing_message, platform::Logger::Level::kCore);
+    logger_.Log(timing_message, platform::Logger::Level::kCore);
 
     timer.Start();
 
     OnUpdate(timestep);
 
-    // Renderer::Render();
+    renderer_.Render();
   }
 }
 }  // namespace vs

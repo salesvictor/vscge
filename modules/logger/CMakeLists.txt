@@ -14,9 +14,8 @@
 
 target_sources(
   logger
-  INTERFACE
-    include/vscge/logger/logger.h
   PUBLIC
+    include/vscge/logger/logger.h
     include/vscge/logger/tee.h
   PRIVATE
     src/tee.cc

@@ -21,22 +21,14 @@
 
 #include "vscge/instrumentation/profiler.h"
 
-namespace vs::platform::Logger {
+namespace vs::platform {
 struct Internals {
-  bool initialized    = false;
   HANDLE write_handle = nullptr;
-
-  std::unordered_map<Level, std::string_view> level_map = {
-      {Level::kInfo, "Info "},
-      {Level::kError, "Error"},
-      {Level::kDebug, "Debug"},
-      {Level::kCore, "Core "},
-  };
-};  // namespace vs::Logger
+};
 
 static Internals internals;
 
-void Initialize() {
+void Logger::Initialize() {
   VS_PROFILE_FUNCTION();
   HANDLE logger_in_read;
   HANDLE logger_in_write;
@@ -72,13 +64,17 @@ void Initialize() {
                SWP_NOMOVE | SWP_NOSIZE);
 
   internals.write_handle = logger_in_write;
-  internals.initialized  = true;
+
+  is_initialized_ = true;
 }
 
-bool IsInitialized() { return internals.initialized; }
+bool Logger::IsInitialized() { return is_initialized_; }
 
-void Log(std::string_view message, Level level) {
+void Logger::Log(std::string_view message, Logger::Level level) {
   VS_PROFILE_FUNCTION();
+  if (!is_initialized_) {
+    return;
+  }
   // I could use the Ex API, but that means Unicode, and I didn't like it.
   constexpr std::string_view date_format = "ddMMMyyyy";
   constexpr std::string_view time_format = "HH':'mm':'ss";
@@ -93,7 +89,7 @@ void Log(std::string_view message, Level level) {
                  date.data(), static_cast<int>(date.capacity()));
 
   std::string timestamp    = date + " " + time;
-  std::string level_string = std::string(internals.level_map[level]);
+  std::string level_string = std::string(logger_level_str_map[level]);
   std::string write_message =
       "[" + timestamp + "|" + level_string + "] " + std::string(message) + '\n';
 
@@ -113,4 +109,4 @@ void Log(std::string_view message, Level level) {
   WriteFile(internals.write_handle, write_message.data(),
             static_cast<DWORD>(write_message.size()), &written, nullptr);
 }
-}  // namespace vs::platform::Logger
+}  // namespace vs::platform

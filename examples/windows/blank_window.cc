@@ -12,10 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <Windows.h>
+#include <gl/GL.h>
 #include <vscge/vscge.h>
 
 class BlankWindow : public vs::Application {
-  void OnUpdate(const vs::Timestep&) override {}
+  void OnUpdate(const vs::Timestep&) override {
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
 };
 
 VS_REGISTER_APP(BlankWindow);

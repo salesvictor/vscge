@@ -25,3 +25,7 @@ target_link_libraries(
   PRIVATE
     vs::logger
 )
+
+if(VS_ENABLE_ASSERTS)
+  target_compile_definitions(debug PRIVATE VS_ENABLE_ASSERTS)
+endif()

@@ -22,16 +22,19 @@
 #include <vector>
 
 #include "vscge/api.h"
+#include "vscge/core/renderer.h"
 #include "vscge/core/timer.h"
 #include "vscge/core/types.h"
 #include "vscge/core/window.h"
 #include "vscge/event/event.h"
+#include "vscge/logger/logger.h"
 #include "vscge/memory/reference.h"
 
 namespace vs {
 class VS_API Application {
  public:
-  Application(const Size& = {240, 120}, const Size& = {4, 4});
+  explicit Application(const Size& screen_size = {800, 600},
+              const Size& pixel_size  = {1, 1});
 
   void Initialize();
 
@@ -45,6 +48,9 @@ class VS_API Application {
  private:
   void MainLoop();
   platform::Window window_;
+
+  platform::Logger logger_;
+  Renderer renderer_;
 };
 }  // namespace vs
 

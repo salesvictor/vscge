@@ -33,6 +33,7 @@ add_custom_target(
   COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 3 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec3.inc
   COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 4 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec4.inc
   COMMENT "Building swizzles"
+  DEPENDS ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py
   VERBATIM
 )
 

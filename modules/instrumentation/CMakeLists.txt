@@ -20,3 +20,7 @@ target_sources(
   PRIVATE
     src/profiler.cc
 )
+
+if(VS_ENABLE_PROFILER)
+  target_compile_definitions(instrumentation PRIVATE VS_ENABLE_PROFILER)
+endif()

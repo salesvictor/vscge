@@ -32,14 +32,14 @@ struct VS_API MouseEvent : public Event {
   MouseEvent(const Point& position, const MouseButtons& buttons)
       : position{position}, buttons{buttons} {}
 
-  virtual ~MouseEvent() = default;
+  ~MouseEvent() override = default;
 
   Point position;
   MouseButtons buttons;
 
   static constexpr EventType TypeStatic() { return EventType::kMouse; }
-  std::string TypeName() const override { return "MouseEvent"; }
-  EventType Type() const override { return EventType::kMouse; }
+  [[nodiscard]] std::string TypeName() const override { return "MouseEvent"; }
+  [[nodiscard]] EventType Type() const override { return EventType::kMouse; }
 };
 
 struct VS_API MouseMovedEvent final : public MouseEvent {
@@ -49,8 +49,8 @@ struct VS_API MouseMovedEvent final : public MouseEvent {
   Point movement;
 
   static constexpr EventType TypeStatic() { return EventType::kMouseMoved; }
-  std::string TypeName() const override { return "MouseMovedEvent"; }
-  EventType Type() const override { return EventType::kMouseMoved; }
+  [[nodiscard]] std::string TypeName() const override { return "MouseMovedEvent"; }
+  [[nodiscard]] EventType Type() const override { return EventType::kMouseMoved; }
 };
 
 struct VS_API MouseButtonPressedEvent final : public MouseEvent {
@@ -58,8 +58,8 @@ struct VS_API MouseButtonPressedEvent final : public MouseEvent {
   static constexpr EventType TypeStatic() {
     return EventType::kMouseButtonPressed;
   }
-  std::string TypeName() const override { return "MouseButtonPressedEvent"; }
-  EventType Type() const override { return EventType::kMouseButtonPressed; }
+  [[nodiscard]] std::string TypeName() const override { return "MouseButtonPressedEvent"; }
+  [[nodiscard]] EventType Type() const override { return EventType::kMouseButtonPressed; }
 };
 
 struct VS_API MouseButtonReleasedEvent final : public MouseEvent {
@@ -67,8 +67,8 @@ struct VS_API MouseButtonReleasedEvent final : public MouseEvent {
   static constexpr EventType TypeStatic() {
     return EventType::kMouseButtonReleased;
   }
-  std::string TypeName() const override { return "MouseButtonReleasedEvent"; }
-  EventType Type() const override { return EventType::kMouseButtonReleased; }
+  [[nodiscard]] std::string TypeName() const override { return "MouseButtonReleasedEvent"; }
+  [[nodiscard]] EventType Type() const override { return EventType::kMouseButtonReleased; }
 };
 }  // namespace vs
 

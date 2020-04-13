@@ -23,11 +23,18 @@
 
 namespace vs {
 namespace platform {
+
+#if _WIN32
+using WindowHandle = void*;
+#endif
+
 class VS_API Window {
  public:
+  bool is_initialized_ = false;
   Size size_;
+  WindowHandle handle_ = nullptr;
 
-  void Initialize();
+  void Initialize(const Size& screen_size);
 
   // TODO(Victor): Check if these **really** need to be static...
   static inline std::atomic<bool> is_running_ = true;

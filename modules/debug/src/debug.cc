@@ -24,7 +24,7 @@ void Fail(std::string cond, std::string function, std::string line,
           std::string file) {
   std::string message = "Failed assertion " + cond + " in " + function +
                         ", line " + line + ", at " + file;
-  platform::Logger::Log(message, platform::Logger::Level::kError);
+  // platform::Logger::Log(message, platform::Logger::Level::kError);
   // *(static_cast<volatile int*>(nullptr)) = 0;  // NOLINT: The point is to
   // break here.
 

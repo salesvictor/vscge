@@ -16,6 +16,7 @@
 #define VSCGE_INCLUDE_VSCGE_EVENT_BASE_EVENT_H_
 
 #include <string>
+#include <utility>
 
 #include "vscge/api.h"
 #include "vscge/memory/reference.h"
@@ -36,13 +37,13 @@ enum class EventType {
 // TODO(Victor): See if it makes sense to add a `handled` to Event.
 struct VS_API Event {
   virtual ~Event()                     = default;
-  virtual EventType Type() const       = 0;
-  virtual std::string TypeName() const = 0;
+  [[nodiscard]] virtual EventType Type() const       = 0;
+  [[nodiscard]] virtual std::string TypeName() const = 0;
 };
 
 class VS_API EventDispatcher {
  public:
-  explicit EventDispatcher(Ref<Event> event) : event_{event} {}
+  explicit EventDispatcher(Ref<Event> event) : event_{std::move(event)} {}
 
   // TODO(Victor): I really do not like having a `TypeStatic()` function, but
   // the only other way I found was a `dynamic_cast`, maybe there's a better way

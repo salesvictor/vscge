@@ -15,9 +15,10 @@
 vscge_check("Configuring VSCGE version: ${VSCGE_VERSION}")
 add_library(vscge INTERFACE)
 
-if(VSCGE_DEVELOPER_MODE)
+if(VS_DEVELOPER_MODE)
   include(${VSCGE_SOURCE_ROOT}/cmake/VSCGEStaticAnalyzers.cmake)
 endif()
+
 vscge_add_module(core)
 vscge_add_module(debug)
 vscge_add_module(event)
@@ -26,12 +27,6 @@ vscge_add_module(logger)
 vscge_add_module(math)
 vscge_add_module(memory)
 vscge_add_module(util)
-
-# ==============================================================================
-# Static checking
-# ==============================================================================
-# TODO(Victor): Find a better way to handle static checkers, maybe on a .cmake?
-# ==============================================================================
 
 # ==============================================================================
 # Compiler configuration.
@@ -91,12 +86,6 @@ vscge_pass()
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(vscge PUBLIC VS_DLL)
   target_compile_definitions(vscge PRIVATE VS_DLL_EXPORTS)
-endif()
-if(VS_ENABLE_PROFILER)
-  target_compile_definitions(vscge PUBLIC VS_ENABLE_PROFILER)
-endif()
-if(VS_ENABLE_ASSERTS)
-  target_compile_definitions(vscge PUBLIC VS_ENABLE_ASSERTS)
 endif()
 #]]
 # ==============================================================================

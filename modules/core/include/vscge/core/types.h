@@ -16,16 +16,41 @@
 #define VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_
 
 #include "vscge/api.h"
-#include "vscge/math/vector.h"
 
 namespace vs {
-using Point = Vec2i;
+struct VS_API Point {
+  int x;
+  int y;
+
+  Point& operator+=(const Point& other) {
+    x += other.x;
+    y += other.y;
+
+    return *this;
+  }
+  Point& operator-=(const Point& other) {
+    x -= other.x;
+    y -= other.y;
+
+    return *this;
+  }
+};
+
+inline Point operator+(Point left, const Point& right) {
+  left += right;
+  return left;
+}
+inline Point operator-(Point left, const Point& right) {
+  left -= right;
+  return left;
+}
 
 struct VS_API Size {
   int width;
   int height;
 
-  constexpr int Area() const { return width * height; };
+  [[nodiscard]] constexpr int Area() const { return width * height; };
+  [[nodiscard]] constexpr float AspectRatio() const { return static_cast<float>(width) / static_cast<float>(height); }
 };
 
 struct VS_API Rect {
@@ -35,13 +60,13 @@ struct VS_API Rect {
   int width;
   int height;
 
-  constexpr Size Size() const { return {width, height}; }
-  constexpr int BufferSize() const { return width * height; }
+  [[nodiscard]] constexpr Size Size() const { return {width, height}; }
+  [[nodiscard]] constexpr int BufferSize() const { return width * height; }
 
-  Point TopLeft() const { return Point(x, y); }
-  Point BottomRight() const { return Point(x + width, y + height); }
+  [[nodiscard]] Point TopLeft() const { return {x, y}; }
+  [[nodiscard]] Point BottomRight() const { return {x + width, y + height}; }
 
-  bool Contains(const Point& p) const {
+  [[nodiscard]] bool Contains(const Point& p) const {
     return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height;
   }
 };
@@ -51,6 +76,8 @@ struct VS_API Vertex {
   float y;
   float z;
 };
+
+struct VertexProps {};
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_

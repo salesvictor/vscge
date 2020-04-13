@@ -22,31 +22,23 @@
 
 #include "vscge/api.h"
 #include "vscge/core/types.h"
+#include "vscge/core/window.h"
 
-/*
 namespace vs {
-// TODO(Victor): See if it makes sense for Renderer to be a static class, if
-// not, change the namespace to be lower case.
-namespace Renderer {
-void VS_API Initialize(const HANDLE& handle, const Size& window_size,
-                       const Size& font_size);
+class VS_API Renderer {
+ public:
+  void Initialize(const platform::Window& window, const Size& pixel_size);
 
-const VS_API std::vector<PixelProps>& GetBuffer();
-const VS_API PixelProps& GetPixelPropsAt(Point location);
-const VS_API Rect GetWindowRect();
+  void ClearScreen();
 
-void VS_API ClearScreen();
+  void DrawBuffer(const std::vector<Vertex>& buffer);
+  void DrawLine(const Point& p1, const Point& p2,
+                const VertexProps& props = {});
+  void DrawRect(const Rect& rect, const VertexProps& props = {});
+  void FillRect(const Rect& rect, const VertexProps& props = {});
 
-void VS_API DrawPixel(const Pixel& pixel);
-void VS_API DrawBuffer(const std::vector<Pixel>& buffer);
-void VS_API DrawLine(const Point& p1, const Point& p2,
-                     const PixelProps& props = {});
-void VS_API DrawRect(const Rect& rect, const PixelProps& props = {});
-void VS_API FillRect(const Rect& rect, const PixelProps& props = {});
-
-void VS_API Render();
-}  // namespace Renderer
+  void Render();
+};
 }  // namespace vs
-*/
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_RENDERER_H_

@@ -63,7 +63,9 @@ function(vscge_option option description default)
 endfunction()
 
 macro(vscge_add_analyzers module)
+  vscge_debug("Adding analyzers to ${module}")
   if(CLANG_TIDY_EXE)
+    vscge_debug("Adding clang-tidy")
     set_target_properties(
       ${module} PROPERTIES
       CXX_CLANG_TIDY ${CLANG_TIDY_EXE}
@@ -78,6 +80,7 @@ macro(vscge_add_analyzers module)
   endif()
 
   if(IWYU_EXE)
+    vscge_debug("Adding iwyu")
     set_target_properties(
       ${module} PROPERTIES
       CXX_IWYU ${IWYU_EXE}

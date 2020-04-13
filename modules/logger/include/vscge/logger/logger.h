@@ -16,26 +16,37 @@
 #define VSCGE_INCLUDE_VSCGE_LOGGER_LOGGER_H_
 
 #include <string>
+#include <unordered_map>
 
 #include "vscge/api.h"
 
 namespace vs {
 namespace platform {
-// TODO(Victor): See if it makes sense for Logger to be a static class, if not,
-// change the namespace to be lower case.
-namespace Logger {
-enum class Level {
-  kInfo,
-  kError,
-  kDebug,
-  kCore,
+class VS_API Logger {
+ public:
+  enum class Level {
+    kInfo,
+    kError,
+    kDebug,
+    kCore,
+  };
+  void Initialize();
+  bool IsInitialized();
+  // TODO(Victor): Maybe also specify a logging file?
+  void Log(std::string_view message, Level level = Level::kInfo);
+
+ private:
+  bool is_initialized_ = false;
 };
-void VS_API Initialize();
-bool VS_API IsInitialized();
-// TODO(Victor): Maybe also specify a logging file?
-void VS_API Log(std::string_view message, Level level = Level::kInfo);
-}  // namespace Logger
 }  // namespace platform
+
+inline std::unordered_map<platform::Logger::Level, std::string_view>
+    logger_level_str_map = {
+        {platform::Logger::Level::kInfo, "Info "},
+        {platform::Logger::Level::kError, "Error"},
+        {platform::Logger::Level::kDebug, "Debug"},
+        {platform::Logger::Level::kCore, "Core "},
+};
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_LOGGER_LOGGER_H_

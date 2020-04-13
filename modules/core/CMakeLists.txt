@@ -33,6 +33,8 @@ vscge_target_sources_platform(
   window.cc
 )
 
+find_package(OpenGL REQUIRED)
+
 target_link_libraries(
   core
   PUBLIC
@@ -42,4 +44,5 @@ target_link_libraries(
     vs::debug
     vs::logger
     vs::util
+    OpenGL::GL
 )
