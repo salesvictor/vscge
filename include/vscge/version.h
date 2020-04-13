@@ -17,7 +17,7 @@
 
 #define VSCGE_VERSION_MAJOR 0
 #define VSCGE_VERSION_MINOR 14
-#define VSCGE_VERSION_PATCH 0
+#define VSCGE_VERSION_PATCH 1
 
 #define VSCGE_STR(str)      VSCGE_STR_IMPL(str)
 #define VSCGE_STR_IMPL(str) #str
