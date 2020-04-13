@@ -62,9 +62,32 @@ function(vscge_option option description default)
   vscge_debug("${option}|${description}|${default}|${POSSIBLE_VALUES}|${${option}}")
 endfunction()
 
+macro(vscge_add_analyzers module)
+  if(CLANG_TIDY_EXE)
+    set_target_properties(
+      ${module} PROPERTIES
+      CXX_CLANG_TIDY ${CLANG_TIDY_EXE}
+    )
+  endif()
+
+  if(CPPCHECK_EXE)
+    set_target_properties(
+      ${module} PROPERTIES
+      CXX_CPPCHECK ${CPPCHECK_EXE}
+    )
+  endif()
+
+  if(IWYU_EXE)
+    set_target_properties(
+      ${module} PROPERTIES
+      CXX_IWYU ${IWYU_EXE}
+    )
+  endif()
+endmacro()
+
 macro(vscge_add_module module)
   vscge_check("Configuring vs::${module}")
-  set(HEADER_ONLY memory util misc math)
+  set(HEADER_ONLY memory util math event)
   set(INTERFACE_OR_PUBLIC "PUBLIC")
   unset(MODULE_TYPE)
   if(${module} IN_LIST HEADER_ONLY)
@@ -72,9 +95,6 @@ macro(vscge_add_module module)
     set(INTERFACE_OR_PUBLIC "INTERFACE")
   endif()
   add_library(${module} ${MODULE_TYPE})
-  if(NOT "${MODULE_TYPE}" STREQUAL "INTERFACE")
-    set_target_properties(${module} PROPERTIES LINKER_LANGUAGE CXX)
-  endif()
   target_compile_features(${module} ${INTERFACE_OR_PUBLIC} cxx_std_17)
   target_include_directories(
     ${module}
@@ -83,12 +103,20 @@ macro(vscge_add_module module)
     ${INTERFACE_OR_PUBLIC} $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${module}/include>
     ${INTERFACE_OR_PUBLIC} $<INSTALL_INTERFACE:${module}/include>
   )
-  if(NOT ${module} STREQUAL "misc")
-    target_link_libraries(${module} ${INTERFACE_OR_PUBLIC} misc)
-    add_subdirectory(${module})
+  target_include_directories(${module} ${INTERFACE_OR_PUBLIC} ${VSCGE_SOURCE_ROOT}/include)
+  if(NOT "${MODULE_TYPE}" STREQUAL "INTERFACE")
+    vscge_add_analyzers(${module})
+    set_target_properties(
+      ${module} PROPERTIES
+      VERSION ${PROJECT_VERSION}
+      ARCHIVE_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
+      LIBRARY_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
+      RUNTIME_OUTPUT_DIRECTORY ${VSCGE_ROOT}/bin
+    )
   endif()
+  add_subdirectory(${module})
   add_library(vs::${module} ALIAS ${module})
-  target_link_libraries(vscge PUBLIC vs::${module})
+  target_link_libraries(vscge INTERFACE vs::${module})
   vscge_pass()
 endmacro()
 
@@ -106,4 +134,12 @@ macro(vscge_target_sources_platform target)
         ${PLATFORM_PREFIX}/${SOURCE_FILE}
     )
   endforeach()
+endmacro()
+
+macro(vscge_add_module_test module test_folder)
+  if(BUILD_VSCGE_TESTS)
+    vscge_check("Configuring tests")
+    add_subdirectory(${test_folder} test/${module})
+    vscge_pass()
+  endif()
 endmacro()

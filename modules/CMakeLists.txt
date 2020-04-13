@@ -13,9 +13,11 @@
 # limitations under the License.
 
 vscge_check("Configuring VSCGE version: ${VSCGE_VERSION}")
-add_library(vscge)
+add_library(vscge INTERFACE)
 
-vscge_add_module(misc)
+if(VSCGE_DEVELOPER_MODE)
+  include(${VSCGE_SOURCE_ROOT}/cmake/VSCGEStaticAnalyzers.cmake)
+endif()
 vscge_add_module(core)
 vscge_add_module(debug)
 vscge_add_module(event)
@@ -29,104 +31,7 @@ vscge_add_module(util)
 # Static checking
 # ==============================================================================
 # TODO(Victor): Find a better way to handle static checkers, maybe on a .cmake?
-vscge_check("Finding static checkers")
-
-vscge_check("Finding clang-tidy")
-find_program(
-  CLANG_TIDY_EXE
-  NAMES "clang-tidy"
-  DOC "Path to clang-tidy"
-)
-if(NOT CLANG_TIDY_EXE)
-  vscge_fail("not found")
-else()
-  vscge_pass("found: ${CLANG_TIDY_EXE}")
-  set(CLANG_TIDY_CHECKS "-*") # Disable everything by default.
-  string(
-    APPEND CLANG_TIDY_CHECKS
-    ",google-*" # Use Google Style.
-    ",modernize-*"
-    ",-modernize-use-trailing-return-type" # Doesn't really comply with Google's Style Guide.
-    ",clang-analyzer-*"
-    # ",-clang-diagnostic-address-of-temporary"
-    ",cppcoreguidelines-*"
-    ",-cppcoreguidelines-pro-type-union-access" # We need this to get off warnings from using the Windows API.
-  )
-  set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=${CLANG_TIDY_CHECKS} -header-filter=.*")
-  set_target_properties(
-    vscge PROPERTIES
-    CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
-  )
-endif()
-
-#[[
-vscge_check("Finding cpplint")
-find_program(
-  CPPLINT_EXE
-  NAMES "cpplint"
-  DOC "Path to cpplint"
-)
-if(NOT CPPLINT_EXE)
-  vscge_fail("not found")
-else()
-  vscge_pass("found: ${CPPLINT_EXE}")
-  set(VSCGE_LINT_FILES "")
-  foreach(file ${VSCGE_SOURCE})
-    list(APPEND VSCGE_LINT_FILES "vscge/${file}")
-  endforeach()
-  set(CPPLINT_FILTERS "-build/c++11")
-  add_custom_target(
-    lint
-    ALL
-    COMMAND ${CPPLINT_EXE} "--filter=${CPPLINT_FILTERS}" ${VSCGE_LINT_FILES}
-    DEPENDS ${VSCGE_SOURCE}
-    WORKING_DIRECTORY "${VSCGE_SOURCE_ROOT}"
-    COMMENT "Linting project"
-    VERBATIM
-  )
-endif()
-#]]
-
-vscge_check("Finding cppcheck")
-find_program(
-  CPPCHECK_EXE
-  NAMES "cppcheck"
-)
-if(NOT CPPCHECK_EXE)
-  vscge_fail("not found")
-else()
-  vscge_pass("found: ${CPPCHECK_EXE}")
-  # set_target_properties(
-  #   vscge PROPERTIES
-  #   CXX_CPPCHECK "${CPPCHECK_EXE}"
-  # )
-endif()
-
-vscge_check("Finding iwyu")
-find_program(
-  IWYU_EXE
-  NAMES "include-what-you-use"
-)
-if(NOT IWYU_EXE)
-  vscge_fail("not found")
-else()
-  vscge_pass("found: ${IWYU_EXE}")
-  set_target_properties(
-    vscge PROPERTIES
-    CXX_INCLUDE_WHAT_YOU_USE "${IWYU_EXE}"
-  )
-endif()
-
-vscge_pass("done")
 # ==============================================================================
-
-set_target_properties(
-  vscge PROPERTIES
-  VERSION ${PROJECT_VERSION}
-  ARCHIVE_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
-  LIBRARY_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
-  RUNTIME_OUTPUT_DIRECTORY ${VSCGE_ROOT}/bin
-)
 
 # ==============================================================================
 # Compiler configuration.
@@ -140,7 +45,7 @@ if(NOT VSCGE_SIMULATED_COMPILER STREQUAL "")
   message(STATUS "Simulating compiler ${VSCGE_SIMULATED_COMPILER}")
 endif()
 
-target_compile_features(vscge PUBLIC cxx_std_17)
+target_compile_features(vscge INTERFACE cxx_std_17)
 
 if(VSCGE_COMPILER STREQUAL "Clang")
   set(COMPILE_PRIVATE_FLAGS /W4 /WX)
@@ -170,18 +75,19 @@ elseif(VSCGE_COMPILER STREQUAL "MSVC")
   set(COMPILE_RELEASE_FLAGS)
 endif()
 
-target_compile_options(
-  vscge
-  PRIVATE ${COMPILE_PRIVATE_FLAGS}
-  PUBLIC $<$<CONFIG:DEBUG>: ${COMPILE_DEBUG_FLAGS}>
-  PUBLIC $<$<CONFIG:RELEASE>: ${COMPILE_RELEASE_FLAGS}>
-)
+# target_compile_options(
+  # vscge
+  # PRIVATE ${COMPILE_PRIVATE_FLAGS}
+  # PUBLIC $<$<CONFIG:DEBUG>: ${COMPILE_DEBUG_FLAGS}>
+  # PUBLIC $<$<CONFIG:RELEASE>: ${COMPILE_RELEASE_FLAGS}>
+# )
 
 vscge_pass()
 # ==============================================================================
 # Options handling
 # ==============================================================================
 # TODO(Victor): Make a macro to handle options?
+#[[
 if(BUILD_SHARED_LIBS)
   target_compile_definitions(vscge PUBLIC VS_DLL)
   target_compile_definitions(vscge PRIVATE VS_DLL_EXPORTS)

@@ -20,6 +20,11 @@ target_sources(
     include/vscge/math/detail/swizzle.h
 )
 
+vscge_add_module_test(
+  math
+  test
+)
+
 find_package(Python3 COMPONENTS Interpreter)
 add_custom_target(
   swizzle_generator

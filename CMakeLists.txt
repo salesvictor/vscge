@@ -30,13 +30,11 @@ project(
 # ==============================================================================
 # Options
 # ==============================================================================
-if(VS_DEVELOPER_MODE)
-  set(CMAKE_MESSAGE_CONTEXT_SHOW TRUE)
-endif()
+set(CMAKE_MESSAGE_CONTEXT_SHOW TRUE)
 
 vscge_option(BUILD_SHARED_LIBS    "Build using shared libraries" OFF)
 vscge_option(BUILD_VSCGE_TESTS    "Build VSCGE tests"            ON)
-vscge_option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples"         ON)
+vscge_option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples"         OFF)
 
 vscge_option(VS_ENABLE_ASSERTS  "Enable VS_ASSERT* macros" ON)
 vscge_option(VS_ENABLE_PROFILER "Enable profiler"          ON)
@@ -53,12 +51,6 @@ add_subdirectory(modules)
 if(BUILD_VSCGE_EXAMPLES)
   vscge_check("Configuring VSCGE examples")
   add_subdirectory(examples tmp)
-  vscge_pass()
-endif()
-
-if(BUILD_VSCGE_TESTS)
-  vscge_check("Configuring VSCGE tests")
-  add_subdirectory(tests tests)
   vscge_pass()
 endif()
 

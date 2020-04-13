@@ -23,17 +23,119 @@
 #include "vscge/event/base_event.h"
 
 namespace vs {
-namespace platform {
-enum class Key;
-}  // namespace platform
+enum class Key {
+  // Arrow keys
+  kLeft,
+  kUp,
+  kRight,
+  kDown,
+
+  kBack,
+  kTab,
+  kReturn,
+  kEscape,
+
+  // Modifier keys.
+  kShift,
+  kControl,
+  kAlt,
+
+  // I don't really know.
+  kClear,
+  kPause,
+
+  kSpace,
+  kEnd,
+  kHome,
+  kSelect,
+  kPrint,
+  kExecute,
+  kInsert,
+  kDelete,
+
+  // Alphanumeric keys.
+  k0,
+  k1,
+  k2,
+  k3,
+  k4,
+  k5,
+  k6,
+  k7,
+  k8,
+  k9,
+
+  kA,
+  kB,
+  kC,
+  kD,
+  kE,
+  kF,
+  kG,
+  kH,
+  kI,
+  kJ,
+  kK,
+  kL,
+  kM,
+  kN,
+  kO,
+  kP,
+  kQ,
+  kR,
+  kS,
+  kT,
+  kU,
+  kV,
+  kW,
+  kX,
+  kY,
+  kZ,
+
+  kNumpad0,
+  kNumpad1,
+  kNumpad2,
+  kNumpad3,
+  kNumpad4,
+  kNumpad5,
+  kNumpad6,
+  kNumpad7,
+  kNumpad8,
+  kNumpad9,
+
+  // Keypad operations.
+  kMultiply,
+  kAdd,
+  kSeparator,
+  kSubtract,
+  kDecimal,
+  kDivide,
+
+  // Function keys.
+  kF1,
+  kF2,
+  kF3,
+  kF4,
+  kF5,
+  kF6,
+  kF7,
+  kF8,
+  kF9,
+  kF10,
+  kF11,
+  kF12,
+
+  kNumlock,
+  kScroll,
+};
 
 struct VS_API KeyEvent : public Event {
   KeyEvent() = default;
-  explicit KeyEvent(platform::Key key) : key(key) {}
+  explicit KeyEvent(Key key) : key(key) {}
 
   virtual ~KeyEvent() = default;
 
-  platform::Key key;
+  Key key;
 
   static constexpr EventType TypeStatic() { return EventType::kKey; }
   std::string TypeName() const override { return "KeyEvent"; }
