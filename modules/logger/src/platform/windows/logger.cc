@@ -50,8 +50,10 @@ void Logger::Initialize() {
   si.wShowWindow = SW_SHOWNOACTIVATE;
   si.hStdInput   = logger_in_read;
 
-  PROCESS_INFORMATION pi     = {};
-  std::string logger_command = "Logger.exe";
+  PROCESS_INFORMATION pi = {};
+
+  // TODO(Victor): This filename should be the same as CMake's generated one.
+  std::string logger_command = "LoggerExe.exe";
 
   CreateProcessA(nullptr, logger_command.data(), nullptr, nullptr, TRUE,
                  CREATE_NEW_CONSOLE, nullptr, nullptr, &si, &pi);
@@ -59,6 +61,8 @@ void Logger::Initialize() {
   CloseHandle(pi.hThread);
   CloseHandle(logger_in_read);
 
+  // TODO(Victor): This is a hacky way to try to ensure this will pop-up after
+  // Logger has launched, could do better.
   Sleep(200);  // NOLINT
   SetWindowPos(GetConsoleWindow(), HWND_TOP, 0, 0, 0, 0,
                SWP_NOMOVE | SWP_NOSIZE);

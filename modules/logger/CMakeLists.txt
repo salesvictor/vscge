@@ -27,9 +27,9 @@ vscge_target_sources_platform(
 )
 
 if(VS_ENABLE_LOGGER)
-  add_executable(Logger src/logger_entry_point.cc)
-  target_link_libraries(Logger vscge)
-  target_compile_features(Logger PRIVATE cxx_std_17)
+  add_executable(LoggerExe src/logger_entry_point.cc)
+  target_link_libraries(LoggerExe vscge)
+  target_compile_features(LoggerExe PRIVATE cxx_std_17)
 endif()
 
 target_link_libraries(

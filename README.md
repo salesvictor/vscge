@@ -4,23 +4,32 @@
 
 # About
 
-This engine is being designed so that I could have a big C++ project and learn all the components that make one.
+This engine is being designed so that I could have a big C++ project and learn
+all the components that make one.
 
-## Modular Design/Unix Philosophy
+## Design
 
-I want as much as possible to be modularized, so that the individual components can be stripped out and used anywhere else, maybe even live on their own repo.
+The goal here is to have a good SWE Project. So, as the name suggests, the
+engine is broken down into modularized, self-contained, components, trying to
+follow as close as possible the best SWE practices.
 
 ## Multiplatform
 
-Although much of what's been done so far is Windows specific, I want this to compile and run on other OSes eventually.
+Although much of what's been done so far is Windows specific, I want this to
+compile and run on other OSes eventually.
 
 ## Barebones
 
-As said before, the goal is to learn, and that's easier when everything is implemented in-house. Maybe I will allow some libs down the road if I feel that they are following the modular design approach -- i.e. are doing only **one** job, and doing it really well.
+Focusing on the learning aspect, much of what's here is implemented in-house,
+using only the C++ Standard Library as the external dependency.
+
+Maybe in the future there will be some libs that follow the modular design
+approach -- i.e. are doing only **one** job, and doing it really well.
 
 # Build Instructions
 
-Hopefully you should be able to do an out-source build without any pain. By that, I mean creating a `build` directory and calling `cmake` from there:
+Hopefully you should be able to do an out-source build without any pain. By
+that, I mean creating a `build` directory and calling `cmake` from there:
 
 ```
 mkdir build && cd build
@@ -37,7 +46,7 @@ They are all on the top `CMakeLists.txt` file, here is a summary:
 |                        | Generic Build Options        |         |
 | `BUILD_SHARED_LIBS`    | Build using shared libraries | OFF     |
 | `BUILD_VSCGE_TESTS`    | Build tests                  | OFF     |
-| `BUILD_VSCGE_EXAMPLES` | Build examples               | ON      |
+| `BUILD_VSCGE_EXAMPLES` | Build examples               | OFF     |
 |                        |                              |         |
 |                        | Feature Enabling Options     |         |
 | `VS_ENABLE_ASSERTS`    | Enable `VS_ASSERT*` macros   | ON      |
@@ -46,11 +55,11 @@ They are all on the top `CMakeLists.txt` file, here is a summary:
 
 # Examples
 
-Those are on the `examples` folder. So far there's only Game of Life implemented on the Windows Console.
+Those are on the `examples` folder.
 
 # Road Map
 
-TBD.
+[Trello](https://trello.com/b/ClSxANlX/vscge-dev).
 
 # Sources and Inspirations
 

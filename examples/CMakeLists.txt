@@ -37,7 +37,7 @@ macro(add_example name platform)
   add_custom_command(
     TARGET ${name} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:Logger> $<TARGET_FILE_DIR:${name}>
+    $<TARGET_FILE:LoggerExe> $<TARGET_FILE_DIR:${name}>
   )
 endmacro()
 
