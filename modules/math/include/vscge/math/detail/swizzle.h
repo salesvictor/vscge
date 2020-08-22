@@ -67,7 +67,7 @@ struct VS_LOCAL Swizzle {
     return *this;
   }
   Swizzle& operator=(const Elem1& elem) {
-    (((*this)[idxs1] += elem), ...);
+    (((*this)[idxs1] = elem), ...);
     return *this;
   }
 

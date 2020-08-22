@@ -45,6 +45,11 @@ struct VS_API Vec2Base : public detail::Swizzle<Vec2Base, Elem, 0, 1> {
     ((data[own_index++] = swizzle[idxs]), ...);
   }
 
+  Vec2Base& operator=(const Elem& elem) {
+    data.fill(elem);
+    return *this;
+  }
+
   union {
     std::array<Elem, 2> data;
 #include "vscge/math/detail/swizzle_vec1.inc"
@@ -67,6 +72,11 @@ struct VS_API Vec3Base : public detail::Swizzle<Vec3Base, Elem, 0, 1, 2> {
 
     std::size_t own_index = 0;
     ((data[own_index++] = swizzle[idxs]), ...);
+  }
+
+  Vec3Base& operator=(const Elem& elem) {
+    data.fill(elem);
+    return *this;
   }
 
   union {
@@ -93,6 +103,12 @@ struct VS_API Vec4Base : public detail::Swizzle<Vec4Base, Elem, 0, 1, 2, 3> {
     std::size_t own_index = 0;
     ((data[own_index++] = swizzle[idxs]), ...);
   }
+
+  Vec4Base& operator=(const Elem& elem) {
+    data.fill(elem);
+    return *this;
+  }
+
   union {
     std::array<Elem, 4> data;
 #include "vscge/math/detail/swizzle_vec1.inc"

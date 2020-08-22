@@ -29,6 +29,11 @@ TEST(VectorConstructionTest, Float) {
   EXPECT_EQ(v.y, 0.0f);
   EXPECT_EQ(v.x, v.y);
 
+  v = 5.0f;
+  EXPECT_EQ(v.x, 5.0f);
+  EXPECT_EQ(v.y, 5.0f);
+  EXPECT_EQ(v.x, v.y);
+
   Vec2 p{1.0f, 2.0f};
   EXPECT_EQ(p.x, 1.0f);
   EXPECT_EQ(p.y, 2.0f);
@@ -43,6 +48,11 @@ TEST(VectorConstructionTest, Int) {
 
   EXPECT_EQ(v.x, 0);
   EXPECT_EQ(v.y, 0);
+  EXPECT_EQ(v.x, v.y);
+
+  v = 5;
+  EXPECT_EQ(v.x, 5);
+  EXPECT_EQ(v.y, 5);
   EXPECT_EQ(v.x, v.y);
 
   Vec2i p{1, 2};
