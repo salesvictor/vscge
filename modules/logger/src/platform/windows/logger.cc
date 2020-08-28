@@ -21,7 +21,7 @@
 
 #include "vscge/instrumentation/profiler.h"
 
-namespace vs::platform {
+namespace vs {
 struct Internals {
   HANDLE write_handle = nullptr;
 };

@@ -21,7 +21,6 @@
 #include "vscge/api.h"
 
 namespace vs {
-namespace platform {
 class VS_API Logger {
  public:
   enum class Level {
@@ -38,14 +37,13 @@ class VS_API Logger {
  private:
   bool is_initialized_ = false;
 };
-}  // namespace platform
 
-inline std::unordered_map<platform::Logger::Level, std::string_view>
+inline std::unordered_map<Logger::Level, std::string_view>
     logger_level_str_map = {
-        {platform::Logger::Level::kInfo, "Info "},
-        {platform::Logger::Level::kError, "Error"},
-        {platform::Logger::Level::kDebug, "Debug"},
-        {platform::Logger::Level::kCore, "Core "},
+        {Logger::Level::kInfo, "Info "},
+        {Logger::Level::kError, "Error"},
+        {Logger::Level::kDebug, "Debug"},
+        {Logger::Level::kCore, "Core "},
 };
 }  // namespace vs
 

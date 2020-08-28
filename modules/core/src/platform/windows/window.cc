@@ -22,17 +22,17 @@
 LRESULT CALLBACK WindowProc(HWND window_handle, UINT message_code,
                             WPARAM w_param, LPARAM l_param) {
   if (message_code == WM_DESTROY) {
-    // vs::platform::Logger::Log("Stopping application!");
-    vs::platform::Window::is_running_ = false;
-    std::unique_lock lock(vs::platform::Window::closing_);
-    vs::platform::Window::has_finished_.wait(lock);
+    // vs::Logger::Log("Stopping application!");
+    vs::Window::is_running_ = false;
+    std::unique_lock lock(vs::Window::closing_);
+    vs::Window::has_finished_.wait(lock);
     PostQuitMessage(0);
     return 0;
   }
   return DefWindowProc(window_handle, message_code, w_param, l_param);
 }
 
-namespace vs::platform {
+namespace vs {
 void Window::Initialize(const Size& screen_size) {
   // TODO(Victor): The way Windows works is that the message queue is thread
   // dependant, that means that the thread that creates the window is the one
@@ -58,6 +58,7 @@ void Window::InputHandler() {
   window_class.lpfnWndProc   = WindowProc;
   window_class.hInstance     = instance;
   window_class.lpszClassName = window_class_name;
+  window_class.hCursor       = LoadCursor(NULL, IDC_ARROW);
 
   STARTUPINFOA startup_info{};
   GetStartupInfoA(&startup_info);
@@ -69,6 +70,7 @@ void Window::InputHandler() {
                             CW_USEDEFAULT, CW_USEDEFAULT, size_.width,
                             size_.height, nullptr, nullptr, instance, nullptr);
   ShowWindow(static_cast<HWND>(handle_), show_flags);
+  ShowCursor(true);
   is_initialized_ = true;
   MSG message;
   while (GetMessage(&message, nullptr, 0, 0)) {
@@ -76,4 +78,4 @@ void Window::InputHandler() {
     DispatchMessage(&message);
   }
 }
-}  // namespace vs::platform
+}  // namespace vs

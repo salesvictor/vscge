@@ -16,68 +16,63 @@
 #include <gl/GL.h>
 #include <vscge/vscge.h>
 
-class BlankWindow : public vs::Application {
+class CubeApp : public vs::Application {
   void OnStart() override {
-    glViewport(0, 0, 800, 600);
+    /* set viewing projection */
     glMatrixMode(GL_PROJECTION);
-    glFrustum(-0.5F, 0.5F, -0.5F, 0.5F, 1.0F, 3.0F);
+    glFrustum(-0.5f, 0.5f, -0.5f, 0.5f, 1.0f, 3.0f);
 
     /* position viewer */
     glMatrixMode(GL_MODELVIEW);
-    glTranslatef(0.0F, 0.0F, -2.0F);
+    glTranslatef(0.0f, 0.0f, -2.0f);
 
     /* position object */
-    glRotatef(30.0F, 1.0F, 0.0F, 0.0F);
-    glRotatef(30.0F, 0.0F, 1.0F, 0.0F);
+    glRotatef(30.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(30.0f, 0.0f, 1.0f, 0.0f);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
   }
   void OnUpdate(const vs::Timestep&) override {
-    /* clear color and depth buffers */
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    /* draw six faces of a cube */
     glBegin(GL_QUADS);
-    glNormal3f(0.0F, 0.0F, 1.0F);
-    glVertex3f(0.5F, 0.5F, 0.5F);
-    glVertex3f(-0.5F, 0.5F, 0.5F);
-    glVertex3f(-0.5F, -0.5F, 0.5F);
-    glVertex3f(0.5F, -0.5F, 0.5F);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.5f, 0.5f, 0.5f);
+    glVertex3f(-0.5f, 0.5f, 0.5f);
+    glVertex3f(-0.5f, -0.5f, 0.5f);
+    glVertex3f(0.5f, -0.5f, 0.5f);
 
-    glNormal3f(0.0F, 0.0F, -1.0F);
-    glVertex3f(-0.5F, -0.5F, -0.5F);
-    glVertex3f(-0.5F, 0.5F, -0.5F);
-    glVertex3f(0.5F, 0.5F, -0.5F);
-    glVertex3f(0.5F, -0.5F, -0.5F);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glVertex3f(-0.5f, -0.5f, -0.5f);
+    glVertex3f(-0.5f, 0.5f, -0.5f);
+    glVertex3f(0.5f, 0.5f, -0.5f);
+    glVertex3f(0.5f, -0.5f, -0.5f);
 
-    glNormal3f(0.0F, 1.0F, 0.0F);
-    glVertex3f(0.5F, 0.5F, 0.5F);
-    glVertex3f(0.5F, 0.5F, -0.5F);
-    glVertex3f(-0.5F, 0.5F, -0.5F);
-    glVertex3f(-0.5F, 0.5F, 0.5F);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.5f, 0.5f, 0.5f);
+    glVertex3f(0.5f, 0.5f, -0.5f);
+    glVertex3f(-0.5f, 0.5f, -0.5f);
+    glVertex3f(-0.5f, 0.5f, 0.5f);
 
-    glNormal3f(0.0F, -1.0F, 0.0F);
-    glVertex3f(-0.5F, -0.5F, -0.5F);
-    glVertex3f(0.5F, -0.5F, -0.5F);
-    glVertex3f(0.5F, -0.5F, 0.5F);
-    glVertex3f(-0.5F, -0.5F, 0.5F);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glVertex3f(-0.5f, -0.5f, -0.5f);
+    glVertex3f(0.5f, -0.5f, -0.5f);
+    glVertex3f(0.5f, -0.5f, 0.5f);
+    glVertex3f(-0.5f, -0.5f, 0.5f);
 
-    glNormal3f(1.0F, 0.0F, 0.0F);
-    glVertex3f(0.5F, 0.5F, 0.5F);
-    glVertex3f(0.5F, -0.5F, 0.5F);
-    glVertex3f(0.5F, -0.5F, -0.5F);
-    glVertex3f(0.5F, 0.5F, -0.5F);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.5f, 0.5f, 0.5f);
+    glVertex3f(0.5f, -0.5f, 0.5f);
+    glVertex3f(0.5f, -0.5f, -0.5f);
+    glVertex3f(0.5f, 0.5f, -0.5f);
 
-    glNormal3f(-1.0F, 0.0F, 0.0F);
-    glVertex3f(-0.5F, -0.5F, -0.5F);
-    glVertex3f(-0.5F, -0.5F, 0.5F);
-    glVertex3f(-0.5F, 0.5F, 0.5F);
-    glVertex3f(-0.5F, 0.5F, -0.5F);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glVertex3f(-0.5f, -0.5f, -0.5f);
+    glVertex3f(-0.5f, -0.5f, 0.5f);
+    glVertex3f(-0.5f, 0.5f, 0.5f);
+    glVertex3f(-0.5f, 0.5f, -0.5f);
     glEnd();
   }
 };
 
-VS_REGISTER_APP(BlankWindow);
-
+VS_REGISTER_APP(CubeApp);

@@ -22,7 +22,6 @@
 #include "vscge/core/types.h"
 
 namespace vs {
-namespace platform {
 
 #if _WIN32
 using WindowHandle = void*;
@@ -44,7 +43,6 @@ class VS_API Window {
  private:
   void InputHandler();
 };
-}  // namespace platform
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_WINDOW_H_

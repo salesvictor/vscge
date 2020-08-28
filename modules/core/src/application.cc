@@ -43,19 +43,19 @@ void Application::Initialize() {
   MainLoop();
   VS_PROFILE_END_SESSION();
 
-  platform::Window::has_finished_.notify_all();
+  Window::has_finished_.notify_all();
 }
 
 void Application::MainLoop() {
   Stopwatch timer;
   timer.Start();
-  while (platform::Window::is_running_) {
+  while (Window::is_running_) {
     VS_PROFILE_FUNCTION();
     Timestep timestep = timer.Stop();
     std::string timing_message =
         "Timestep: " + std::to_string(timestep.Milliseconds()) +
         " ms | FPS: " + std::to_string(static_cast<int>(1 / timestep));
-    logger_.Log(timing_message, platform::Logger::Level::kCore);
+    logger_.Log(timing_message, Logger::Level::kCore);
 
     timer.Start();
 

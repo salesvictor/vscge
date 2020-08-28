@@ -47,9 +47,9 @@ class VS_API Application {
 
  private:
   void MainLoop();
-  platform::Window window_;
+  Window window_;
 
-  platform::Logger logger_;
+  Logger logger_;
   Renderer renderer_;
 };
 }  // namespace vs

@@ -27,7 +27,7 @@
 namespace vs {
 class VS_API Renderer {
  public:
-  void Initialize(const platform::Window& window, const Size& pixel_size);
+  void Initialize(const Window& window, const Size& pixel_size);
 
   void ClearScreen();
 
