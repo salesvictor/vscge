@@ -46,6 +46,7 @@ vscge_option(VS_TARGET_PLATFORM "End-user platform" "Windows" "Windows Console")
 vscge_option(VS_DEVELOPER_MODE "Engine Developer" ON)
 # ==============================================================================
 
+add_subdirectory(external)
 add_subdirectory(modules)
 
 if(BUILD_VSCGE_EXAMPLES)

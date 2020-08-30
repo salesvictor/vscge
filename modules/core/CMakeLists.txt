@@ -34,6 +34,8 @@ vscge_target_sources_platform(
 )
 
 find_package(OpenGL REQUIRED)
+# TODO(Victor): Find a better way to do this 
+# find_package(gl3w REQUIRED)
 
 target_link_libraries(
   core
@@ -45,4 +47,6 @@ target_link_libraries(
     vs::logger
     vs::util
     OpenGL::GL
+  PRIVATE
+    gl3w
 )

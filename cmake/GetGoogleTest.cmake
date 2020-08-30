@@ -16,7 +16,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 include(FetchContent)
 
-set(FETCHCONTENT_BASE_DIR ${VSCGE_ROOT}/tmp/extern)
+set(FETCHCONTENT_BASE_DIR ${VSCGE_ROOT}/tmp/external)
 
 FetchContent_Declare(
   googletest

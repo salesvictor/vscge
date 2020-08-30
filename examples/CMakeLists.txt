@@ -44,3 +44,7 @@ endmacro()
 # add_example(game_of_life)
 add_example(blank_window "Windows")
 add_example(cube         "Windows")
+add_example(triangle     "Windows")
+
+# TODO(Victor): should be removed once rendering pipeline is set.
+target_link_libraries(triangle gl3w)

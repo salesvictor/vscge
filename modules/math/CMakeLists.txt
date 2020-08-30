@@ -26,14 +26,36 @@ vscge_add_module_test(
 )
 
 find_package(Python3 COMPONENTS Interpreter)
+
+set(
+  swizzle_includes
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec1.inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec2.inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec3.inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec4.inc
+)
+
+set(swizzle_generator_py ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py)
+
+# This is a clever way of dealing with this, the command will only run if the
+# dependency -- i.e. the python generator -- changes (this doesn't work for)
+# targets for some reason.
+#
+# By adding the output of this command to the swizzle_generator target, we make
+# it run when the target is built.
+add_custom_command(
+  OUTPUT ${swizzle_includes}
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 1 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec1.inc
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 2 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec2.inc
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 3 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec3.inc
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 4 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec4.inc
+  DEPENDS ${swizzle_generator_py}
+  VERBATIM
+)
 add_custom_target(
-  swizzle_generator
-  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 1 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec1.inc
-  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 2 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec2.inc
-  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 3 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec3.inc
-  COMMAND ${Python3_EXECUTABLE} ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py 4 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec4.inc
+  swizzle_generator ALL
   COMMENT "Building swizzles"
-  DEPENDS ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py
+  DEPENDS ${swizzle_includes}
   VERBATIM
 )
 

@@ -15,7 +15,7 @@
 #include "vscge/core/renderer.h"
 
 #include <Windows.h>
-#include <gl/gl.h>
+#include <gl/gl3w.h>
 
 #include <algorithm>
 #include <cassert>
@@ -93,15 +93,22 @@ void Renderer::Initialize(const Window& window, const Size& /*font_size*/) {
 
   if (!modern_context) {
     VS_ASSERT(false);
+    exit(1);
   }
 
   wglMakeCurrent(nullptr, nullptr);
   wglDeleteContext(glRenderContext);
   if (!wglMakeCurrent(internals.device_context, modern_context)) {
     VS_ASSERT(false);
+    exit(1);
   }
 
   glRenderContext = modern_context;
+
+  if (gl3wInit()) {
+    VS_ASSERT(false);
+    exit(1);
+  }
 
   // Setup Viewport and Clear Screen for the first time.
   glViewport(0, 0, window.size_.width, window.size_.height);

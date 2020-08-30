@@ -64,4 +64,8 @@ void Application::MainLoop() {
     renderer_.Render();
   }
 }
+
+void Application::Log(std::string_view message, Logger::Level level) {
+  logger_.Log(message, level);
+}
 }  // namespace vs

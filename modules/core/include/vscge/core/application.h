@@ -43,6 +43,8 @@ class VS_API Application {
   virtual void OnEvent(Ref<Event>) {}
   virtual void OnUpdate(const Timestep&) = 0;
 
+  void Log(std::string_view message, Logger::Level level);
+
   virtual ~Application() = default;
 
  private:
