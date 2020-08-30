@@ -23,8 +23,10 @@ compile and run on other OSes eventually.
 Focusing on the learning aspect, much of what's here is implemented in-house,
 using only the C++ Standard Library as the external dependency.
 
-Maybe in the future there will be some libs that follow the modular design
-approach -- i.e. are doing only **one** job, and doing it really well.
+## Dependencies
+
+- gl3w.
+- gtest.
 
 # Build Instructions
 
