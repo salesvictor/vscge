@@ -18,12 +18,14 @@ target_sources(
     include/vscge/core/application.h
     include/vscge/core/entry_point.h
     include/vscge/core/renderer.h
+    include/vscge/core/shader.h
     include/vscge/core/timer.h
     include/vscge/core/types.h
     include/vscge/core/window.h
   PRIVATE
     src/application.cc
     src/renderer.cc
+    src/shader.cc
     src/timer.cc
 )
 

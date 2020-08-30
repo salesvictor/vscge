@@ -12,18 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
-#define VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_SHORT_TYPES_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_SHORT_TYPES_H_
 
-// TODO(Victor): Check what really needs to be here.
-#include "vscge/core/application.h"
-#include "vscge/core/entry_point.h"
-#include "vscge/core/shader.h"
-#include "vscge/core/short_types.h"
-#include "vscge/core/timer.h"
-#include "vscge/event/event.h"
-#include "vscge/event/key_event.h"
-#include "vscge/event/mouse_event.h"
-#include "vscge/logger/logger.h"
+// NOTE(Victor): For some reason, cstdint doesn't have int8_t here...
+#include <stdint.h>
 
-#endif  // VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+// int
+using i8  = int8_t;
+using i16 = int16_t;
+using i32 = int32_t;
+using i64 = int64_t;
+
+// unsigned int
+using uint = unsigned int;
+using ui8  = uint8_t;
+using ui16 = uint16_t;
+using ui32 = uint32_t;
+using ui64 = uint64_t;
+
+// float
+using f32 = float;
+using f64 = double;
+
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_SHORTE_TYPES_H_

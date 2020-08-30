@@ -12,18 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
-#define VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_SHADER_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_SHADER_H_
 
-// TODO(Victor): Check what really needs to be here.
-#include "vscge/core/application.h"
-#include "vscge/core/entry_point.h"
-#include "vscge/core/shader.h"
+#include <string_view>
+
+#include "vscge/api.h"
 #include "vscge/core/short_types.h"
-#include "vscge/core/timer.h"
-#include "vscge/event/event.h"
-#include "vscge/event/key_event.h"
-#include "vscge/event/mouse_event.h"
-#include "vscge/logger/logger.h"
 
-#endif  // VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+namespace vs {
+class VS_API Shader {
+ public:
+  Shader(std::string_view vertex_shader_path   = "",
+         std::string_view fragment_shader_path = "");
+
+  void Use();
+
+ private:
+  uint id_;
+};
+}  // namespace vs
+
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_SHADER_H_

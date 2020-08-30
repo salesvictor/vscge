@@ -29,7 +29,7 @@ class Triangle : public vs::Application {
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
 
-    unsigned int vbo;
+    uint vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
@@ -41,74 +41,20 @@ class Triangle : public vs::Application {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    const char* vertex_shader_src = R"#(
-      #version 330 core
-      layout (location = 0) in vec3 aPos;
-
-      void main()
-      {
-          gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-      }
-    )#";
-
-    unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_shader_src, NULL);
-    glCompileShader(vertex_shader);
-
-    int success;
-    char info_log[512];
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-      glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-      Log(info_log, vs::Logger::Level::kError);
-    }
-
-    const char* fragment_shader_src = R"#(
-      #version 330 core
-      out vec4 FragColor;
-
-      void main()
-      {
-          FragColor = vec4(0.53f, 0.12f, 0.47f, 1.0f);
-      } 
-    )#";
-
-    unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_shader_src, NULL);
-    glCompileShader(fragment_shader);
-
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-      glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-      Log(info_log, vs::Logger::Level::kError);
-    }
-
-    shader_program_ = glCreateProgram();
-    glAttachShader(shader_program_, vertex_shader);
-    glAttachShader(shader_program_, fragment_shader);
-    glLinkProgram(shader_program_);
-
-    glGetProgramiv(shader_program_, GL_LINK_STATUS, &success);
-    if (!success) {
-      glGetProgramInfoLog(shader_program_, 512, NULL, info_log);
-      Log(info_log, vs::Logger::Level::kError);
-    }
-
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
+    vs::Shader shader{};
   }
 
   void OnUpdate(const vs::Timestep&) override {
     glClearColor(0.1f, 0.1f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(shader_program_);
     glBindVertexArray(vao_);
+    shader_.Use();
     glDrawArrays(GL_TRIANGLES, 0, 3);
   }
 
   unsigned int vao_;
-  unsigned int shader_program_;
+  vs::Shader shader_{};
 };
 
 VS_REGISTER_APP(Triangle);
