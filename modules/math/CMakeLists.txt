@@ -16,6 +16,7 @@ target_sources(
   math
   INTERFACE
     include/vscge/math/matrix.h
+    include/vscge/math/transform.h
     include/vscge/math/vector.h
     include/vscge/math/detail/swizzle.h
 )

@@ -19,6 +19,8 @@
 
 #include "vscge/api.h"
 #include "vscge/core/types.h"
+#include "vscge/math/detail/swizzle.h"
+#include "vscge/math/vector.h"
 
 namespace vs {
 enum class MatrixOrdering {
@@ -26,7 +28,7 @@ enum class MatrixOrdering {
   kRowMajor,
 };
 
-template <class Elem, int rows, int columns,
+template <class Elem, std::size_t rows, std::size_t columns,
           MatrixOrdering ordering = MatrixOrdering::kColumnMajor>
 class VS_API Matrix {
  public:
@@ -35,10 +37,10 @@ class VS_API Matrix {
     data_.fill(default_elem);
   }
 
-  Elem& operator()(int row, int col) {
+  Elem& operator()(std::size_t row, std::size_t col) {
     return const_cast<Elem&>(std::as_const(*this)(row, col));
   }
-  const Elem& operator()(int row, int col) const {
+  const Elem& operator()(std::size_t row, std::size_t col) const {
     if constexpr (ordering == MatrixOrdering::kColumnMajor) {
       return data_[col * size_.width + row];
     } else {
@@ -51,11 +53,45 @@ class VS_API Matrix {
     return (*this)(location.x, location.y);
   }
 
-  const std::vector<Elem>& Buffer() const { return data_; }
+  Elem& At(std::size_t row, std::size_t col) { return (*this)(row, col); }
+  const Elem& At(std::size_t row, std::size_t col) const {
+    return (*this)(row, col);
+  }
+
+  auto Buffer() const { return data_.data(); }
+
+  constexpr static std::size_t SmallerDim() {
+    return rows < columns ? rows : columns;
+  }
+
+  Matrix& SetPrimaryDiag(const std::array<Elem, SmallerDim()>& diag) {
+    for (std::size_t i = 0; i < SmallerDim(); ++i) {
+      At(i, i) = diag[i];
+    }
+
+    return *this;
+  }
+
+  template <template <typename> class VecT, class VecElem, std::size_t... idxs>
+  VecBase<Elem, rows> operator*(
+      const detail::Swizzle<VecT, VecElem, idxs...>& vec) {
+    static_assert(columns == sizeof...(idxs),
+                  "Incompatible sizes for multiplication!");
+    VecBase<Elem, rows> vec_result;
+    for (std::size_t row = 0; row < rows; ++row) {
+      Elem row_result = 0;
+      for (std::size_t col = 0; col < columns; ++col) {
+        row_result += At(row, col) * vec[col];
+      }
+      vec_result[row] = row_result;
+    }
+
+    return vec_result;
+  }
 
  private:
-  constexpr Size size_ = {rows, columns};
-  std::array<Elem, size_.Area()> data_;
+  Size size_ = {rows, columns};
+  std::array<Elem, rows * columns> data_;
 };
 
 template <class Elem>

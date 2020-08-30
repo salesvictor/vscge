@@ -31,11 +31,11 @@ class VS_API Renderer {
 
   void ClearScreen();
 
-  void DrawBuffer(const std::vector<Vertex>& buffer);
-  void DrawLine(const Point& p1, const Point& p2,
-                const VertexProps& props = {});
-  void DrawRect(const Rect& rect, const VertexProps& props = {});
-  void FillRect(const Rect& rect, const VertexProps& props = {});
+  // void DrawBuffer(const std::vector<Vertex>& buffer);
+  // void DrawLine(const Point& p1, const Point& p2,
+  // const VertexProps& props = {});
+  // void DrawRect(const Rect& rect, const VertexProps& props = {});
+  // void FillRect(const Rect& rect, const VertexProps& props = {});
 
   void Render();
 };

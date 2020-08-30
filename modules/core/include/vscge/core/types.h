@@ -70,14 +70,6 @@ struct VS_API Rect {
     return x <= p.x && p.x < x + width && y <= p.y && p.y < y + height;
   }
 };
-
-struct VS_API Vertex {
-  float x;
-  float y;
-  float z;
-};
-
-struct VertexProps {};
 }  // namespace vs
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_TYPES_H_

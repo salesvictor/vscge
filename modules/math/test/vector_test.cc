@@ -41,6 +41,10 @@ TEST(VectorConstructionTest, Float) {
   Vec2 q{2.0f, 2.0f};
   EXPECT_EQ(q.x, 2.0f);
   EXPECT_EQ(q.y, 2.0f);
+
+  Vec2 r{-1.0f, -3.0f};
+  EXPECT_EQ(r.x, -1.0f);
+  EXPECT_EQ(r.y, -3.0f);
 }
 
 TEST(VectorConstructionTest, Int) {

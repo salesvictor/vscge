@@ -15,6 +15,8 @@
 #ifndef VSCGE_INCLUDE_VSCGE_MATH_DETAIL_SWIZZLE_H_
 #define VSCGE_INCLUDE_VSCGE_MATH_DETAIL_SWIZZLE_H_
 
+#include <tuple>
+
 #include "vscge/api.h"
 
 // TODO(Victor): Disabling these for now, check if really should
@@ -56,6 +58,9 @@ struct VS_LOCAL Swizzle {
   // operators uses it!
   Swizzle(Swizzle&& other) { (((*this)[idxs1] = other[idxs1]), ...); }
 
+  operator Elem1() const {
+    return (*this)[std::get<0>(std::tuple(idxs1...))];
+  }
   // TODO(Victor): Maybe use a python script to generate all the operators and
   // `#include` them here?
   template <template <typename> class VecT2, class Elem2, std::size_t... idxs2>

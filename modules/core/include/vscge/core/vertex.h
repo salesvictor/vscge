@@ -12,21 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
-#define VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+#ifndef VSCGE_INCLUDE_VSCGE_CORE_VERTEX_H_
+#define VSCGE_INCLUDE_VSCGE_CORE_VERTEX_H_
 
-// TODO(Victor): Check what really needs to be here.
-#include "vscge/core/application.h"
-#include "vscge/core/entry_point.h"
-#include "vscge/core/shader.h"
-#include "vscge/core/short_types.h"
-#include "vscge/core/timer.h"
-#include "vscge/core/vertex.h"
-#include "vscge/event/event.h"
-#include "vscge/event/key_event.h"
-#include "vscge/event/mouse_event.h"
-#include "vscge/logger/logger.h"
-#include "vscge/math/matrix.h"
+#include "vscge/api.h"
 #include "vscge/math/vector.h"
 
-#endif  // VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+namespace vs {
+inline Vec3 kInvalidColor(-1.0f);
+inline Vec2 kInvalidUv(-1.0f);
+
+struct VS_API VertexProps {
+  Vec3 color{kInvalidColor};
+  Vec2 uv{kInvalidUv};  // Texture coords
+};
+
+inline VertexProps kInvalidProps{{kInvalidColor}, {kInvalidUv}};
+
+struct VS_API Vertex {
+  Vec3 pos{};
+  VertexProps props{};
+};
+}  // namespace vs
+
+#endif  // VSCGE_INCLUDE_VSCGE_CORE_VERTEX_H_

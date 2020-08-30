@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.0] - 2020-08-30
+
+### Added
+
+- Proper Vertex Class.
+- Uniforms in Shader Class.
+- Transform lib.
+- More tests on Vector.
+- Swizzle conversion to Elem.
+- VecBase Class to facilitate conversions.
+- Elem constructor and other assignment operators for the Vectors.
+- Conversion from Matrix to Vector.
+- Matrix - Vector multiplication.
+
+### Changed
+
+- Triangle example to use Vertex and Shader classes more properly.
+- Matrix Class template parameters to be `std::size_t` instead of `int`.
+
+### Removed
+
+- Bogus Vertex[Pros] Class from `types.h`.
+- Placeholder drawing functions in Renderer.
+
 ## [0.15.5] - 2020-08-30
 
 ### Added

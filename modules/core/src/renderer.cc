@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "vscge/core/types.h"
+#include "vscge/core/vertex.h"
 #include "vscge/debug/debug.h"
 #include "vscge/instrumentation/profiler.h"
 

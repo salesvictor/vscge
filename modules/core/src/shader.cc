@@ -22,28 +22,46 @@
 #include <string_view>
 
 #include "vscge/core/short_types.h"
+#include "vscge/math/transform.h"
 
 namespace vs {
 
 constexpr const char vertex_shader_default[] = R"#(
-      #version 330 core
-      layout (location = 0) in vec3 aPos;
+#version 330 core
+layout (location = 0) in vec3 vPos;
+layout (location = 1) in vec3 vColor;
+layout (location = 2) in vec2 vTex;
 
-      void main()
-      {
-          gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-      }
-    )#";
+out vec3 fColor;
+out vec2 fTex;
+
+// Defaults to identity if not set.
+uniform mat4 vTransform;
+
+void main()
+{
+  gl_Position = vTransform * vec4(vPos, 1.0f);
+
+  vec3 color = vColor;
+  if (color == vec3(-1.0f, -1.0f, -1.0f)) {
+    color = vec3(0.53f, 0.12f, 0.47f);
+  }
+  fColor = color;
+  fTex   = vTex;
+}
+)#";
 
 constexpr const char fragment_shader_default[] = R"#(
-      #version 330 core
-      out vec4 FragColor;
+#version 330 core
+in vec3 fColor;
 
-      void main()
-      {
-          FragColor = vec4(0.53f, 0.12f, 0.47f, 1.0f);
-      } 
-    )#";
+out vec4 FragColor;
+
+void main()
+{
+  FragColor = vec4(fColor, 1.0f);
+} 
+)#";
 
 enum class ShaderType {
   kVertex,
@@ -54,7 +72,7 @@ unsigned int CreateAndCompileShader(std::string_view shader_src,
                                     ShaderType shader_type) {
   auto type = shader_type == ShaderType::kVertex ? GL_VERTEX_SHADER
                                                  : GL_FRAGMENT_SHADER;
-  uint id = glCreateShader(type);
+  uint id         = glCreateShader(type);
   auto shader_str = shader_src.data();
   glShaderSource(id, 1, &shader_str, NULL);
   glCompileShader(id);
@@ -128,7 +146,50 @@ Shader::Shader(std::string_view vertex_shader_path,
   // Clean-up
   glDeleteShader(vertex_shader_id);
   glDeleteShader(fragment_shader_id);
+
+  // Defaults vTransform to identity if vertex shader was the default
+  if (vertex_shader_path.empty()) {
+    SetUniform("vTransform", IdMat4());
+  }
 }
 
 void Shader::Use() { glUseProgram(id_); }
+
+void Shader::SetUniformMatrix4fv(std::string_view name, const Mat4& mat) {
+  auto loc = glGetUniformLocation(id_, name.data());
+  SetUniformMatrix4fv(loc, mat);
+}
+void Shader::SetUniform4fv(std::string_view name, const Vec4& vec) {
+  auto loc = glGetUniformLocation(id_, name.data());
+  SetUniform4fv(loc, vec);
+}
+void Shader::SetUniform3fv(std::string_view name, const Vec3& vec) {
+  auto loc = glGetUniformLocation(id_, name.data());
+  SetUniform3fv(loc, vec);
+}
+void Shader::SetUniform2fv(std::string_view name, const Vec2& vec) {
+  auto loc = glGetUniformLocation(id_, name.data());
+  SetUniform2fv(loc, vec);
+}
+void Shader::SetUniform1f(std::string_view name, float val) {
+  auto loc = glGetUniformLocation(id_, name.data());
+  SetUniform1f(loc, val);
+}
+
+void Shader::SetUniformMatrix4fv(std::size_t loc, const Mat4& mat) {
+  glProgramUniformMatrix4fv(id_, static_cast<int>(loc), 1, GL_FALSE,
+                            mat.Buffer());
+}
+void Shader::SetUniform4fv(std::size_t loc, const Vec4& vec) {
+  glProgramUniform4fv(id_, static_cast<int>(loc), 1, vec.Buffer());
+}
+void Shader::SetUniform3fv(std::size_t loc, const Vec3& vec) {
+  glProgramUniform3fv(id_, static_cast<int>(loc), 1, vec.Buffer());
+}
+void Shader::SetUniform2fv(std::size_t loc, const Vec2& vec) {
+  glProgramUniform2fv(id_, static_cast<int>(loc), 1, vec.Buffer());
+}
+void Shader::SetUniform1f(std::size_t loc, float val) {
+  glProgramUniform1f(id_, static_cast<int>(loc), val);
+}
 }  // namespace vs

@@ -15,5 +15,6 @@
 include(${PROJECT_SOURCE_DIR}/cmake/GetGoogleTest.cmake)
 
 add_gtest(gtest_test)
-add_gtest(vector_test  vs::cge)
-add_gtest(swizzle_test vs::cge)
+add_gtest(vector_test    vs::cge)
+add_gtest(swizzle_test   vs::cge)
+add_gtest(transform_test vs::cge)

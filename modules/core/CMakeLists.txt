@@ -21,6 +21,7 @@ target_sources(
     include/vscge/core/shader.h
     include/vscge/core/timer.h
     include/vscge/core/types.h
+    include/vscge/core/vertex.h
     include/vscge/core/window.h
   PRIVATE
     src/application.cc

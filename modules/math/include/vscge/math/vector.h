@@ -29,11 +29,36 @@ struct VS_API Vec3Base;
 template <class Elem>
 struct VS_API Vec4Base;
 
+// Base Vector, you probably don't want this.
+template <typename Elem, std::size_t size>
+class VecBase {
+ public:
+  Elem& operator[](std::size_t index) { return data_[index]; }
+  const Elem& operator[](std::size_t index) const { return data_[index]; }
+
+  operator Vec2Base<Elem>() const {
+    static_assert(size == 2, "Wrong vector size!");
+    return {data_[0], data_[1]};
+  }
+  operator Vec3Base<Elem>() const {
+    static_assert(size == 3, "Wrong vector size!");
+    return {data_[0], data_[1], data_[2]};
+  }
+  operator Vec4Base<Elem>() const {
+    static_assert(size == 4, "Wrong vector size!");
+    return {data_[0], data_[1], data_[2], data_[3]};
+  }
+
+ private:
+  std::array<Elem, size> data_;
+};
+
 // TODO(Victor): I tried creating a base vector class that had variadic
 // constructors for all vectors, but it wasn't working.
 template <class Elem>
 struct VS_API Vec2Base : public detail::Swizzle<Vec2Base, Elem, 0, 1> {
   Vec2Base() = default;
+  Vec2Base(Elem x) : data{x, x} {}
   Vec2Base(Elem x, Elem y) : data{x, y} {}
   Vec2Base(const Vec2Base& other) : data{other.data} {}
 
@@ -50,6 +75,13 @@ struct VS_API Vec2Base : public detail::Swizzle<Vec2Base, Elem, 0, 1> {
     return *this;
   }
 
+  Vec2Base& operator=(const Vec2Base& other) {
+    data = other.data;
+    return *this;
+  }
+
+  auto Buffer() const { return data.data(); }
+
   union {
     std::array<Elem, 2> data;
 #include "vscge/math/detail/swizzle_vec1.inc"
@@ -63,6 +95,7 @@ using Vec2i = Vec2Base<int>;
 template <class Elem>
 struct VS_API Vec3Base : public detail::Swizzle<Vec3Base, Elem, 0, 1, 2> {
   Vec3Base() = default;
+  Vec3Base(Elem x) : data{x, x, x} {}
   Vec3Base(Elem x, Elem y, Elem z) : data{x, y, z} {}
   Vec3Base(const Vec3Base& other) : data{other.data} {}
 
@@ -79,6 +112,13 @@ struct VS_API Vec3Base : public detail::Swizzle<Vec3Base, Elem, 0, 1, 2> {
     return *this;
   }
 
+  Vec3Base& operator=(const Vec3Base& other) {
+    data = other.data;
+    return *this;
+  }
+
+  auto Buffer() const { return data.data(); }
+
   union {
     std::array<Elem, 3> data;
 #include "vscge/math/detail/swizzle_vec1.inc"
@@ -93,6 +133,7 @@ using Vec3i = Vec3Base<int>;
 template <class Elem>
 struct VS_API Vec4Base : public detail::Swizzle<Vec4Base, Elem, 0, 1, 2, 3> {
   Vec4Base() = default;
+  Vec4Base(Elem x) : data{x, x, x, x} {}
   Vec4Base(Elem x, Elem y, Elem z, Elem w) : data{x, y, z, w} {}
   Vec4Base(const Vec4Base& other) : data{other.data} {}
 
@@ -108,6 +149,13 @@ struct VS_API Vec4Base : public detail::Swizzle<Vec4Base, Elem, 0, 1, 2, 3> {
     data.fill(elem);
     return *this;
   }
+
+  Vec4Base& operator=(const Vec4Base& other) {
+    data = other.data;
+    return *this;
+  }
+
+  auto Buffer() const { return data.data(); }
 
   union {
     std::array<Elem, 4> data;
