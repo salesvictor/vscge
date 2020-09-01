@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.1] - 2020-08-31
+
+### Added
+
+- Utility wrapper around `add_subdirectory()` to dump automatically generated files.
+
+### Changed
+
+- Way to handle external dependencies, from the `extern` folder to a `.cmake`.
+- gl3w from a in-source dependency to an external one, as it was failing to lin (raised an [issue](https://github.com/skaslev/gl3w/issues/66)).
+
 ## [0.16.0] - 2020-08-30
 
 ### Added

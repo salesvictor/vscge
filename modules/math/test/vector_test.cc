@@ -20,6 +20,9 @@
 
 #include "util.h"
 
+// TODO(Victor): Disabling these for now, check if really should
+#pragma warning(disable : 4244)
+
 using namespace vs;
 
 TEST(VectorConstructionTest, Float) {

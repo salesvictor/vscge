@@ -31,8 +31,8 @@ vscge_add_module(util)
 # ==============================================================================
 # Compiler configuration.
 # ==============================================================================
-set(VSCGE_COMPILER "${CMAKE_CXX_COMPILER_ID}")
-set(VSCGE_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}")
+set(VSCGE_COMPILER           "${CMAKE_CXX_COMPILER_ID}")
+set(VSCGE_COMPILER_VERSION   "${CMAKE_CXX_COMPILER_VERSION}")
 set(VSCGE_SIMULATED_COMPILER "${CMAKE_CXX_SIMULATE_ID}")
 vscge_check("Configuring ${VSCGE_COMPILER} ${VSCGE_COMPILER_VERSION} compiler")
 

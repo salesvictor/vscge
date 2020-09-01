@@ -25,8 +25,10 @@ using only the C++ Standard Library as the external dependency.
 
 ## Dependencies
 
-- gl3w.
-- gtest.
+* [gl3w](https://github.com/skaslev/gl3w)
+    * Unfortunately, you should install this before building VSCGE
+* [Google Test](https://github.com/google/googletest)
+    * Used for testing. If building those, it is automatically downloaded for you
 
 # Build Instructions
 
@@ -91,3 +93,8 @@ Those are on the `examples` folder.
 * [It's Time To Do CMake Right](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
 * [CMake Tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)
 * [Modern CMake Tips](https://pspdfkit.com/blog/2018/modern-cmake-tips/)
+* [Crascit](https://crascit.com/)
+
+# OpenGL
+
+* [Learn OpenGL](https://learnopengl.com)

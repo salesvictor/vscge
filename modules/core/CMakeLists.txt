@@ -36,10 +36,6 @@ vscge_target_sources_platform(
   window.cc
 )
 
-find_package(OpenGL REQUIRED)
-# TODO(Victor): Find a better way to do this 
-# find_package(gl3w REQUIRED)
-
 target_link_libraries(
   core
   PUBLIC

@@ -14,7 +14,7 @@
 
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
-set(VSCGE_ROOT ${CMAKE_CURRENT_BINARY_DIR})
+set(VSCGE_ROOT        ${CMAKE_CURRENT_BINARY_DIR})
 set(VSCGE_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(cmake/VSCGEVersion.cmake)
@@ -34,7 +34,7 @@ set(CMAKE_MESSAGE_CONTEXT_SHOW TRUE)
 
 vscge_option(BUILD_SHARED_LIBS    "Build using shared libraries" OFF)
 vscge_option(BUILD_VSCGE_TESTS    "Build VSCGE tests"            ON)
-vscge_option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples"         OFF)
+vscge_option(BUILD_VSCGE_EXAMPLES "Build VSCGE examples"         ON)
 
 vscge_option(VS_ENABLE_ASSERTS  "Enable VS_ASSERT* macros" ON)
 vscge_option(VS_ENABLE_PROFILER "Enable profiler"          ON)
@@ -46,12 +46,14 @@ vscge_option(VS_TARGET_PLATFORM "End-user platform" "Windows" "Windows Console")
 vscge_option(VS_DEVELOPER_MODE "Engine Developer" ON)
 # ==============================================================================
 
-add_subdirectory(external)
-add_subdirectory(modules)
+# Load external dependencies
+include(cmake/VSCGEAddExtern.cmake)
+
+vscge_add_subdir(modules)
 
 if(BUILD_VSCGE_EXAMPLES)
   vscge_check("Configuring VSCGE examples")
-  add_subdirectory(examples tmp)
+  vscge_add_subdir(examples)
   vscge_pass()
 endif()
 

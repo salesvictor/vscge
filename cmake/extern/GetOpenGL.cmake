@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_gtest(gtest_test)
-add_gtest(vector_test    vs::cge)
-add_gtest(swizzle_test   vs::cge)
-add_gtest(transform_test vs::cge)
+find_package(OpenGL REQUIRED)
+
+# This should be called at an appropriate root dir, but if it isn't, uncomment
+# the following line
+#set_target_properties(OpenGL::GL PROPERTIES IMPORTED_GLOBAL TRUE)

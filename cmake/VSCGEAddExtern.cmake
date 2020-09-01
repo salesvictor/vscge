@@ -14,6 +14,13 @@
 
 vscge_check("Configuring external dependencies")
 
-add_subdirectory(gl3w)
+set(${PROJECT_NAME}_FETCHCONTENT_BASE_DIR ${VSCGE_ROOT}/tmp/extern)
+
+vscge_add_external(OpenGL)
+vscge_add_external(Gl3w)
+
+if(BUILD_VSCGE_TESTS)
+  vscge_add_external(GoogleTest)
+endif()
 
 vscge_pass()

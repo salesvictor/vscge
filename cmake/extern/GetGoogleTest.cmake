@@ -12,11 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# NOTE: Remember to `enable_testing()` on a proper root directory!
+
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 include(FetchContent)
 
-set(FETCHCONTENT_BASE_DIR ${VSCGE_ROOT}/tmp/external)
+if(DEFINED "${PROJECT_NAME}_FETCHCONTENT_BASE_DIR")
+  set(FETCHCONTENT_BASE_DIR ${${PROJECT_NAME}_FETCHCONTENT_BASE_DIR})
+endif()
 
 FetchContent_Declare(
   googletest
