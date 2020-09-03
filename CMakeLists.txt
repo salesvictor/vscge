@@ -19,6 +19,7 @@ set(VSCGE_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(cmake/VSCGEVersion.cmake)
 include(cmake/VSCGEUtils.cmake)
+include(cmake/VSCGEModules.cmake)
 
 project(
   VSCGE

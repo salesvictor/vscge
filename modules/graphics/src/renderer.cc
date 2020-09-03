@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "vscge/core/renderer.h"
+#include "vscge/graphics/renderer.h"
 
 #include <Windows.h>
 #include <gl/gl3w.h>
@@ -23,8 +23,8 @@
 #include <vector>
 
 #include "vscge/core/types.h"
-#include "vscge/core/vertex.h"
 #include "vscge/debug/debug.h"
+#include "vscge/graphics/vertex.h"
 #include "vscge/instrumentation/profiler.h"
 
 namespace vs {

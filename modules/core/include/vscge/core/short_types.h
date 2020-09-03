@@ -26,13 +26,22 @@ using i64 = int64_t;
 
 // unsigned int
 using uint = unsigned int;
-using ui8  = uint8_t;
-using ui16 = uint16_t;
-using ui32 = uint32_t;
-using ui64 = uint64_t;
+using u8   = uint8_t;
+using u16  = uint16_t;
+using u32  = uint32_t;
+using u64  = uint64_t;
 
 // float
 using f32 = float;
 using f64 = double;
+
+// vec
+class Vec2;
+class Vec3;
+class Vec4;
+
+using v2 = Vec2;
+using v3 = Vec3;
+using v4 = Vec4;
 
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_SHORTE_TYPES_H_

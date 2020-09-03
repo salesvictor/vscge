@@ -19,14 +19,12 @@ if(VS_DEVELOPER_MODE)
   include(${VSCGE_SOURCE_ROOT}/cmake/VSCGEStaticAnalyzers.cmake)
 endif()
 
-vscge_add_module(core)
-vscge_add_module(debug)
-vscge_add_module(event)
-vscge_add_module(instrumentation)
-vscge_add_module(logger)
-vscge_add_module(math)
-vscge_add_module(memory)
-vscge_add_module(util)
+file(GLOB modules RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "*")
+list(REMOVE_ITEM modules "CMakeLists.txt")
+
+foreach(module ${modules})
+  vscge_add_module(${module})
+endforeach()
 
 # ==============================================================================
 # Compiler configuration.

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 target_sources(
-  math
+  ${module}
   INTERFACE
     include/vscge/math/matrix.h
     include/vscge/math/transform.h
@@ -21,19 +21,16 @@ target_sources(
     include/vscge/math/detail/swizzle.h
 )
 
-vscge_add_module_test(
-  math
-  test
-)
+vscge_add_module_test(${module} test)
 
 find_package(Python3 COMPONENTS Interpreter)
 
 set(
   swizzle_includes
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec1.inc
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec2.inc
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec3.inc
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec4.inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec1.inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec2.inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec3.inc
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec4.inc
 )
 
 set(swizzle_generator_py ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py)
@@ -46,10 +43,10 @@ set(swizzle_generator_py ${VSCGE_SOURCE_ROOT}/tool/swizzle_include_generator.py)
 # it run when the target is built.
 add_custom_command(
   OUTPUT ${swizzle_includes}
-  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 1 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec1.inc
-  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 2 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec2.inc
-  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 3 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec3.inc
-  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 4 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/math/detail/swizzle_vec4.inc
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 1 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec1.inc
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 2 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec2.inc
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 3 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec3.inc
+  COMMAND ${Python3_EXECUTABLE} ${swizzle_generator_py} 4 > ${CMAKE_CURRENT_SOURCE_DIR}/include/vscge/${module}/detail/swizzle_vec4.inc
   DEPENDS ${swizzle_generator_py}
   VERBATIM
 )

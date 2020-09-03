@@ -12,18 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_MODULES_MISC_INCLUDE_VSCGE_VERSION_H_
-#define VSCGE_MODULES_MISC_INCLUDE_VSCGE_VERSION_H_
+#ifndef VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_BUFFER_H_
+#define VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_BUFFER_H_
 
-#define VSCGE_VERSION_MAJOR 0
-#define VSCGE_VERSION_MINOR 17
-#define VSCGE_VERSION_PATCH 0
+#include <vector>
 
-#define VSCGE_STR(str)      VSCGE_STR_IMPL(str)
-#define VSCGE_STR_IMPL(str) #str
+#include "vscge/core/short_types.h"
+#include "vscge/graphics/vertex.h"
 
-#define VSCGE_VERSION            \
-  VSCGE_STR(VSCGE_VERSION_MAJOR) \
-  "." VSCGE_STR(VSCGE_VERSION_MINOR) "." VSCGE_STR(VSCGE_VERSION_PATCH)
+namespace vs {
+class VertexBuffer {
+ public:
+  VertexBuffer(const std::vector<Vertex>& vertices);
+  ~VertexBuffer();
 
-#endif  // VSCGE_MODULES_MISC_INCLUDE_VSCGE_VERSION_H_
+ private:
+  uint id_;
+};
+}  // namespace vs
+
+#endif  // VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_BUFFER_H_

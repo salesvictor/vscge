@@ -13,7 +13,7 @@
 # limitations under the License.
 
 target_sources(
-  util
+  ${module}
   INTERFACE
-    include/vscge/util/macro.h
+    include/vscge/${module}/macro.h
 )

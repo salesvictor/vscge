@@ -92,67 +92,8 @@ macro(vscge_add_analyzers module)
   endif()
 endmacro()
 
-macro(vscge_add_module module)
-  vscge_check("Configuring vs::${module}")
-  set(HEADER_ONLY memory util math event)
-  set(INTERFACE_OR_PUBLIC "PUBLIC")
-  unset(MODULE_TYPE)
-  if(${module} IN_LIST HEADER_ONLY)
-    set(MODULE_TYPE "INTERFACE")
-    set(INTERFACE_OR_PUBLIC "INTERFACE")
-  endif()
-  add_library(${module} ${MODULE_TYPE})
-  target_compile_features(${module} ${INTERFACE_OR_PUBLIC} cxx_std_17)
-  target_include_directories(
-    ${module}
-    ${INTERFACE_OR_PUBLIC}
-      ${module}/include/
-    ${INTERFACE_OR_PUBLIC} $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${module}/include>
-    ${INTERFACE_OR_PUBLIC} $<INSTALL_INTERFACE:${module}/include>
-  )
-  target_include_directories(${module} ${INTERFACE_OR_PUBLIC} ${VSCGE_SOURCE_ROOT}/include)
-  if(NOT "${MODULE_TYPE}" STREQUAL "INTERFACE")
-    vscge_add_analyzers(${module})
-    set_target_properties(
-      ${module} PROPERTIES
-      VERSION ${PROJECT_VERSION}
-      ARCHIVE_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
-      LIBRARY_OUTPUT_DIRECTORY ${VSCGE_ROOT}/lib
-      RUNTIME_OUTPUT_DIRECTORY ${VSCGE_ROOT}/bin
-    )
-  endif()
-  vscge_add_subdir(${module})
-  add_library(vs::${module} ALIAS ${module})
-  target_link_libraries(vscge INTERFACE vs::${module})
-  vscge_pass()
-endmacro()
-
 macro(vscge_add_external dependency)
   vscge_check("Configuring ${dependency}")
   include("${VSCGE_SOURCE_ROOT}/cmake/extern/Get${dependency}.cmake")
   vscge_pass()
-endmacro()
-
-macro(vscge_target_sources_platform target)
-  if(VS_TARGET_PLATFORM STREQUAL "Windows")
-    set(PLATFORM_PREFIX src/platform/windows)
-  elseif(VS_TARGET_PLATFORM STREQUAL "Windows Console")
-    set(PLATFORM_PREFIX src/platform/windows_console)
-  endif()
-
-  foreach(SOURCE_FILE ${ARGN})
-    target_sources(
-      ${target}
-      PRIVATE
-        ${PLATFORM_PREFIX}/${SOURCE_FILE}
-    )
-  endforeach()
-endmacro()
-
-macro(vscge_add_module_test module test_folder)
-  if(BUILD_VSCGE_TESTS)
-    vscge_check("Configuring tests")
-    add_subdirectory(${test_folder} ${VSCGE_ROOT}/tmp/test/${module})
-    vscge_pass()
-  endif()
 endmacro()

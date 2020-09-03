@@ -22,11 +22,11 @@
 #include <vector>
 
 #include "vscge/api.h"
-#include "vscge/core/renderer.h"
 #include "vscge/core/timer.h"
 #include "vscge/core/types.h"
 #include "vscge/core/window.h"
 #include "vscge/event/event.h"
+#include "vscge/graphics/renderer.h"
 #include "vscge/logger/logger.h"
 #include "vscge/memory/reference.h"
 
@@ -34,7 +34,7 @@ namespace vs {
 class VS_API Application {
  public:
   explicit Application(const Size& screen_size = {800, 600},
-              const Size& pixel_size  = {1, 1});
+                       const Size& pixel_size  = {1, 1});
 
   void Initialize();
 

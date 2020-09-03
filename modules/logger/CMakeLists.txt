@@ -12,18 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+file(GLOB ${module}_sources RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "src/*.cc")
+file(GLOB ${module}_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "include/vscge/${module}/*.h")
+
+vscge_debug("SOURCES::${module}_headers:: ${${module}_headers}")
+vscge_debug("SOURCES::${module}_sources:: ${${module}_sources}")
+
 target_sources(
-  logger
-  PUBLIC
-    include/vscge/logger/logger.h
-    include/vscge/logger/tee.h
-  PRIVATE
-    src/tee.cc
+  ${module}
+  PUBLIC  ${${module}_headers}
+  PRIVATE ${${module}_sources}
 )
 
-vscge_target_sources_platform(
-  logger
-  logger.cc
+vscge_find_dependencies(${module}_headers ${module}_headers_deps)
+vscge_find_dependencies(${module}_sources ${module}_sources_deps)
+
+vscge_separate_dependencies(
+  ${module}_headers_deps ${module}_sources_deps
+  ${module}_public_deps ${module}_interface_deps ${module}_private_deps
+)
+
+vscge_debug("DEPS::${module}_public_deps::    ${${module}_public_deps}")
+vscge_debug("DEPS::${module}_interface_deps:: ${${module}_interface_deps}")
+vscge_debug("DEPS::${module}_private_deps::   ${${module}_private_deps}")
+
+vscge_target_sources_platform(${module} ${module}_platform_sources)
+vscge_find_dependencies(${module}_platform_sources ${module}_platform_deps)
+
+target_link_libraries(
+  ${module}
+  INTERFACE ${${module}_interface_deps}
+  PUBLIC    ${${module}_public_deps}
+  PRIVATE   ${${module}_private_deps} ${${module}_platform_deps}
 )
 
 if(VS_ENABLE_LOGGER)
@@ -31,9 +51,3 @@ if(VS_ENABLE_LOGGER)
   target_link_libraries(LoggerExe vscge)
   target_compile_features(LoggerExe PRIVATE cxx_std_17)
 endif()
-
-target_link_libraries(
-  logger
-  PRIVATE
-    vs::instrumentation
-)

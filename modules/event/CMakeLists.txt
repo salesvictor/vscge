@@ -1,10 +1,10 @@
 target_sources(
-  event
+  ${module}
   ${INTERFACE_OR_PUBLIC}
-    include/vscge/event/base_event.h
-    include/vscge/event/event.h
-    include/vscge/event/key_event.h
-    include/vscge/event/mouse_event.h
+    include/vscge/${module}/base_event.h
+    include/vscge/${module}/event.h
+    include/vscge/${module}/key_event.h
+    include/vscge/${module}/mouse_event.h
 )
 
 # vscge_target_sources_platform(
@@ -13,7 +13,7 @@ target_sources(
 # )
 
 target_link_libraries(
-  event
+  ${module}
   ${INTERFACE_OR_PUBLIC}
     vs::memory
 )

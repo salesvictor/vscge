@@ -13,7 +13,7 @@
 # limitations under the License.
 
 target_sources(
-  memory
+  ${module}
   INTERFACE
-    include/vscge/memory/reference.h
+    include/vscge/${module}/reference.h
 )
