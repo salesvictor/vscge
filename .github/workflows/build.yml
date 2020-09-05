@@ -23,8 +23,22 @@ jobs:
           }
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        repository: skaslev/gl3w
+    - name: Get gl3w
+      id: get_gl3w
+      shell: bash
+      run: |
+        git clone https://github.com/skaslev/gl3w.git extern/gl3w
+        cd extern/gl3w
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build .
+        cmake --install .
 
+    - uses: actions/checkout@v1
     - name: Download Ninja and CMake
       id: cmake_and_ninja
       shell: cmake -P {0}
