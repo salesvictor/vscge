@@ -26,7 +26,8 @@
 namespace vs {
 class VS_API Shader {
  public:
-  Shader(std::string_view vertex_shader_path   = "",
+  Shader(std::string_view name                 = "default",
+         std::string_view vertex_shader_path   = "",
          std::string_view fragment_shader_path = "");
 
   void Use();
@@ -81,6 +82,7 @@ class VS_API Shader {
 
  private:
   uint id_;
+  std::string_view name_;
 };
 }  // namespace vs
 

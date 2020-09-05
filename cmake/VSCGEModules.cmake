@@ -1,3 +1,17 @@
+# Copyright 2020 Victor Sales
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 macro(vscge_add_module module)
   vscge_check("Configuring vs::${module}")
   set(HEADER_ONLY memory util math event)
@@ -51,7 +65,7 @@ macro(vscge_find_dependencies _sources deps)
   # _sources is a list name
   set(sources ${${_sources}})
   # Parenthesis use for grouping
-  set(module_regex "^#include \"vscge/(.*)/.*\.h")
+  set(module_regex "^#include \"vscge/(.+)/.+\.h")
   foreach(source ${sources})
     # Gets all vscge include lines
     file(STRINGS ${source} dependencies_lines REGEX ${module_regex} )
@@ -63,6 +77,11 @@ macro(vscge_find_dependencies _sources deps)
       # Gets the match of the group in the regex, which should be a module.
       # Must add "vs::" here because some libs have keyword names (i.e. debug).
       set(dependency "vs::${CMAKE_MATCH_1}")
+
+      # I tried to make the regex work as intended to only get the module name,
+      # alas, it didn't work, so we do a manual split here
+      string(REPLACE "/" ";" dirs ${dependency})
+      list(GET dirs 0 dependency)
       list(APPEND dependencies ${dependency})
     endforeach()
 
@@ -128,6 +147,10 @@ macro(vscge_separate_dependencies _h_deps _cc_deps pub_deps iface_deps pvt_deps)
 
   # Private Deps is cc_deps minus h_deps == right
   set(${pvt_deps} ${right})
+endmacro()
+
+macro(vscge_module_common)
+  include("${VSCGE_SOURCE_ROOT}/cmake/VSCGEModuleCommon.cmake")
 endmacro()
 
 macro(vscge_add_module_test module test_folder)

@@ -12,27 +12,59 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_CORE_VERTEX_H_
-#define VSCGE_INCLUDE_VSCGE_CORE_VERTEX_H_
+#ifndef VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_H_
+#define VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_H_
+
+#include <initializer_list>
+#include <vector>
 
 #include "vscge/api.h"
+#include "vscge/debug/debug.h"
+#include "vscge/graphics/data_type.h"
 #include "vscge/math/vector.h"
 
 namespace vs {
-inline Vec3 kInvalidColor(-1.0f);
-inline Vec2 kInvalidUv(-1.0f);
+struct VS_API VertexAttrib {
+  DataType type;
+  std::string_view name;
+  bool should_normalize{false};
 
-struct VS_API VertexProps {
-  Vec3 color{kInvalidColor};
-  Vec2 uv{kInvalidUv};  // Texture coords
+  const std::size_t ByteSize() const { return DataTypeByteSize(type); }
 };
 
-inline VertexProps kInvalidProps{{kInvalidColor}, {kInvalidUv}};
+class VS_API VertexLayout {
+ public:
+  VertexLayout() = default;
+  VertexLayout(const std::vector<VertexAttrib>& attribs) : attribs_{attribs} {
+    for (const auto& attrib : attribs) {
+      size_ += attrib.ByteSize();
+    }
+  }
+  VertexLayout(const std::initializer_list<VertexAttrib>& attribs)
+      : attribs_{attribs} {
+    for (const auto& attrib : attribs) {
+      size_ += attrib.ByteSize();
+    }
+  }
 
-struct VS_API Vertex {
-  Vec3 pos{};
-  VertexProps props{};
+  std::vector<VertexAttrib>& attribs() { return attribs_; }
+  const std::vector<VertexAttrib>& attribs() const { return attribs_; }
+
+  const std::size_t ByteSize() const { return size_; }
+
+  // Iterators boiler-plate
+  using iter  = std::vector<VertexAttrib>::iterator;
+  using citer = std::vector<VertexAttrib>::const_iterator;
+
+  iter begin() { return attribs_.begin(); }
+  iter end() { return attribs_.end(); }
+  citer begin() const { return attribs_.begin(); }
+  citer end() const { return attribs_.end(); }
+
+ private:
+  std::vector<VertexAttrib> attribs_;
+  std::size_t size_{0};
 };
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_CORE_VERTEX_H_
+#endif  // VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_H_

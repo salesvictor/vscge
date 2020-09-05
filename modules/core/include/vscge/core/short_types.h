@@ -44,4 +44,8 @@ using v2 = Vec2;
 using v3 = Vec3;
 using v4 = Vec4;
 
+using float2 = Vec2;
+using float3 = Vec3;
+using float4 = Vec4;
+
 #endif  // VSCGE_INCLUDE_VSCGE_CORE_SHORTE_TYPES_H_

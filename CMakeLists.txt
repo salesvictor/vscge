@@ -22,10 +22,10 @@ include(cmake/VSCGEUtils.cmake)
 include(cmake/VSCGEModules.cmake)
 
 project(
-  VSCGE
-  VERSION ${VSCGE_VERSION}
+  vscge
+  VERSION     ${VSCGE_VERSION}
   DESCRIPTION "VS Component Game Engine"
-  LANGUAGES CXX
+  LANGUAGES   CXX
 )
 
 # ==============================================================================

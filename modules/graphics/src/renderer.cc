@@ -116,36 +116,36 @@ void Renderer::Initialize(const Window& window, const Size& /*font_size*/) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void ClearScreen() { VS_PROFILE_FUNCTION(); }
+// void ClearScreen() { VS_PROFILE_FUNCTION(); }
 
-void DrawBuffer(const std::vector<Vertex>& /*buffer*/) {
-  VS_PROFILE_FUNCTION();
-}
+// void DrawBuffer(const std::vector<Vertex>& /*buffer*/) {
+// VS_PROFILE_FUNCTION();
+// }
 
-void DrawLine(const Point& /*p1*/, const Point& /*p2*/,
-              const VertexProps& /*props*/) {
-  VS_PROFILE_FUNCTION();
-}
+// void DrawLine(const Point& /*p1*/, const Point& /*p2*/,
+// const VertexProps& /*props*/) {
+// VS_PROFILE_FUNCTION();
+// }
 
-void DrawRect(const Rect& rect, const VertexProps& props) {
-  VS_PROFILE_FUNCTION()
-  int x0 = rect.x;
-  int y0 = rect.y;
-  int x1 = rect.x + rect.width - 1;   // NOLINT
-  int y1 = rect.y + rect.height - 1;  // NOLINT
+// void DrawRect(const Rect& rect, const VertexProps& props) {
+// VS_PROFILE_FUNCTION()
+// int x0 = rect.x;
+// int y0 = rect.y;
+// int x1 = rect.x + rect.width - 1;   // NOLINT
+// int y1 = rect.y + rect.height - 1;  // NOLINT
 
-  DrawLine({x0, y0}, {x1, y0}, props);  // Top
-  DrawLine({x1, y0}, {x1, y1}, props);  // Right
-  DrawLine({x1, y1}, {x0, y1}, props);  // Bottom
-  DrawLine({x0, y1}, {x0, y0}, props);  // Left
-}
+// DrawLine({x0, y0}, {x1, y0}, props);  // Top
+// DrawLine({x1, y0}, {x1, y1}, props);  // Right
+// DrawLine({x1, y1}, {x0, y1}, props);  // Bottom
+// DrawLine({x0, y1}, {x0, y0}, props);  // Left
+// }
 
-void FillRect(const Rect& rect, const VertexProps& props) {
-  VS_PROFILE_FUNCTION();
-  for (int y = rect.y; y < rect.y + rect.height; ++y) {
-    DrawLine({rect.x, y}, {rect.x + rect.width, y}, props);  // NOLINT
-  }
-}
+// void FillRect(const Rect& rect, const VertexProps& props) {
+// VS_PROFILE_FUNCTION();
+// for (int y = rect.y; y < rect.y + rect.height; ++y) {
+// DrawLine({rect.x, y}, {rect.x + rect.width, y}, props);  // NOLINT
+// }
+// }
 
 void Renderer::Render() {
   VS_PROFILE_FUNCTION();

@@ -93,8 +93,8 @@ unsigned int CreateAndCompileShader(std::string_view shader_src,
   return id;
 }
 
-Shader::Shader(std::string_view vertex_shader_path,
-               std::string_view fragment_shader_path) {
+Shader::Shader(std::string_view name, std::string_view vertex_shader_path,
+               std::string_view fragment_shader_path) : name_{name} {
   std::string vertex_shader;
   std::string fragment_shader;
 

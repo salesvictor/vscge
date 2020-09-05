@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_BUFFER_H_
-#define VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_BUFFER_H_
+#ifndef VSCGE_INCLUDE_VSCGE_GRAPHICS_INDEX_BUFFER_H_
+#define VSCGE_INCLUDE_VSCGE_GRAPHICS_INDEX_BUFFER_H_
 
 #include <vector>
 
@@ -23,36 +23,29 @@
 #include "vscge/memory/reference.h"
 
 namespace vs {
-class VertexBuffer {
+class IndexBuffer {
  public:
   // Use these to create your Buffers! Otherwise you might end up with dangling
   // references!
-  static Ref<VertexBuffer> Make(const std::vector<float>& vertices);
-  static Ref<VertexBuffer> Make(const std::vector<float>& vertices,
-                                const VertexLayout& layout);
+  static Ref<IndexBuffer> Make(const std::vector<uint>& indices);
 
-  VertexBuffer() = default;
-  VertexBuffer(const std::vector<float>& vertices);
-  VertexBuffer(const std::vector<float>& vertices, const VertexLayout& layout);
-  ~VertexBuffer();
+  IndexBuffer() = default;
+  IndexBuffer(const std::vector<uint>& indices);
+  ~IndexBuffer();
 
   // Move-only class, because copying is "expensive" and "essentialy
   // impossible", see
   // https://www.khronos.org/opengl/wiki/Common_Mistakes#The_Object_Oriented_Language_Problem
-  VS_MOVE_ID_ONLY(VertexBuffer);
+  VS_MOVE_ID_ONLY(IndexBuffer);
 
   void Bind() const;
   void Unbind() const;
 
-  VertexLayout& layout() { return layout_; };
-  const VertexLayout& layout() const { return layout_; };
-
  private:
   uint id_{0};  // Zero means invalid
-  VertexLayout layout_;
 
   void Release();
 };
 }  // namespace vs
 
-#endif  // VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_BUFFER_H_
+#endif  // VSCGE_INCLUDE_VSCGE_GRAPHICS_INDEX_BUFFER_H_

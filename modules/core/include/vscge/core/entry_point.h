@@ -22,7 +22,7 @@
 
 #define VS_REGISTER_APP(app_name)               \
   vs::Ref<vs::Application> vs::CreateApp() {    \
-    return vs::CreateRef<app_name>(app_name()); \
+    return vs::MakeRef<app_name>(app_name()); \
   }
 
 namespace vs {

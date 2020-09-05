@@ -20,53 +20,46 @@ class Triangle : public vs::Application {
   void OnStart() override {
     // clang-format off
     vertices_ = {
-      {{-0.5f, -0.5f, 0.0f}, {{ 0.0f,  0.0f,  0.0f}}},
-      {{ 0.5f, -0.5f, 0.0f}, {{ 0.0f,  0.0f,  0.0f}}},
-      {{ 0.0f,  0.5f, 0.0f}, {{ 0.0f,  0.0f,  0.0f}}},
-      {{-1.0f, -0.5f, 0.0f}, {{ 0.5f,  0.0f,  0.0f}}},
-      {{ 1.0f,  0.8f, 0.0f}},
-      {{ 0.8f,  1.0f, 0.0f}},
+      // Pos               // Col
+      -0.5f, -0.5f, 0.0f,  0.0f,  0.0f,  0.0f,
+       0.5f, -0.5f, 0.0f,  0.0f,  0.0f,  0.0f,
+       0.0f,  0.5f, 0.0f,  0.0f,  0.0f,  0.0f,
+      -1.0f, -0.5f, 0.0f,  0.5f,  0.0f,  0.0f,
+       1.0f,  0.8f, 0.0f, -1.0f, -1.0f, -1.0f,
+       0.8f,  1.0f, 0.0f, -1.0f, -1.0f, -1.0f,
     };
     // clang-format on
 
-    glGenVertexArrays(1, &vao_);
-    glBindVertexArray(vao_);
+    auto vbo = vs::VertexBuffer::Make(vertices_);
 
-    uint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    vs::VertexLayout layout = {
+        {vs::DataType::kVec3, "vPos"},
+        {vs::DataType::kVec3, "vColor"},
+    };
+    vbo->layout() = layout;
 
-    glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(vs::Vertex),
-                 vertices_.data(), GL_STATIC_DRAW);
+    auto ibo = vs::IndexBuffer::Make({0, 1, 2, 3, 4, 5});
+    vao_.AddVertexBuffer(vbo);
+    vao_.SetIndexBuffer(ibo);
 
-    // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vs::Vertex),
-                          (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Color
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vs::Vertex),
-                          (void*)(sizeof(vs::Vec3)));
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    vs::Shader shader{};
+    vao_.Unbind();
+    vbo->Unbind();
+    ibo->Unbind();
   }
 
   void OnUpdate(const vs::Timestep&) override {
     glClearColor(0.1f, 0.1f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glBindVertexArray(vao_);
+    // glBindVertexArray(vao_);
+    vao_.Bind();
     shader_.Use();
-    glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices_.size());
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   }
 
-  unsigned int vao_;
+  vs::VertexArray vao_{};
   vs::Shader shader_{};
-  std::vector<vs::Vertex> vertices_;
+  std::vector<float> vertices_;
 };
 
 VS_REGISTER_APP(Triangle);

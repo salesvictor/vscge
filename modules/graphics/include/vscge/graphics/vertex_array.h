@@ -12,25 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
-#define VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+#ifndef VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_ARRAY_H_
+#define VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_ARRAY_H_
 
-// TODO(Victor): Check what really needs to be here.
-#include "vscge/core/application.h"
-#include "vscge/core/entry_point.h"
+#include <vector>
+
 #include "vscge/core/short_types.h"
-#include "vscge/core/timer.h"
-#include "vscge/event/event.h"
-#include "vscge/event/key_event.h"
-#include "vscge/event/mouse_event.h"
 #include "vscge/graphics/index_buffer.h"
-#include "vscge/graphics/shader.h"
 #include "vscge/graphics/vertex.h"
-#include "vscge/graphics/vertex_array.h"
 #include "vscge/graphics/vertex_buffer.h"
-#include "vscge/logger/logger.h"
-#include "vscge/math/matrix.h"
-#include "vscge/math/vector.h"
 #include "vscge/memory/reference.h"
 
-#endif  // VSCGE_MODULES_MISC_INCLUDE_VSCGE_VSCGE_H_
+namespace vs {
+class VertexArray {
+ public:
+  VertexArray();
+  ~VertexArray();
+
+  void Bind() const;
+  void Unbind() const;
+
+  void AddVertexBuffer(const Ref<VertexBuffer>&);
+  void SetIndexBuffer(const Ref<IndexBuffer>&);
+
+ private:
+  uint id_;
+
+  // These need to be `Ref` to prevent creation of other ids!
+  std::vector<Ref<VertexBuffer>> vertex_buffers_;
+  Ref<IndexBuffer> index_buffer_;
+};
+}  // namespace vs
+
+#endif  // VSCGE_INCLUDE_VSCGE_GRAPHICS_VERTEX_ARRAY_H_

@@ -15,10 +15,14 @@
 #ifndef VSCGE_INCLUDE_VSCGE_UTILS_MACRO_H_
 #define VSCGE_INCLUDE_VSCGE_UTILS_MACRO_H_
 
+#include <type_traits>
+
 #define VS_BIND_EVENT(fn)  [this](auto ev) { fn(ev); }
 #define VS_BIND_THREAD(fn) [this]() { fn(); }
 
 #define VS_STR(str)      VS_STR_IMPL(str)
 #define VS_STR_IMPL(str) #str
+
+#define VS_VALUE_TYPE(var) std::decay_t<decltype((var))>::value_type
 
 #endif  // VSCGE_INCLUDE_VSCGE_UTILS_MACRO_H_

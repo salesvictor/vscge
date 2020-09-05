@@ -22,7 +22,7 @@ template <typename Type>
 using Ref = std::shared_ptr<Type>;
 
 template <typename Type, typename... Args>
-constexpr Ref<Type> CreateRef(Args&&... args) {
+constexpr Ref<Type> MakeRef(Args&&... args) {
   return std::make_shared<Type>(std::forward<Args>(args)...);
 }
 }  // namespace vs

@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0] - 2020-09-03
+
+### Added
+
+- Common CMake script for non-interface modules.
+- `name` member to `Shader`. It's a surprise tool that will help us later.
+- `VS_VALUE_TYPE()` macro to get a container's `value_type`.
+- `VertexLayout` Class to specify how a vertex buffer should be read.
+- `DataType` Enum Class to encapsulate GLSL primitive types on `VertexLayout`.
+- `IndexBuffer` Class to encapsulate OpenGL's object.
+- Reference Factories for `*Buffer` Classes.
+- `VertexArray` Class to encapsalte OpenGL's object.
+
+### Changed
+
+- Fixed a bug on the common module script to now accept subfolders on the include directory.
+- Triangle example to use new class pipeline.
+- `vs::CreateRef` to `vs::MakeRef`, for consistency with `std` pointers.
+
+### Removed
+
+- `Vertex` Class, as it was substituted by raw float buffers and `VertexLayout`.
+
 ## [0.17.0] - 2020-09-03
 
 ### Added

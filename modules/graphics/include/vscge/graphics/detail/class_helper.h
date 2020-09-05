@@ -1,0 +1,33 @@
+// Copyright 2020 Victor Sales
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef VSCGE_INCLUDE_VSCGE_GRAPHICS_DETAIL_CLASS_HELPER_H_
+#define VSCGE_INCLUDE_VSCGE_GRAPHICS_DETAIL_CLASS_HELPER_H_
+
+#include <utility>
+
+// Should have a `Release()` member function!
+#define VS_MOVE_ID_ONLY(ClassName)                                 \
+  ClassName(const ClassName&) = delete;                            \
+  ClassName& operator=(const ClassName&) = delete;                 \
+                                                                   \
+  ClassName(ClassName&& other) : id_{other.id_} { other.id_ = 0; } \
+  ClassName& operator=(ClassName&& other) {                        \
+    if (this != &other) {                                          \
+      Release();                                                   \
+      std::swap(id_, other.id_);                                   \
+    }                                                              \
+  }
+
+#endif  // VSCGE_INCLUDE_VSCGE_GRAPHICS_DETAIL_CLASS_HELPER_H_
