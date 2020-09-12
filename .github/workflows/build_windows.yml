@@ -1,0 +1,61 @@
+name: Build Windows
+
+on: [push]
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    env:
+      CC: ${{ matrix.config.cc }}
+      CXX: ${{ matrix.config.cxx }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows Latest MSVC", artifact: "Windows-MSVC.tar.xz",
+            os: windows-latest,
+            build_type: ["Debug", "Release"], cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          }
+        - {
+            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
+            os: windows-latest,
+            build_type: ["Debug", "Release"], cc: "gcc", cxx: "g++"
+          }
+        - {
+            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
+            os: windows-latest,
+            build_type: ["Debug", "Release"], cc: "clang", cxx: "clang++"
+          }
+
+    steps:
+      - uses: microsoft/setup-msbuild@v1.0.1
+      - uses: actions/checkout@v2
+        with:
+          repository: skaslev/gl3w
+      - name: Get gl3w
+        id: get_gl3w
+        run: |
+          git clone https://github.com/skaslev/gl3w.git extern/gl3w
+          cd extern/gl3w
+          cmake -S . -B build
+          cmake --build build
+          cmake --install build
+
+      - uses: actions/checkout@v2
+      - name: Configure
+        run: |
+          cmake -S . -B build
+
+      - name: Build
+        run: |
+          cmake --build build --config ${{ matrix.config.build_type }}
+      
+      - name: Test
+        run: |
+          cmake --build build --target check
