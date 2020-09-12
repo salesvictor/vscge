@@ -19,22 +19,23 @@ jobs:
         - {
             name: "Windows Latest MSVC", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
-            build_type: ["Debug", "Release"], cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+            build_type: "Release", cc: "cl", cxx: "cl",
+            needs_msvc: true,
           }
         - {
             name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
             os: windows-latest,
-            build_type: ["Debug", "Release"], cc: "gcc", cxx: "g++"
+            build_type: "Release", cc: "gcc", cxx: "g++",
           }
         - {
-            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
+            name: "Windows Latest clang", artifact: "Windows-clang.tar.xz",
             os: windows-latest,
-            build_type: ["Debug", "Release"], cc: "clang", cxx: "clang++"
+            build_type: "Release", cc: "clang", cxx: "clang++",
           }
 
     steps:
       - uses: microsoft/setup-msbuild@v1.0.1
+        if: ${{ matrix.config.needs_msvc }}
       - uses: actions/checkout@v2
         with:
           repository: skaslev/gl3w
