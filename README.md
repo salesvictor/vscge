@@ -1,4 +1,5 @@
-[![GitHub license](https://img.shields.io/github/license/salesvictor/vscge?color=blue&style=plastic)](https://github.com/salesvictor/vscge/blob/master/LICENSE) ![build](https://github.com/salesvictor/vscge/workflows/build/badge.svg)
+[![GitHub license](https://img.shields.io/github/license/salesvictor/vscge?color=blue&style=plastic)](https://github.com/salesvictor/vscge/blob/master/LICENSE)
+![Build Windows](https://github.com/salesvictor/vscge/workflows/Build%20Windows/badge.svg)
 
 # VS Component Game Engine
 
@@ -10,8 +11,8 @@ all the components that make one.
 ## Design
 
 The goal here is to have a good SWE Project. So, as the name suggests, the
-engine is broken down into modularized, self-contained, components, trying to
-follow as close as possible the best SWE practices.
+engine is broken down into modularized components, trying to follow as close
+as possible good SWE practices.
 
 ## Multiplatform
 
@@ -26,7 +27,7 @@ using only the C++ Standard Library as the external dependency.
 ## Dependencies
 
 * [gl3w](https://github.com/skaslev/gl3w)
-    * Unfortunately, you should install this before building VSCGE
+    * Unfortunately, you should install this before building VSCGE, thinking of constructing one of my own because of this
 * [Google Test](https://github.com/google/googletest)
     * Used for testing. If building those, it is automatically downloaded for you
 
@@ -38,7 +39,7 @@ that, I mean creating a `build` directory and calling `cmake` from there:
 ```
 mkdir build && cd build
 cmake ..
-cmake . --build
+cmake --build .
 ```
 
 ## Available Options
@@ -98,3 +99,4 @@ Those are on the `examples` folder.
 # OpenGL
 
 * [Learn OpenGL](https://learnopengl.com)
+* [Raw OpenGL](https://alain.xyz/blog/raw-opengl)
