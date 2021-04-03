@@ -73,6 +73,9 @@ void Window::InputHandler() {
   ShowCursor(true);
   is_initialized_ = true;
   MSG message;
+  
+  // TODO(Victor): Look at PeekMessage() instead of GetMessage(),
+  // it might solve the weird initialization problem :)
   while (GetMessage(&message, nullptr, 0, 0)) {
     TranslateMessage(&message);
     DispatchMessage(&message);
