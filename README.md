@@ -100,3 +100,4 @@ Those are on the `examples` folder.
 
 * [Learn OpenGL](https://learnopengl.com)
 * [Raw OpenGL](https://alain.xyz/blog/raw-opengl)
+* [The Book of Shaders](https://thebookofshaders.com/)
